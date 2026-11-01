@@ -73,6 +73,8 @@ export interface TemplateManifest {
   file: string
   description: string
   colorRoles: { label: string; slots: AccentSlot[] }[]
+  // 深色底上放白字的位置，顏色太淺時提醒（規格書 4.4、Q12）
+  contrastChecks: { slot: AccentSlot; where: string }[]
   fontRoles: { label: string; style: string; default: string }[]
   checklistSlots: Record<ChecklistCategory, number>
   presets: { name: string; colors: Record<AccentSlot, string> }[]

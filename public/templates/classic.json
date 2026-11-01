@@ -1,12 +1,17 @@
 {
   "id": "classic",
-  "name": "原版",
+  "name": "經典",
   "file": "classic.docx",
-  "description": "Alice 設計的第一份旅遊手冊範本。",
+  "description": "Alice 設計的第一份旅遊手冊範本：Day 方塊有圓形日期框，檢查清單整頁獨立。",
   "colorRoles": [
     { "label": "主色", "slots": ["accent1", "accent2"] },
     { "label": "輔色", "slots": ["accent3", "accent4"] },
     { "label": "強調色", "slots": ["accent5", "accent6"] }
+  ],
+  "contrastChecks": [
+    { "slot": "accent1", "where": "航班表頭的白字" },
+    { "slot": "accent5", "where": "檢查清單標題列的白字" },
+    { "slot": "accent6", "where": "旅遊資訊標籤的白字" }
   ],
   "fontRoles": [
     { "label": "內文", "style": "BW-內文", "default": "華康秀風體W3" },
@@ -24,6 +29,39 @@
         "accent4": "#215868",
         "accent5": "#BC003F",
         "accent6": "#800080"
+      }
+    },
+    {
+      "name": "海港藍",
+      "colors": {
+        "accent1": "#2F5D7C",
+        "accent2": "#1F3A4D",
+        "accent3": "#2C6E7F",
+        "accent4": "#4A7A99",
+        "accent5": "#B5503A",
+        "accent6": "#3A6B8C"
+      }
+    },
+    {
+      "name": "櫻花粉",
+      "colors": {
+        "accent1": "#9C4F68",
+        "accent2": "#5E3442",
+        "accent3": "#8A4A6E",
+        "accent4": "#B07088",
+        "accent5": "#B03A5B",
+        "accent6": "#7A4E8A"
+      }
+    },
+    {
+      "name": "秋楓",
+      "colors": {
+        "accent1": "#8A5A2B",
+        "accent2": "#4A3222",
+        "accent3": "#9A4A24",
+        "accent4": "#A07A50",
+        "accent5": "#B23A1F",
+        "accent6": "#8F5410"
       }
     }
   ]

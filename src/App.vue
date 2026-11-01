@@ -6,6 +6,7 @@ import FlightsPanel from './components/FlightsPanel.vue'
 import FoodsPanel from './components/FoodsPanel.vue'
 import HotelsPanel from './components/HotelsPanel.vue'
 import InfosPanel from './components/InfosPanel.vue'
+import StylePanel from './components/StylePanel.vue'
 import { generateFromSettings } from './docx/fromSettings'
 import { bookletFileName } from './model/fileName'
 import { SaveFileError } from './model/saveFile'
@@ -17,13 +18,14 @@ const { booklet, settings, hasUnsavedChanges, pendingRestore } = store
 
 // ---------- 分頁 ----------
 
-const tabs: { id: string; label: string; component: Component; count: () => number }[] = [
+const tabs: { id: string; label: string; component: Component; count?: () => number }[] = [
   { id: 'flights', label: '航班', component: FlightsPanel, count: () => booklet.value.flights.length },
   { id: 'days', label: '每日行程', component: DaysPanel, count: () => booklet.value.days.length },
   { id: 'foods', label: '美食特產', component: FoodsPanel, count: () => booklet.value.foods.length },
   { id: 'hotels', label: '飯店', component: HotelsPanel, count: () => booklet.value.hotels.length },
   { id: 'infos', label: '旅遊資訊', component: InfosPanel, count: () => booklet.value.infos.length },
   { id: 'checklist', label: '自訂清單', component: ChecklistPanel, count: () => booklet.value.checklist.length },
+  { id: 'style', label: '範本與樣式', component: StylePanel },
 ]
 const activeTab = ref(tabs[0].id)
 const activePanel = computed(() => tabs.find((t) => t.id === activeTab.value)!.component)
@@ -163,7 +165,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
         @click="activeTab = t.id"
       >
         {{ t.label }}
-        <span class="count">{{ t.count() }}</span>
+        <span v-if="t.count" class="count">{{ t.count() }}</span>
       </button>
     </nav>
 
@@ -275,6 +277,10 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 
 .tabs button:hover {
   color: var(--c-text);
+}
+
+.tabs button:last-child {
+  margin-left: auto;
 }
 
 .tabs button.active {
