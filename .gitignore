@@ -1,0 +1,13 @@
+node_modules/
+dist/
+scripts/verify/output/
+
+# 原始資料與規格書只留在本機，不放進 repo
+手冊範本.docx
+旅遊手冊產生網站_需求規格.md
+旅遊手冊輸入表.xlsx
+測試輸出_大阪京都.docx
+
+# 只在本機使用的工具（範本改造、用本機 Word 實測）
+tools/
+scripts/verify/

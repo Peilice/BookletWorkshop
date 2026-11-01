@@ -1,0 +1,30 @@
+{
+  "id": "classic",
+  "name": "原版",
+  "file": "classic.docx",
+  "description": "Alice 設計的第一份旅遊手冊範本。",
+  "colorRoles": [
+    { "label": "主色", "slots": ["accent1", "accent2"] },
+    { "label": "輔色", "slots": ["accent3", "accent4"] },
+    { "label": "強調色", "slots": ["accent5", "accent6"] }
+  ],
+  "fontRoles": [
+    { "label": "內文", "style": "BW-內文", "default": "華康秀風體W3" },
+    { "label": "Day 方塊", "style": "BW-Day方塊", "default": "華康棒棒體W5" },
+    { "label": "飯店名稱", "style": "BW-飯店名稱", "default": "華康寶風體W4" }
+  ],
+  "checklistSlots": { "證件": 0, "衣物": 1, "藥品": 0, "其它": 10 },
+  "presets": [
+    {
+      "name": "原版",
+      "colors": {
+        "accent1": "#5F6B57",
+        "accent2": "#3B2F2A",
+        "accent3": "#4F6228",
+        "accent4": "#215868",
+        "accent5": "#BC003F",
+        "accent6": "#800080"
+      }
+    }
+  ]
+}
