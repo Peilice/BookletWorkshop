@@ -1,12 +1,12 @@
 // 依目前的手冊與設定產生 Word：讀取範本、決定配色與字體
 
-import type { AccentSlot, Booklet, Settings, TemplateManifest } from '../model/booklet'
+import type { Booklet, PaletteColors, Settings, TemplateManifest } from '../model/booklet'
 import { useTemplates } from '../store/templates'
 import { toTemplateData } from '../transform/templateData'
 import { generateDocx } from './generate'
 
 /** 實際使用的配色：沒有指定時用範本的第一組預設配色 */
-export function effectivePalette(manifest: TemplateManifest, settings: Settings): Record<AccentSlot, string> {
+export function effectivePalette(manifest: TemplateManifest, settings: Settings): PaletteColors {
   return settings.palette ?? manifest.presets[0].colors
 }
 

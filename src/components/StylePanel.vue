@@ -2,7 +2,7 @@
 // 範本選擇、配色、字體（規格書 4.3–4.5）
 import { computed, onMounted, ref } from 'vue'
 import { effectiveFonts, effectivePalette } from '../docx/fromSettings'
-import type { AccentSlot, TemplateManifest } from '../model/booklet'
+import type { AccentSlot, PaletteColors, TemplateManifest } from '../model/booklet'
 import { lowContrastSpots, MIN_CONTRAST } from '../model/contrast'
 import { useBookletStore } from '../store/booklet'
 import { useTemplates } from '../store/templates'
@@ -34,7 +34,7 @@ const presetIndex = computed(() => {
   const p = palette.value
   if (!m || !p) return 0
   return m.presets.findIndex((preset) =>
-    (Object.keys(preset.colors) as AccentSlot[]).every((k) => sameColor(preset.colors[k], p[k])),
+    (Object.keys(preset.colors) as (keyof PaletteColors)[]).every((k) => sameColor(preset.colors[k] ?? '', p[k] ?? '')),
   )
 })
 

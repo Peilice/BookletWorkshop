@@ -1,6 +1,6 @@
 // 存檔（.json）的格式、讀檔檢查與版本升級（規格書 4.2）
 
-import type { AccentSlot, Booklet, ChecklistCategory, Settings } from './booklet'
+import type { AccentSlot, Booklet, ChecklistCategory, PaletteColors, Settings } from './booklet'
 import { CHECKLIST_CATEGORIES } from './booklet'
 import { defaultSettings } from './defaults'
 
@@ -66,8 +66,11 @@ function normalizeSettings(s: unknown): Settings {
   if (!isObj(s)) return result
   if (str(s.templateId)) result.templateId = str(s.templateId)
   const p = s.palette
-  if (isObj(p) && ACCENTS.every((k) => /^#?[0-9a-fA-F]{6}$/.test(str(p[k])))) {
-    result.palette = Object.fromEntries(ACCENTS.map((k) => [k, str(p[k])])) as Record<AccentSlot, string>
+  const isHex = (v: unknown) => /^#?[0-9a-fA-F]{6}$/.test(str(v))
+  if (isObj(p) && ACCENTS.every((k) => isHex(p[k]))) {
+    const palette = Object.fromEntries(ACCENTS.map((k) => [k, str(p[k])])) as PaletteColors
+    for (const k of ['dk2', 'lt2'] as const) if (isHex(p[k])) palette[k] = str(p[k])
+    result.palette = palette
   }
   if (isObj(s.fonts)) {
     result.fonts = Object.fromEntries(Object.entries(s.fonts).filter(([, v]) => typeof v === 'string')) as Record<

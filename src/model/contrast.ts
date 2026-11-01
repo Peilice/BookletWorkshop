@@ -1,6 +1,6 @@
 // 文字與底色的對比（WCAG 2 公式）。白字至少要 4.5 才看得清楚
 
-import type { AccentSlot, TemplateManifest } from './booklet'
+import type { PaletteColors, TemplateManifest } from './booklet'
 
 export const MIN_CONTRAST = 4.5
 
@@ -21,7 +21,7 @@ export function contrastRatio(a: string, b: string): number {
 /** 回傳對比不足的位置（白字放在該顏色上） */
 export function lowContrastSpots(
   manifest: TemplateManifest,
-  palette: Record<AccentSlot, string>,
+  palette: PaletteColors,
 ): { where: string; ratio: number }[] {
   return manifest.contrastChecks
     .map((c) => ({ where: c.where, ratio: contrastRatio(palette[c.slot], '#FFFFFF') }))

@@ -11,6 +11,16 @@ describe('存檔與讀檔', () => {
     expect(parseSaveFile(text)).toEqual({ booklet: osakaKyoto, settings })
   })
 
+  it('配色裡的文字 2、背景 2 也會存回來', () => {
+    const palette = {
+      accent1: '#111111', accent2: '#222222', accent3: '#333333',
+      accent4: '#444444', accent5: '#555555', accent6: '#666666',
+      dk2: '#123456', lt2: '#FEDCBA',
+    }
+    const settings = { templateId: 'classic', palette, fonts: {} }
+    expect(parseSaveFile(JSON.stringify(createSaveFile(emptyBooklet(), settings))).settings).toEqual(settings)
+  })
+
   it('存檔記錄格式版本號', () => {
     expect(createSaveFile(emptyBooklet(), defaultSettings()).version).toBe(SAVE_VERSION)
   })

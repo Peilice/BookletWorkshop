@@ -1,11 +1,14 @@
 // 換色：改寫佈景主題的強調色，並同步文件裡套用佈景主題色彩的備用 RGB 值。
 // Word 開檔時會依佈景主題重新計算顏色；同步備用值是為了讓其他軟體（LibreOffice 等）也顯示正確。
 
-import type { AccentSlot } from '../model/booklet'
+import type { PaletteColors } from '../model/booklet'
 
-export type Palette = Record<AccentSlot, string> // 值為 #RRGGBB 或 RRGGBB
+export type Palette = PaletteColors // 值為 #RRGGBB 或 RRGGBB
 
 const FIXED: Record<string, string> = { text1: '000000', background1: 'FFFFFF', dark1: '000000', light1: 'FFFFFF' }
+
+// Word 文件裡的 themeColor 名稱 → 佈景主題的色彩欄位
+const THEME_SLOT: Record<string, keyof Palette> = { text2: 'dk2', dark2: 'dk2', background2: 'lt2', light2: 'lt2' }
 
 function norm(hex: string): string {
   return hex.replace('#', '').toUpperCase()
@@ -63,8 +66,13 @@ function setAttr(tag: string, name: string, value: string): string {
 
 // 同步 w:color / 框線 / w:shd 上的備用 RGB 值
 export function syncThemedColors(xml: string, palette: Palette): string {
-  const resolve = (theme: string | undefined): string | undefined =>
-    theme === undefined ? undefined : theme in palette ? norm(palette[theme as AccentSlot]) : FIXED[theme]
+  const resolve = (theme: string | undefined): string | undefined => {
+    if (theme === undefined) return undefined
+    const slot = (THEME_SLOT[theme] ?? theme) as keyof Palette
+    const hex = palette[slot]
+    // 配色沒有指定文字 2／背景 2 時，維持文件原本的備用值
+    return hex ? norm(hex) : FIXED[theme]
+  }
 
   return xml.replace(/<w:(color|top|left|bottom|right|insideH|insideV|start|end|shd)\b[^>]*>/g, (tag, name) => {
     let out = tag

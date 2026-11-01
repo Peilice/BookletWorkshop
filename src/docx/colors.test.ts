@@ -48,6 +48,21 @@ describe('syncThemedColors', () => {
     expect(out).toContain('<w:color w:val="000000" w:themeColor="text1"/>')
   })
 
+  it('文字 2、背景 2：配色有指定時同步，沒有指定時不動', () => {
+    const xml = '<w:color w:val="1F497D" w:themeColor="text2"/><w:shd w:val="clear" w:fill="EEECE1" w:themeFill="background2"/>'
+    expect(syncThemedColors(xml, { ...palette, dk2: '#112233', lt2: '#F5F0E6' })).toBe(
+      '<w:color w:val="112233" w:themeColor="text2"/><w:shd w:val="clear" w:fill="F5F0E6" w:themeFill="background2"/>',
+    )
+    expect(syncThemedColors(xml, palette)).toBe(xml)
+  })
+
+  it('setThemeColors 替換文字 2、背景 2', () => {
+    const xml = '<a:dk2><a:srgbClr val="1F497D"/></a:dk2><a:lt2><a:srgbClr val="EEECE1"/></a:lt2>'
+    expect(setThemeColors(xml, { ...palette, dk2: '#112233', lt2: '#F5F0E6' })).toBe(
+      '<a:dk2><a:srgbClr val="112233"/></a:dk2><a:lt2><a:srgbClr val="F5F0E6"/></a:lt2>',
+    )
+  })
+
   it('沒有套用佈景主題色彩的元素不動', () => {
     const xml = '<w:color w:val="123456"/>'
     expect(syncThemedColors(xml, palette)).toBe(xml)
