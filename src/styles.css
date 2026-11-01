@@ -1,0 +1,189 @@
+:root {
+  --c-bg: #f6f5f1;
+  --c-surface: #ffffff;
+  --c-text: #23261f;
+  --c-muted: #6b6f66;
+  --c-border: #d9d7cf;
+  --c-primary: #4f5a48;
+  --c-primary-hover: #3e4739;
+  --c-primary-soft: #e9ece4;
+  --c-danger: #a3233a;
+  --c-warn-bg: #fff6dc;
+  --c-warn-border: #e8cf7f;
+  --c-ok-bg: #e7f3e9;
+  --c-ok-border: #9cc7a4;
+  --radius: 6px;
+  font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--c-text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 700;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: var(--radius);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  color: var(--c-text);
+  padding: 6px 14px;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--c-primary);
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+button.primary {
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+  color: #fff;
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--c-primary-hover);
+}
+
+button.add {
+  border-style: dashed;
+  color: var(--c-primary);
+  background: transparent;
+}
+
+button.icon {
+  padding: 2px 8px;
+  font-size: 13px;
+  color: var(--c-muted);
+}
+
+button.icon.danger:hover:not(:disabled) {
+  color: var(--c-danger);
+  border-color: var(--c-danger);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 1px;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+/* 欄位：標籤在上、輸入框在下 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.field > span {
+  font-size: 13px;
+  color: var(--c-muted);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--c-muted);
+  margin: 0;
+}
+
+.hint.warn {
+  color: #8a5a00;
+}
+
+/* 每一筆資料的卡片 */
+.card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-head h3 {
+  font-size: 16px;
+}
+
+.card-head .spacer {
+  flex: 1;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.panel-intro h2 {
+  font-size: 18px;
+}
+
+.empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--c-muted);
+  border: 1px dashed var(--c-border);
+  border-radius: var(--radius);
+}
+
+/* 子項目（景點、美食項目）縮排在卡片裡 */
+.sub-item {
+  border-left: 3px solid var(--c-primary-soft);
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

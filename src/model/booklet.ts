@@ -44,6 +44,14 @@ export interface InfoItem {
 
 export type ChecklistCategory = '證件' | '衣物' | '藥品' | '其它'
 
+// 表單下拉選單顯示的分類名稱（和範本檢查清單的標題一致）
+export const CHECKLIST_CATEGORIES: { key: ChecklistCategory; label: string }[] = [
+  { key: '證件', label: '重要必備證件資料' },
+  { key: '衣物', label: '衣物&用品' },
+  { key: '藥品', label: '常備藥品' },
+  { key: '其它', label: '其它' },
+]
+
 export interface ChecklistItem {
   category: ChecklistCategory
   item: string
@@ -71,3 +79,10 @@ export interface TemplateManifest {
 }
 
 export type AccentSlot = 'accent1' | 'accent2' | 'accent3' | 'accent4' | 'accent5' | 'accent6'
+
+// 產生 Word 時的選項，也一起記在存檔裡（規格書 4.2）
+export interface Settings {
+  templateId: string
+  palette: Record<AccentSlot, string> | null // null：用範本的第一組預設配色
+  fonts: Record<string, string> // 樣式名稱 → 字體；沒有列出的用範本預設字體
+}

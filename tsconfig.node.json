@@ -12,5 +12,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["vite.config.ts", "scripts/**/*.ts", "src/**/*.test.ts", "src/model/**/*.ts", "src/transform/**/*.ts", "src/docx/**/*.ts"]
+  "include": ["vite.config.ts", "scripts/**/*.ts", "src/**/*.test.ts"]
 }
