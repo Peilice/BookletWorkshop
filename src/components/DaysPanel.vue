@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import { newDay, newSpot } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
+import { autoOverview, OVERVIEW_LIMIT } from '../model/validate'
 import { weekday } from '../transform/templateData'
 import ItemActions from './ItemActions.vue'
 
 const { booklet } = useBookletStore()
-
-// Day 方塊空間有限（規格書 4.1）
-const OVERVIEW_LIMIT = 40
-
-function autoOverview(spots: { name: string }[]): string {
-  return spots
-    .map((s) => s.name.trim())
-    .filter(Boolean)
-    .join(' → ')
-}
 
 function addDay() {
   booklet.value.days.push(newDay(booklet.value.days.at(-1)))

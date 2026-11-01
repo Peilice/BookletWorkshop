@@ -7,10 +7,13 @@ import FoodsPanel from './components/FoodsPanel.vue'
 import HotelsPanel from './components/HotelsPanel.vue'
 import InfosPanel from './components/InfosPanel.vue'
 import StylePanel from './components/StylePanel.vue'
-import { generateFromSettings } from './docx/fromSettings'
+import { effectivePalette, generateFromSettings } from './docx/fromSettings'
+import { lowContrastSpots } from './model/contrast'
 import { bookletFileName } from './model/fileName'
 import { SaveFileError } from './model/saveFile'
+import { validateBooklet, type Issue, type TabId } from './model/validate'
 import { useBookletStore } from './store/booklet'
+import { useTemplates } from './store/templates'
 import { downloadFile } from './utils/download'
 
 const store = useBookletStore()
@@ -18,7 +21,7 @@ const { booklet, settings, hasUnsavedChanges, pendingRestore } = store
 
 // ---------- 分頁 ----------
 
-const tabs: { id: string; label: string; component: Component; count?: () => number }[] = [
+const tabs: { id: TabId; label: string; component: Component; count?: () => number }[] = [
   { id: 'flights', label: '航班', component: FlightsPanel, count: () => booklet.value.flights.length },
   { id: 'days', label: '每日行程', component: DaysPanel, count: () => booklet.value.days.length },
   { id: 'foods', label: '美食特產', component: FoodsPanel, count: () => booklet.value.foods.length },
@@ -87,8 +90,46 @@ function onSave() {
   notify('ok', '已下載存檔。之後可以用「讀取存檔」繼續編輯。')
 }
 
+// ---------- 產生前檢查（規格書 4.6）：有問題時先列出來，使用者可以回去修改或仍然產生 ----------
+
+const checkIssues = ref<Issue[] | null>(null)
+const issueGroups = computed(() =>
+  tabs
+    .map((t) => ({ tab: t, items: (checkIssues.value ?? []).filter((i) => i.tab === t.id).map((i) => i.text) }))
+    .filter((g) => g.items.length),
+)
+
+async function collectIssues(): Promise<Issue[]> {
+  const issues = validateBooklet(booklet.value)
+  try {
+    const manifest = await useTemplates().getManifest(settings.value.templateId)
+    for (const s of lowContrastSpots(manifest, effectivePalette(manifest, settings.value))) {
+      issues.push({ tab: 'style', text: `${s.where}可能看不清楚，建議選深一點的顏色` })
+    }
+  } catch {
+    // 範本讀不到時，產生 Word 那一步會顯示錯誤
+  }
+  return issues
+}
+
+async function onGenerateClick() {
+  const issues = await collectIssues()
+  if (issues.length) checkIssues.value = issues
+  else await generate()
+}
+
+function goToIssue(tab: TabId) {
+  checkIssues.value = null
+  activeTab.value = tab
+}
+
+async function generateAnyway() {
+  checkIssues.value = null
+  await generate()
+}
+
 const generating = ref(false)
-async function onGenerate() {
+async function generate() {
   generating.value = true
   try {
     const docx = await generateFromSettings(booklet.value, settings.value)
@@ -131,7 +172,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
       <button type="button" @click="onNew">新增手冊</button>
       <button type="button" @click="onOpenClick">讀取存檔</button>
       <button type="button" @click="onSave">存檔</button>
-      <button type="button" class="primary" :disabled="generating" @click="onGenerate">
+      <button type="button" class="primary" :disabled="generating" @click="onGenerateClick">
         {{ generating ? '產生中…' : '產生 Word' }}
       </button>
       <input ref="fileInput" type="file" accept=".json,application/json" hidden @change="onFileChosen" />
@@ -180,6 +221,28 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
       <div class="dialog-actions">
         <button type="button" @click="closeConfirm(false)">取消</button>
         <button type="button" class="primary" @click="closeConfirm(true)">{{ confirmState.ok }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="checkIssues" class="overlay">
+    <div class="dialog check-dialog" role="alertdialog" aria-modal="true" aria-labelledby="check-title">
+      <h2 id="check-title">產生前檢查</h2>
+      <p>有 {{ checkIssues.length }} 個地方可能還沒填好，還是可以直接產生 Word。</p>
+      <div class="issue-list">
+        <section v-for="g in issueGroups" :key="g.tab.id" class="issue-group">
+          <div class="issue-head">
+            <h3>{{ g.tab.label }}</h3>
+            <button type="button" class="icon" @click="goToIssue(g.tab.id)">前往修改</button>
+          </div>
+          <ul>
+            <li v-for="(text, i) in g.items" :key="i">{{ text }}</li>
+          </ul>
+        </section>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" @click="checkIssues = null">回去修改</button>
+        <button type="button" class="primary" @click="generateAnyway">仍然產生 Word</button>
       </div>
     </div>
   </div>
@@ -323,6 +386,41 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 
 .dialog p {
   margin: 0 0 16px;
+}
+
+.check-dialog {
+  max-width: 560px;
+  width: 100%;
+}
+
+.check-dialog h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.issue-list {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.issue-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.issue-head h3 {
+  font-size: 15px;
+}
+
+.issue-group ul {
+  margin: 4px 0 0;
+  padding-left: 20px;
+  color: var(--c-muted);
 }
 
 .dialog-actions {
