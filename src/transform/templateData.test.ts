@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import type { Booklet, TemplateManifest } from '../model/booklet'
 import { osakaKyoto, sparse } from '../model/sample'
-import { shortDate, toTemplateData, weekday } from './templateData'
+import { chineseDay, shortDate, toTemplateData, weekday } from './templateData'
 
 const manifest: TemplateManifest = JSON.parse(
   readFileSync(new URL('../../public/templates/classic.json', import.meta.url), 'utf8'),
@@ -66,5 +66,47 @@ describe('檢查清單', () => {
     ])
     expect(data['其它加列']).toEqual([{ 第1格: '其它項目11', 第2格: '其它項目12', 第3格: '' }])
     expect(data['藥品加列']).toEqual([])
+  })
+})
+
+describe('和風直排範本用到的資料', () => {
+  const data = toTemplateData(osakaKyoto, manifest)
+
+  it('中文天數', () => {
+    expect([1, 2, 10, 11, 20, 23].map(chineseDay)).toEqual(['第一天', '第二天', '第十天', '第十一天', '第二十天', '第二十三天'])
+  })
+
+  it('航班標出去程、回程，中間的航班不標', () => {
+    const three = { ...osakaKyoto, flights: [osakaKyoto.flights[0], osakaKyoto.flights[0], osakaKyoto.flights[1]] }
+    const legs = (b: Booklet) => (toTemplateData(b, manifest)['航班'] as Record<string, unknown>[]).map((f) => f['航程'])
+    expect(legs(osakaKyoto)).toEqual(['去程', '回程'])
+    expect(legs(three)).toEqual(['去程', '', '回程'])
+    expect(legs({ ...osakaKyoto, flights: [osakaKyoto.flights[0]] })).toEqual(['去程'])
+  })
+
+  it('星期簡寫', () => {
+    expect((data['航班'] as Record<string, unknown>[])[0]['星期簡寫']).toBe('二')
+    expect((data['每日行程'] as Record<string, unknown>[])[0]['星期簡寫']).toBe('二')
+  })
+
+  it('景點介紹只列有內容的景點，並標出第幾天', () => {
+    const b: Booklet = {
+      ...osakaKyoto,
+      days: [
+        { ...osakaKyoto.days[0], spots: [{ name: '宮川朝市', content: '介紹' }, { name: '回民宿', content: ' ' }] },
+        { ...osakaKyoto.days[1], spots: [{ name: '新穗高纜車', content: '介紹二' }] },
+      ],
+    }
+    const d = toTemplateData(b, manifest)
+    expect(d['有景點介紹']).toBe(true)
+    expect(d['景點介紹']).toEqual([
+      { 景點名稱: '宮川朝市', 景點內容: '介紹', 第幾天: '第一天' },
+      { 景點名稱: '新穗高纜車', 景點內容: '介紹二', 第幾天: '第二天' },
+    ])
+  })
+
+  it('沒有航班也沒有飯店時，不顯示班機與住宿', () => {
+    expect(data['有航班或飯店']).toBe(true)
+    expect(toTemplateData({ ...sparse, flights: [], hotels: [] }, manifest)['有航班或飯店']).toBe(false)
   })
 })

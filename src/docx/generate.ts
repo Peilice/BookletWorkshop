@@ -4,7 +4,7 @@ import Docxtemplater from 'docxtemplater'
 import PizZip from 'pizzip'
 import { setThemeColors, syncThemedColors, type Palette } from './colors'
 import { setStyleFonts } from './fonts'
-import { renumberDrawingIds } from './postprocess'
+import { dropEmptyLastSection, renumberDrawingIds } from './postprocess'
 
 export interface GenerateOptions {
   data: Record<string, unknown>
@@ -35,7 +35,7 @@ export function generateDocx(template: ArrayBuffer | Uint8Array, opts: GenerateO
   for (const path of Object.keys(out.files)) {
     if (COLOR_PARTS.test(path)) edit(path, (xml) => syncThemedColors(xml, opts.palette))
   }
-  edit('word/document.xml', renumberDrawingIds)
+  edit('word/document.xml', (xml) => dropEmptyLastSection(renumberDrawingIds(xml)))
 
   return out.generate({ type: 'uint8array', compression: 'DEFLATE' })
 }

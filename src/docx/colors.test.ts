@@ -31,6 +31,11 @@ describe('setThemeColors', () => {
       '<a:accent1><a:srgbClr val="1F4E79"/></a:accent1><a:accent3><a:srgbClr val="C55A11"/></a:accent3>',
     )
   })
+
+  it('XML 有縮排換行時也能替換（不是 Word 存的檔案）', () => {
+    const xml = '<a:accent1>\n        <a:srgbClr val="8B3A2E"/>\n      </a:accent1>'
+    expect(setThemeColors(xml, palette)).toBe('<a:accent1>\n        <a:srgbClr val="1F4E79"/>\n      </a:accent1>')
+  })
 })
 
 describe('syncThemedColors', () => {

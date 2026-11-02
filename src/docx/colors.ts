@@ -18,7 +18,7 @@ export function setThemeColors(themeXml: string, palette: Palette): string {
   let xml = themeXml
   for (const [slot, hex] of Object.entries(palette)) {
     xml = xml.replace(
-      new RegExp(`(<a:${slot}>)<a:(?:srgbClr|sysClr)[^>]*/>`),
+      new RegExp(`(<a:${slot}>\\s*)<a:(?:srgbClr|sysClr)[^>]*/>`),
       `$1<a:srgbClr val="${norm(hex)}"/>`,
     )
   }

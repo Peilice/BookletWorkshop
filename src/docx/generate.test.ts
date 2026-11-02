@@ -3,8 +3,8 @@
 import { readFileSync } from 'node:fs'
 import PizZip from 'pizzip'
 import { describe, expect, it } from 'vitest'
-import type { TemplateManifest } from '../model/booklet'
-import { osakaKyoto, sparse } from '../model/sample'
+import type { Booklet, TemplateManifest } from '../model/booklet'
+import { kanazawa, osakaKyoto, sparse } from '../model/sample'
 import { toTemplateData } from '../transform/templateData'
 import { generateDocx } from './generate'
 
@@ -62,5 +62,33 @@ describe('generateDocx', () => {
     const palette = { ...manifest.presets[0].colors, accent1: '#123456' }
     const { theme } = generate(osakaKyoto, defaultFonts, palette)
     expect(theme).toContain('<a:accent1><a:srgbClr val="123456"/></a:accent1>')
+  })
+})
+
+describe('generateDocx：和風直排範本', () => {
+  const wafu: TemplateManifest = JSON.parse(readFileSync(new URL('wafu.json', templateDir), 'utf8'))
+  const wafuTemplate = readFileSync(new URL(wafu.file, templateDir))
+  const fonts = Object.fromEntries(wafu.fontRoles.map((r) => [r.style, r.default]))
+  const render = (booklet: Booklet) =>
+    new PizZip(generateDocx(wafuTemplate, { data: toTemplateData(booklet, wafu), palette: wafu.presets[0].colors, fonts }))
+      .file('word/document.xml')!
+      .asText()
+
+  it('所有標記都被替換，每個有內容的景點一頁、各有一個照片框', () => {
+    const document = render(kanazawa)
+    expect(document).not.toMatch(/\{[#/]?[^{}<]*\}/)
+    expect(document).toContain('去程：11/26（四）')
+    expect(document).toContain('高山｜Mine House')
+    expect(document).toContain('11/27（五）　09:00 出門')
+    expect(document).toContain('（第二天）')
+    const spots = kanazawa.days.flatMap((d) => d.spots).filter((s) => s.content.trim())
+    expect(document.match(/<wp:anchor\b/g)).toHaveLength(spots.length)
+  })
+
+  it('沒有景點介紹時，文件結尾是橫排區段，不會多一頁空白直排頁', () => {
+    const noSpots = { ...kanazawa, days: kanazawa.days.map((d) => ({ ...d, spots: [] })) }
+    const document = render(noSpots)
+    expect(document.match(/<w:sectPr\b/g)).toHaveLength(1)
+    expect(document).not.toContain('tbRl')
   })
 })
