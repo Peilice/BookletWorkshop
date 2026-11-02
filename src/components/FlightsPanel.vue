@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { newFlight } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
-import { useFormFields } from '../store/templates'
 import { keyOf } from '../utils/motion'
 import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
+import UnusedMark from './UnusedMark.vue'
 
 const { booklet } = useBookletStore()
-const { has } = useFormFields()
 </script>
 
 <template>
@@ -27,12 +26,12 @@ const { has } = useFormFields()
             <span>{{ f.from || '起飛地' }}</span>
             <Icon name="route" />
             <span>{{ f.to || '抵達地' }}</span>
-            <b v-if="has('flightNo') && f.flightNo" class="flight-no">{{ f.flightNo }}</b>
+            <b v-if="f.flightNo" class="flight-no">{{ f.flightNo }}</b>
           </p>
-          <div class="flight-grid" :class="{ 'no-airline': !has('airline') && !has('flightNo') }">
+          <div class="flight-grid">
             <label class="field"><span>日期</span><input v-model="f.date" type="date" /></label>
-            <label v-if="has('airline')" class="field"><span>航空公司</span><input v-model="f.airline" /></label>
-            <label v-if="has('flightNo')" class="field"><span>班機</span><input v-model="f.flightNo" class="strong" placeholder="例：CI152" /></label>
+            <label class="field wide"><span>航空公司<UnusedMark field="airline" /></span><input v-model="f.airline" /></label>
+            <label class="field"><span>班機<UnusedMark field="flightNo" /></span><input v-model="f.flightNo" class="strong" placeholder="例：CI152" /></label>
             <label class="field"><span>起飛地</span><input v-model="f.from" /></label>
             <label class="field"><span>起飛時間</span><input v-model="f.departTime" type="time" /></label>
             <label class="field"><span>抵達地</span><input v-model="f.to" /></label>
@@ -51,15 +50,16 @@ const { has } = useFormFields()
 </template>
 
 <style scoped>
+/* 兩行：日期、航空公司、班機；起飛地、起飛時間、抵達地、抵達時間 */
 .flight-grid {
   display: grid;
-  grid-template-columns: 148px 1fr 96px 1fr 124px 1fr 124px;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) 112px minmax(0, 1fr) 112px;
+  gap: 14px 16px;
   align-items: end;
 }
 
-.flight-grid.no-airline {
-  grid-template-columns: 148px 1fr 124px 1fr 124px;
+.flight-grid .wide {
+  grid-column: span 2;
 }
 
 .strong {

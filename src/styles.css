@@ -24,7 +24,7 @@
   --font-numeral: 'Anton', 'Microsoft JhengHei', sans-serif;
   --font-label: 'Barlow Condensed', 'Microsoft JhengHei', sans-serif;
 
-  --page-width: 1240px;
+  --bar-h: 64px;
   --gutter: 32px;
   --seq-col: 72px;
 
@@ -42,6 +42,11 @@
 body {
   margin: 0;
   background: var(--paper);
+}
+
+/* 只支援電腦：工作台加上右邊 400px 的成品預覽，窄於這個寬度時左右捲動 */
+#app {
+  min-width: 1180px;
 }
 
 ::selection {
@@ -104,7 +109,7 @@ button.primary:hover:not(:disabled) {
   border-color: var(--ink-hover);
 }
 
-/* 產生 Word：整個畫面唯一用強調色填滿的元素 */
+/* 輸出手冊：整個畫面唯一用強調色填滿的元素（產生前檢查對話框裡的「仍然產生」沿用） */
 button.generate {
   background: var(--accent-strong);
   border-color: var(--accent-strong);
@@ -244,6 +249,15 @@ input[type='checkbox'] {
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--ink-soft);
+}
+
+/* 目前的排版風格不顯示這個欄位（UnusedMark.vue） */
+.field > span .unused {
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--warn);
+  margin-left: 6px;
 }
 
 .field.grow {

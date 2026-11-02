@@ -89,12 +89,6 @@ function newBooklet() {
   fileSnapshot.value = snapshot()
 }
 
-/** 在起始頁選好範本，開始填一份空白手冊；上次的暫存還沒決定要不要恢復時，提示繼續保留 */
-function startBooklet(templateId: string) {
-  apply(emptyBooklet(), { ...defaultSettings(), templateId })
-  fileSnapshot.value = snapshot()
-}
-
 /** 換範本：填好的資料全部保留（新範本用不到的欄位只是不顯示）；配色回到新範本的預設，字體沿用同名樣式 */
 function changeTemplate(templateId: string) {
   settings.value = { templateId, palette: null, fonts: settings.value.fonts }
@@ -130,7 +124,6 @@ export function useBookletStore() {
     restoreAutosave,
     discardAutosave,
     newBooklet,
-    startBooklet,
     changeTemplate,
     loadSaveFile,
     revertUnsaved,

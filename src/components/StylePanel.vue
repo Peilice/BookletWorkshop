@@ -1,14 +1,13 @@
 <script setup lang="ts">
-// 手冊名稱、配色、字體（規格書 4.4–4.5）；範本在起始頁或「換排版風格」選
+// 工作台第 3 步「外觀」：配色、字體（規格書 4.4–4.5）；手冊名稱在頂列，排版風格在第 2 步選
 import { computed, onMounted, ref } from 'vue'
 import { effectiveFonts, effectivePalette } from '../docx/fromSettings'
 import type { AccentSlot, PaletteColors, TemplateManifest } from '../model/booklet'
 import { lowContrastSpots, MIN_CONTRAST } from '../model/contrast'
 import { useBookletStore } from '../store/booklet'
-import { useFormFields, useTemplates } from '../store/templates'
+import { useTemplates } from '../store/templates'
 
-const { booklet, settings } = useBookletStore()
-const { has } = useFormFields()
+const { settings } = useBookletStore()
 const { templates, loadError, loadTemplates } = useTemplates()
 onMounted(loadTemplates)
 
@@ -83,18 +82,6 @@ async function listLocalFonts() {
 <template>
   <section class="style-panel">
     <p v-if="loadError" class="hint warn" role="alert">{{ loadError }}</p>
-
-    <!-- 手冊名稱：網站頁首、PDF 第一頁 -->
-    <div v-if="has('title')" class="block">
-      <div class="panel-intro">
-        <h2>手冊名稱</h2>
-        <p class="hint">顯示在網站頁首和 PDF 第一頁，也是加到手機主畫面時的名稱。沒有填時顯示「旅遊手冊」。</p>
-      </div>
-      <label class="field title-field">
-        <span>名稱</span>
-        <input v-model="booklet.title" placeholder="例如：熊本・阿蘇・由布院 2026.11" />
-      </label>
-    </div>
 
     <!-- 配色 -->
     <div v-if="manifest && palette" class="block">
@@ -239,10 +226,6 @@ async function listLocalFonts() {
   padding: 10px 14px 10px 30px;
   background: var(--warn-bg);
   color: var(--warn);
-}
-
-.title-field {
-  max-width: 480px;
 }
 
 .font-list-action {

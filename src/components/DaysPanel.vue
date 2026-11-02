@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef, watchEffect } from 'vue'
+import { computed, ref, shallowRef, watch, watchEffect } from 'vue'
 import type { Day } from '../model/booklet'
 import { newDay, newSpot } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
+import { useFocus } from '../store/focus'
 import { useFormFields } from '../store/templates'
 import { autoOverview, contentLength } from '../model/validate'
 import { weekday } from '../transform/templateData'
@@ -10,9 +11,10 @@ import { keyOf, useSlider } from '../utils/motion'
 import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
+import UnusedMark from './UnusedMark.vue'
 
 const { booklet } = useBookletStore()
-const { rules, has } = useFormFields()
+const { rules } = useFormFields()
 const overviewLimit = computed(() => rules.value.overviewLimit)
 const spotLimit = computed(() => rules.value.spotContentLimit)
 
@@ -29,6 +31,10 @@ watchEffect(() => {
 })
 
 const activeIndex = computed(() => (activeDay.value ? booklet.value.days.indexOf(activeDay.value) : -1))
+
+// 成品預覽跟著跳到這一天
+const { dayIndex } = useFocus()
+watch(activeIndex, (i) => i >= 0 && (dayIndex.value = i), { immediate: true })
 
 // Day 切換的重點色線跟著目前那天滑過去
 const dayTabs = ref<HTMLElement>()
@@ -117,13 +123,13 @@ function posterDate(iso: string): string {
         :aria-labelledby="`day-tab-${activeIndex}`"
         class="day-form"
       >
-        <div v-if="has('dayTheme') || has('departTime')" class="theme-row">
-          <label v-if="has('dayTheme')" class="field">
-            <span>主題</span>
+        <div class="theme-row">
+          <label class="field">
+            <span>主題<UnusedMark field="dayTheme" /></span>
             <input v-model="activeDay.theme" placeholder="例：高山老街、飛驒古川" />
           </label>
-          <label v-if="has('departTime')" class="field">
-            <span>出門時間（選填）</span>
+          <label class="field">
+            <span>出門時間（選填）<UnusedMark field="departTime" /></span>
             <input v-model="activeDay.departTime" type="time" />
           </label>
         </div>
@@ -167,8 +173,8 @@ function posterDate(iso: string): string {
 <style scoped>
 .day-layout {
   display: grid;
-  grid-template-columns: 340px minmax(0, 1fr);
-  gap: 0 48px;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 0 40px;
   border-top: 2px solid var(--ink);
   padding-top: 18px;
   align-items: start;
@@ -191,7 +197,7 @@ function posterDate(iso: string): string {
 
 .day-no {
   font-family: var(--font-numeral);
-  font-size: 220px;
+  font-size: 180px;
   line-height: 0.84;
   margin-left: -6px;
   font-variant-numeric: tabular-nums;
@@ -276,7 +282,7 @@ function posterDate(iso: string): string {
 
 .theme-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 140px;
+  grid-template-columns: minmax(0, 1fr) 150px;
   gap: 16px;
 }
 
@@ -300,7 +306,7 @@ function posterDate(iso: string): string {
 
 .overview-input {
   font-family: var(--font-heading);
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 900;
   line-height: 1.25;
   padding-bottom: 8px;
