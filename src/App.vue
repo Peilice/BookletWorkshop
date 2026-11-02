@@ -9,6 +9,7 @@ import InfosPanel from './components/InfosPanel.vue'
 import StylePanel from './components/StylePanel.vue'
 import TemplatePicker from './components/TemplatePicker.vue'
 import { effectivePalette, generateFromSettings } from './docx/fromSettings'
+import { printPdfFromSettings, siteHtmlFromSettings, siteZipFromSettings } from './site/fromSettings'
 import { lowContrastSpots, readableOr } from './model/contrast'
 import { bookletFileName } from './model/fileName'
 import { hiddenContent } from './model/hiddenContent'
@@ -59,6 +60,9 @@ const tabs: { id: TabId; label: string; component: Component; count?: () => numb
   { id: 'checklist', label: '自訂清單', component: ChecklistPanel, count: () => booklet.value.checklist.length },
   { id: 'style', label: '字體與顏色', component: StylePanel },
 ]
+// 網站範本沒有字體可選，這一頁改放手冊名稱和配色
+const styleLabel = computed(() => (currentTemplate.value?.fontRoles.length ? '字體與顏色' : '名稱與配色'))
+const tabLabel = (t: (typeof tabs)[number]) => (t.id === 'style' ? styleLabel.value : t.label)
 // 美食特產、旅遊資訊、自訂清單：範本沒用到就不顯示（資料仍保留在存檔裡）
 const { has } = useFormFields()
 const optionalTabs: TabId[] = ['foods', 'infos', 'checklist']
@@ -173,10 +177,22 @@ async function collectIssues(): Promise<Issue[]> {
   return issues
 }
 
-async function onGenerateClick() {
+// 產出：Word、網站（單一 HTML 或 zip）、PDF；先檢查，有問題時列出來
+type OutputKind = 'docx' | 'html' | 'zip' | 'pdf'
+const OUTPUT_LABEL: Record<OutputKind, string> = {
+  docx: '產生 Word',
+  html: '下載網站',
+  zip: '下載網站',
+  pdf: '產生 PDF',
+}
+const pendingOutput = ref<OutputKind>('docx')
+
+async function onGenerateClick(kind: OutputKind) {
+  siteChoice.value = false
+  pendingOutput.value = kind
   const issues = await collectIssues()
   if (issues.length) checkIssues.value = issues
-  else await generate()
+  else await generate(kind)
 }
 
 function goToIssue(tab: TabId) {
@@ -186,24 +202,44 @@ function goToIssue(tab: TabId) {
 
 async function generateAnyway() {
   checkIssues.value = null
-  await generate()
+  await generate(pendingOutput.value)
 }
 
-const generating = ref(false)
-async function generate() {
-  generating.value = true
+// 下載網站：先選單一 HTML 檔或 zip
+const siteChoice = ref(false)
+
+const FONT_FALLBACK = '字型下載失敗（可能沒有網路），先用電腦內建的字型代替。'
+
+const generating = ref<OutputKind | null>(null)
+async function generate(kind: OutputKind) {
+  generating.value = kind
   try {
-    const docx = await generateFromSettings(booklet.value, settings.value)
-    downloadFile(
-      docx as BlobPart,
-      bookletFileName(booklet.value, 'docx'),
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    )
-    notify('ok', '已產生 Word。需要 PDF 時，請在 Word 裡「另存為 PDF」。')
+    const b = booklet.value
+    const s = settings.value
+    if (kind === 'docx') {
+      const docx = await generateFromSettings(b, s)
+      downloadFile(
+        docx as BlobPart,
+        bookletFileName(b, 'docx'),
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      )
+      notify('ok', '已產生 Word。需要 PDF 時，請在 Word 裡「另存為 PDF」。')
+    } else if (kind === 'html') {
+      const { output, fontError } = await siteHtmlFromSettings(b, s)
+      downloadFile(output, bookletFileName(b, 'html'), 'text/html')
+      notify(fontError ? 'error' : 'ok', fontError ? `已下載網站。${FONT_FALLBACK}` : '已下載網站。用瀏覽器打開這個 .html 檔就能看，也可以直接傳到手機。')
+    } else if (kind === 'zip') {
+      const { output, fontError } = await siteZipFromSettings(b, s)
+      downloadFile(output as BlobPart, bookletFileName(b, 'zip'), 'application/zip')
+      notify(fontError ? 'error' : 'ok', fontError ? `已下載網站 zip。${FONT_FALLBACK}` : '已下載網站 zip。解壓縮後整個資料夾上傳到 GitHub Pages 或 Netlify，就能離線瀏覽、加到手機主畫面。')
+    } else {
+      const { fontError } = await printPdfFromSettings(b, s)
+      notify(fontError ? 'error' : 'ok', fontError ? `已叫出列印視窗。${FONT_FALLBACK}` : '在列印視窗的「目的地」選「另存為 PDF」，紙張會是 A4；建議取消勾選「頁首和頁尾」。')
+    }
   } catch (err) {
-    notify('error', `產生 Word 失敗：${err instanceof Error ? err.message : String(err)}`)
+    notify('error', `${OUTPUT_LABEL[kind]}失敗：${err instanceof Error ? err.message : String(err)}`)
   } finally {
-    generating.value = false
+    generating.value = null
   }
 }
 
@@ -261,9 +297,23 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
           <button type="button" @click="onNew">新增手冊</button>
           <button type="button" @click="onOpenClick">讀取存檔</button>
           <button type="button" class="primary" @click="onSave">存檔</button>
-          <button type="button" class="generate" :disabled="generating" @click="onGenerateClick">
-            {{ generating ? '產生中…' : '產生 Word' }}
+          <button
+            v-if="currentTemplate?.file"
+            type="button"
+            class="generate"
+            :disabled="!!generating"
+            @click="onGenerateClick('docx')"
+          >
+            {{ generating === 'docx' ? '產生中…' : '產生 Word' }}
           </button>
+          <template v-if="currentTemplate?.site">
+            <button type="button" class="generate" :disabled="!!generating" @click="siteChoice = true">
+              {{ generating === 'html' || generating === 'zip' ? '產生中…' : '下載網站' }}
+            </button>
+            <button type="button" class="generate" :disabled="!!generating" @click="onGenerateClick('pdf')">
+              {{ generating === 'pdf' ? '準備中…' : '產生 PDF' }}
+            </button>
+          </template>
         </template>
         <input ref="fileInput" type="file" accept=".json,application/json" hidden @change="onFileChosen" />
       </div>
@@ -280,7 +330,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
           :class="{ active: activeTab === t.id }"
           @click="activeTab = t.id"
         >
-          {{ t.label }}
+          {{ tabLabel(t) }}
           <sup v-if="t.count" class="count">{{ t.count() }}</sup>
         </button>
       </nav>
@@ -325,7 +375,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
       <TemplatePicker v-model="switchTarget" name="switch-template" />
       <div v-if="switchChanged && switchManifest" class="switch-note">
         <template v-if="switchHidden.length">
-          <p>換成「{{ switchManifest.name }}」後，下面這些內容不會顯示，也不會出現在 Word 裡：</p>
+          <p>換成「{{ switchManifest.name }}」後，下面這些內容不會顯示，也不會出現在產生的手冊裡：</p>
           <ul>
             <li v-for="h in switchHidden" :key="h.label">{{ h.label }}（{{ h.count }} 筆）</li>
           </ul>
@@ -343,6 +393,25 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
     </div>
   </div>
 
+  <div v-if="siteChoice" class="overlay">
+    <div class="dialog site-dialog" role="dialog" aria-modal="true" aria-labelledby="site-title">
+      <h2 id="site-title">下載網站</h2>
+      <div class="site-options">
+        <button type="button" class="site-option" @click="onGenerateClick('html')">
+          <strong>單一 HTML 檔</strong>
+          <span class="hint">一個 .html 檔，用瀏覽器打開就能看，也可以直接傳給旅伴。</span>
+        </button>
+        <button type="button" class="site-option" @click="onGenerateClick('zip')">
+          <strong>上架用 zip</strong>
+          <span class="hint">整個資料夾上傳到 GitHub Pages 或 Netlify 後，可以離線瀏覽、加到手機主畫面。</span>
+        </button>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" @click="siteChoice = false">取消</button>
+      </div>
+    </div>
+  </div>
+
   <div v-if="confirmState" class="overlay">
     <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-text">
       <p id="confirm-text">{{ confirmState.text }}</p>
@@ -356,11 +425,11 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
   <div v-if="checkIssues" class="overlay">
     <div class="dialog check-dialog" role="alertdialog" aria-modal="true" aria-labelledby="check-title">
       <h2 id="check-title">產生前檢查</h2>
-      <p>有 {{ checkIssues.length }} 個地方可能還沒填好，還是可以直接產生 Word。</p>
+      <p>有 {{ checkIssues.length }} 個地方可能還沒填好，還是可以直接{{ OUTPUT_LABEL[pendingOutput] }}。</p>
       <div class="issue-list">
         <section v-for="g in issueGroups" :key="g.tab.id" class="issue-group">
           <div class="issue-head">
-            <h3>{{ g.tab.label }}</h3>
+            <h3>{{ tabLabel(g.tab) }}</h3>
             <button type="button" class="add" @click="goToIssue(g.tab.id)">前往修改</button>
           </div>
           <ul>
@@ -370,7 +439,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
       </div>
       <div class="dialog-actions">
         <button type="button" @click="checkIssues = null">回去修改</button>
-        <button type="button" class="generate" @click="generateAnyway">仍然產生 Word</button>
+        <button type="button" class="generate" @click="generateAnyway">仍然{{ OUTPUT_LABEL[pendingOutput] }}</button>
       </div>
     </div>
   </div>
@@ -576,6 +645,36 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 
 .dialog p {
   margin: 0 0 20px;
+}
+
+.site-dialog {
+  max-width: 560px;
+  width: 100%;
+}
+
+.site-dialog h2 {
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+
+.site-options {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.site-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  height: auto;
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.site-option strong {
+  font-size: 16px;
 }
 
 .check-dialog {

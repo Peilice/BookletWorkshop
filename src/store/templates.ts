@@ -39,6 +39,7 @@ async function getManifest(id: string): Promise<TemplateManifest> {
 }
 
 async function getTemplateFile(manifest: TemplateManifest): Promise<ArrayBuffer> {
+  if (!manifest.file) throw new Error(`「${manifest.name}」沒有 Word 版本`)
   const res = await fetch(`${base}${manifest.file}`)
   if (!res.ok) throw new Error(`無法讀取範本（${res.status}）`)
   return res.arrayBuffer()

@@ -34,6 +34,7 @@ const CATEGORY_KEYS = CHECKLIST_CATEGORIES.map((c) => c.key)
 
 function normalizeBooklet(b: Obj): Booklet {
   return {
+    title: str(b.title),
     flights: list(b.flights, (f) => ({
       date: str(f.date),
       airline: str(f.airline),

@@ -1,4 +1,4 @@
-// 產生 Word 前的檢查：列出空白或可能有問題的欄位。只提醒，不阻止產生（規格書 4.6）
+// 產生手冊前的檢查：列出空白或可能有問題的欄位。只提醒，不阻止產生（規格書 4.6）
 
 import type { Booklet, FormField, TemplateRules } from './booklet'
 import { CHECKLIST_CATEGORIES } from './booklet'
@@ -39,7 +39,7 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
   if (!b.flights.length && !b.days.length && !(has('foods') && b.foods.length) && !b.hotels.length) {
     const parts = has('foods') ? '航班、行程、美食或飯店' : '航班、行程或飯店'
     const rest = has('infos') || has('checklist') ? '只會有旅遊資訊和檢查清單' : '會是空白的'
-    add('days', `手冊還沒有${parts}，產生的 Word ${rest}。`)
+    add('days', `手冊還沒有${parts}，產生的手冊${rest}。`)
   }
 
   b.flights.forEach((f, i) => {
@@ -58,7 +58,7 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
   b.days.forEach((d, i) => {
     const day = `Day ${i + 1}`
     if (blank(d.date)) add('days', `${day}：沒有填日期`)
-    if (has('dayTheme') && blank(d.theme)) add('days', `${day}：沒有填主題`)
+    if (has('dayTheme') && !rules.optionalFields?.includes('dayTheme') && blank(d.theme)) add('days', `${day}：沒有填主題`)
     if (!d.spots.length) add('days', `${day}：沒有景點`)
     d.spots.forEach((s, j) => {
       if (blank(s.name)) add('days', `${day} 景點 ${j + 1}：沒有填景點名稱`)

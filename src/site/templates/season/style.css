@@ -1,0 +1,1249 @@
+/* 和風沉穩：白底＋一組暖灰，唯一會變的顏色是選中那天的和色（--day、--day-chip、--day-soft） */
+
+@property --day {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #4f5e2c;
+}
+
+@property --day-soft {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #edefe3;
+}
+
+:root {
+  --white: #fff;
+  --g-50: #faf8f5;
+  --g-100: #f3efea;
+  --g-200: #e8e2d8;
+  --g-400: #a79f94;
+  --g-600: #6b6258;
+  --g-800: #3e3831;
+  --ink: #2a2622;
+  --f-round: 'Zen Maru Gothic', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+  --f-body: 'Noto Sans TC', 'PingFang TC', 'Hiragino Sans', 'Microsoft JhengHei', system-ui, sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --gutter: 16px;
+  --tabbar: 62px;
+  transition:
+    --day 0.6s var(--ease),
+    --day-soft 0.6s var(--ease);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 120px;
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--day-soft);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.num,
+.time {
+  font-variant-numeric: tabular-nums;
+}
+
+.ic {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 8px;
+  top: -60px;
+  z-index: 50;
+  padding: 8px 14px;
+  background: var(--ink);
+  color: var(--white);
+  border-radius: 99px;
+}
+
+.skip:focus {
+  top: 8px;
+}
+
+.print-only,
+.pill.print-pill {
+  display: none;
+}
+
+.empty {
+  color: var(--g-600);
+  padding: 24px 0;
+}
+
+/* ---------- 頁首 ---------- */
+
+.mast {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--day);
+  color: var(--white);
+}
+
+.mast-in {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding-top: max(10px, env(safe-area-inset-top));
+  padding-bottom: 10px;
+}
+
+.mast-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.mast h1 {
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: clamp(19px, 5vw, 24px);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+}
+
+.mast-dates {
+  font-family: var(--f-round);
+  font-weight: 700;
+  font-size: 12.5px;
+  opacity: 0.85;
+  letter-spacing: 0.04em;
+}
+
+.offline {
+  flex: none;
+  font-family: var(--f-round);
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: rgb(0 0 0 / 28%);
+}
+
+/* 分頁：手機在底部，寬螢幕移到頁首右側 */
+.tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  height: calc(var(--tabbar) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--white);
+  border-top: 1px solid var(--g-200);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-decoration: none;
+  color: var(--g-600);
+  font-family: var(--f-round);
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+.tab .ic {
+  width: 22px;
+  height: 22px;
+}
+
+.tab[aria-current='page'] {
+  color: var(--day);
+}
+
+.tab[aria-current='page'] .ic {
+  stroke-width: 2.4;
+}
+
+@media (min-width: 860px) {
+  .tabs {
+    position: static;
+    display: flex;
+    gap: 6px;
+    height: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+
+  .tab {
+    flex-direction: row;
+    gap: 6px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 99px;
+    color: var(--white);
+    font-size: 14.5px;
+  }
+
+  .tab .ic {
+    width: 18px;
+    height: 18px;
+  }
+
+  .tab:hover {
+    background: rgb(255 255 255 / 14%);
+  }
+
+  .tab[aria-current='page'] {
+    background: var(--white);
+    color: var(--day);
+  }
+}
+
+/* ---------- 區段 ---------- */
+
+.panel {
+  padding-bottom: 32px;
+}
+
+.panel:not(#trip) {
+  padding-top: 24px;
+}
+
+.sec-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1.3;
+  padding-bottom: 8px;
+  margin: 8px 0 16px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.sec-title:not(:first-child) {
+  margin-top: 40px;
+}
+
+.sec-ic {
+  width: 22px;
+  height: 22px;
+  color: var(--day);
+}
+
+.box-title {
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: 17px;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 99px;
+  background: var(--day-soft);
+  color: var(--day);
+  font-family: var(--f-round);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.pill .ic {
+  width: 14px;
+  height: 14px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--day);
+  border-radius: 99px;
+  background: var(--day);
+  color: var(--white);
+  font: 700 14.5px/1 var(--f-round);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btn-outline {
+  background: var(--white);
+  border-color: var(--g-200);
+  color: var(--ink);
+}
+
+.btn-outline:hover {
+  background: var(--white);
+  border-color: var(--ink);
+}
+
+/* ---------- 行程：日期色階＋當日漸層 ---------- */
+
+.season {
+  background: linear-gradient(to bottom, var(--day) 0, var(--day) 18px, var(--day-soft) 100%);
+  padding: 14px 0 18px;
+}
+
+.daybar {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(44px, 1fr));
+  gap: 5px;
+  overflow-x: auto;
+  padding: 14px 4px 6px;
+  margin: -14px -4px 0;
+  scrollbar-width: none;
+}
+
+.daybar::-webkit-scrollbar {
+  display: none;
+}
+
+.daybtn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--c);
+  color: var(--white);
+  cursor: pointer;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.daybtn b {
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+.daybtn small {
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  opacity: 0.92;
+}
+
+.daybtn:hover {
+  transform: translateY(-2px);
+}
+
+.daybtn[aria-selected='true'] {
+  box-shadow:
+    0 0 0 2px var(--white),
+    0 0 0 4px var(--ink);
+}
+
+.today {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 7px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--white);
+  font: 700 11px/1.5 var(--f-round);
+  white-space: nowrap;
+}
+
+.empty-on-color {
+  color: var(--white);
+}
+
+@media (max-width: 370px) {
+  .daybar {
+    gap: 3px;
+  }
+}
+
+.day-head {
+  background: linear-gradient(to bottom, var(--day-soft), var(--white));
+  padding: 6px 0 22px;
+}
+
+.route {
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: clamp(30px, 8.6vw, 56px);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+}
+
+.route .nb {
+  white-space: nowrap;
+}
+
+.arr {
+  color: var(--day);
+  margin: 0 0.12em;
+}
+
+.day-meta {
+  margin-top: 8px;
+  color: var(--g-800);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.day-meta b {
+  font-family: var(--f-round);
+  font-weight: 900;
+}
+
+.day-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.day-chips .pill {
+  background: var(--white);
+}
+
+.day-body {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 960px) {
+  .day-body.has-side {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: start;
+  }
+
+  .day-side {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+.js .day:not([hidden]) .stops {
+  animation: rise 0.45s var(--ease);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* 景點清單：路線脊線從第一站穿到最後一站 */
+.stops {
+  position: relative;
+  border-top: 2px solid var(--ink);
+}
+
+.stops::before {
+  content: '';
+  position: absolute;
+  left: 27px;
+  top: 38px;
+  bottom: 38px;
+  width: 2px;
+  background: var(--day);
+}
+
+.stop {
+  position: relative;
+  border-bottom: 1px solid var(--g-200);
+}
+
+.stop-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 76px;
+  padding: 10px 0;
+  list-style: none;
+}
+
+summary.stop-row {
+  cursor: pointer;
+}
+
+summary.stop-row::-webkit-details-marker {
+  display: none;
+}
+
+.stop-mark {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--day-soft);
+  color: var(--day);
+}
+
+.stop-mark .ic {
+  width: 22px;
+  height: 22px;
+}
+
+.badge {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 99px;
+  background: var(--day);
+  color: var(--white);
+  box-shadow: 0 0 0 2px var(--white);
+  font: 900 12px/1 var(--f-round);
+  font-variant-numeric: tabular-nums;
+}
+
+.stop-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.chev {
+  width: 20px;
+  height: 20px;
+  color: var(--g-400);
+  transition: transform 0.3s var(--ease);
+}
+
+details[open] .chev {
+  transform: rotate(180deg);
+}
+
+.stop-body {
+  position: relative;
+  z-index: 1;
+  padding: 0 0 18px 72px;
+  color: var(--g-800);
+  font-size: 15.5px;
+  line-height: 1.85;
+  max-width: calc(68ch + 72px);
+}
+
+.stop-body p + p {
+  margin-top: 0.6em;
+}
+
+/* ---------- 住宿卡 ---------- */
+
+.hotels {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 860px) {
+  .hotels {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.hotel {
+  border: 1px solid var(--g-200);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--white);
+}
+
+.hotel-head {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: var(--day-soft);
+}
+
+.hotel-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.hotel-ic {
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  color: var(--day);
+}
+
+.hotel-kicker {
+  font: 700 12.5px/1.4 var(--f-round);
+  color: var(--day);
+}
+
+.hotel-name {
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.hotel-stay {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 13.5px;
+  color: var(--g-800);
+  font-variant-numeric: tabular-nums;
+}
+
+.hotel-stay .pill {
+  background: var(--white);
+}
+
+.nights {
+  display: flex;
+  gap: 3px;
+  max-width: 238px;
+  margin-top: 10px;
+}
+
+.nights span {
+  flex: 1;
+  height: 8px;
+  border-radius: 99px;
+  background: var(--c, var(--white));
+}
+
+.hotel-body {
+  padding: 4px 16px 16px;
+}
+
+.fact {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--g-200);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.fact span {
+  min-width: 0;
+}
+
+.fact .ic {
+  margin-top: 4px;
+  color: var(--g-600);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.note {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--g-50);
+  color: var(--g-800);
+}
+
+/* ---------- 航班 ---------- */
+
+.flights {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .flights {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.flight {
+  border: 1px solid var(--g-200);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.flight-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--g-50);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.flight-no {
+  margin-left: auto;
+  font: 700 14px/1.3 var(--f-round);
+}
+
+.flight-route {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 16px;
+}
+
+.pt {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pt-end {
+  text-align: right;
+}
+
+.pt .time {
+  font-family: var(--f-round);
+  font-weight: 900;
+  font-size: 32px;
+  line-height: 1.1;
+}
+
+.pt span {
+  font-size: 14.5px;
+  color: var(--g-800);
+  overflow-wrap: anywhere;
+}
+
+.flight-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  color: var(--day);
+}
+
+.flight-line::before,
+.flight-line::after {
+  content: '';
+  flex: 1;
+  height: 0;
+  border-top: 2px dotted var(--g-400);
+}
+
+.flight-line .ic {
+  margin: 0 6px;
+  transform: rotate(45deg);
+}
+
+/* ---------- 資訊、美食、清單 ---------- */
+
+.infos,
+.foods,
+.checklist {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 720px) {
+  .infos {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .foods,
+  .checklist {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1040px) {
+  .foods {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.info-box {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--g-50);
+  color: var(--g-800);
+  font-size: 15px;
+}
+
+.info-box .box-title {
+  color: var(--ink);
+}
+
+.food {
+  padding: 16px;
+  border: 1px solid var(--g-200);
+  border-radius: 16px;
+}
+
+.food .box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sq {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: var(--c);
+  flex: none;
+}
+
+.food li {
+  padding: 8px 0;
+  border-top: 1px solid var(--g-200);
+}
+
+.food li b {
+  display: block;
+  font-family: var(--f-round);
+  font-weight: 700;
+}
+
+.food li span {
+  display: block;
+  font-size: 14px;
+  color: var(--g-600);
+  line-height: 1.6;
+}
+
+.progress {
+  margin-bottom: 16px;
+}
+
+.bar {
+  height: 10px;
+  border-radius: 99px;
+  background: var(--g-100);
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 99px;
+  background: var(--day);
+  transition: width 0.4s var(--ease);
+}
+
+.progress-text {
+  margin-top: 6px;
+  font: 700 13.5px/1.4 var(--f-round);
+  color: var(--g-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress.done .progress-text {
+  color: var(--ink);
+}
+
+.check-group {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--g-50);
+}
+
+.check-group label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.check-group li + li label {
+  border-top: 1px solid var(--g-200);
+}
+
+.check-group input {
+  appearance: none;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  border: 1.5px solid var(--g-400);
+  border-radius: 7px;
+  background: var(--white) center / 14px no-repeat;
+  cursor: pointer;
+}
+
+.check-group input:checked {
+  border-color: var(--day);
+  background-color: var(--day);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+
+.check-group input:checked + span {
+  color: var(--g-600);
+  text-decoration: line-through;
+}
+
+/* ---------- 頁尾 ---------- */
+
+.foot {
+  padding: 24px 0 32px;
+  border-top: 1px solid var(--g-200);
+  color: var(--g-600);
+  font-size: 12.5px;
+}
+
+.foot .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.has-tabs .foot {
+  padding-bottom: calc(var(--tabbar) + env(safe-area-inset-bottom) + 24px);
+}
+
+@media (min-width: 860px) {
+  .has-tabs .foot {
+    padding-bottom: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- 列印：A4，每天一頁，景點介紹全部展開 ---------- */
+
+@page {
+  size: A4;
+  margin: 14mm 14mm 16mm;
+
+  @bottom-center {
+    content: counter(page);
+    font: 9pt 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+    color: #6b6258;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  :root {
+    transition: none;
+  }
+
+  body {
+    font-size: 10.5pt;
+    line-height: 1.65;
+  }
+
+  .wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  .no-print,
+  .tabs,
+  .season,
+  .offline,
+  .skip,
+  .chev,
+  .foot {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  .pill.print-pill {
+    display: inline-flex;
+  }
+
+  .day-side {
+    display: none;
+  }
+
+  .stops {
+    margin-left: 6px;
+  }
+
+  .panel[hidden],
+  .day[hidden] {
+    display: block !important;
+  }
+
+  .mast {
+    position: static;
+    border-radius: 12px;
+    margin-bottom: 18px;
+  }
+
+  .mast-in {
+    min-height: 0;
+    padding: 18px 20px;
+  }
+
+  .mast h1 {
+    font-size: 24pt;
+  }
+
+  .mast-dates {
+    font-size: 11pt;
+  }
+
+  .panel:not(#trip) {
+    padding-top: 0;
+  }
+
+  .panel {
+    padding-bottom: 0;
+  }
+
+  #stay,
+  #info,
+  .day {
+    break-before: page;
+  }
+
+  .sec-title {
+    font-size: 16pt;
+    break-after: avoid;
+  }
+
+  .sec-title:not(:first-child) {
+    margin-top: 24px;
+  }
+
+  .overview {
+    margin-top: 24px;
+  }
+
+  .overview table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+
+  .overview th,
+  .overview td {
+    text-align: left;
+    vertical-align: top;
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--g-200);
+  }
+
+  .overview thead th {
+    font: 700 9pt var(--f-round);
+    color: var(--g-600);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .ov-day {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 99px;
+    background: var(--day-chip);
+    color: var(--white);
+    font: 900 9.5pt/1.5 var(--f-round);
+    white-space: nowrap;
+  }
+
+  .day-head {
+    padding: 14px 16px 16px;
+    border-radius: 12px;
+    border-left: 6px solid var(--day);
+    margin-bottom: 14px;
+  }
+
+  .route {
+    font-size: 26pt;
+  }
+
+  .day-meta {
+    font-size: 11pt;
+  }
+
+  .day-body,
+  .day-body.has-side {
+    display: block;
+  }
+
+  .stop,
+  .hotel,
+  .flight,
+  .info-box,
+  .food,
+  .check-group,
+  .note {
+    break-inside: avoid;
+  }
+
+  .stop-row {
+    min-height: 0;
+    padding: 8px 0;
+  }
+
+  .stop-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .stops::before {
+    left: 19px;
+    top: 30px;
+    bottom: 30px;
+  }
+
+  .stop-name {
+    font-size: 13pt;
+  }
+
+  .stop-body {
+    padding: 0 0 12px 56px;
+    font-size: 10.5pt;
+  }
+
+  .hotels,
+  .flights {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .infos {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .foods,
+  .checklist {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pt .time {
+    font-size: 22pt;
+  }
+
+  .check-group label {
+    min-height: 0;
+    padding: 5px 0;
+  }
+
+  .check-group input {
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+  }
+}

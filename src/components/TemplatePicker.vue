@@ -18,7 +18,16 @@ onMounted(loadTemplates)
       <span class="choice-body">
         <strong>{{ t.name }}</strong>
         <span class="hint">{{ t.description }}</span>
+        <span class="outputs">產出：{{ [t.file && 'Word', t.site && '網站', t.site && 'PDF'].filter(Boolean).join('、') }}</span>
       </span>
     </label>
   </div>
 </template>
+
+<style scoped>
+.outputs {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+</style>

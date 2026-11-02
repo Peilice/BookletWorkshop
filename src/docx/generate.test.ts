@@ -10,7 +10,7 @@ import { generateDocx } from './generate'
 
 const templateDir = new URL('../../public/templates/', import.meta.url)
 const manifest: TemplateManifest = JSON.parse(readFileSync(new URL('classic.json', templateDir), 'utf8'))
-const template = readFileSync(new URL(manifest.file, templateDir))
+const template = readFileSync(new URL(manifest.file!, templateDir))
 const defaultFonts = Object.fromEntries(manifest.fontRoles.map((r) => [r.style, r.default]))
 
 function generate(booklet = osakaKyoto, fonts = defaultFonts, palette = manifest.presets[0].colors) {
@@ -67,7 +67,7 @@ describe('generateDocx', () => {
 
 describe('generateDocx：和風直排範本', () => {
   const wafu: TemplateManifest = JSON.parse(readFileSync(new URL('wafu.json', templateDir), 'utf8'))
-  const wafuTemplate = readFileSync(new URL(wafu.file, templateDir))
+  const wafuTemplate = readFileSync(new URL(wafu.file!, templateDir))
   const fonts = Object.fromEntries(wafu.fontRoles.map((r) => [r.style, r.default]))
   const render = (booklet: Booklet) =>
     new PizZip(generateDocx(wafuTemplate, { data: toTemplateData(booklet, wafu), palette: wafu.presets[0].colors, fonts }))

@@ -6,6 +6,7 @@ const lorem = (name: string) =>
   `（測試內容）${name}的介紹文字，約兩到三行，用來確認段落格式、字型和換行是否正確。這裡再多寫一些字讓它換行。`
 
 export const osakaKyoto: Booklet = {
+  title: '大阪・京都 四日遊',
   flights: [
     { date: '2026-12-01', airline: '中華航空', flightNo: 'CI152', from: '高雄', departTime: '08:00', to: '大阪關西', arriveTime: '11:45' },
     { date: '2026-12-04', airline: '中華航空', flightNo: 'CI153', from: '大阪關西', departTime: '12:45', to: '高雄', arriveTime: '14:50' },
@@ -91,6 +92,7 @@ export const osakaKyoto: Booklet = {
 
 // 只有行程和旅遊資訊：航班、美食、飯店要整段隱藏；檢查清單項目多到要加列
 export const sparse: Booklet = {
+  title: '',
   flights: [],
   days: osakaKyoto.days.slice(0, 2),
   foods: [],
@@ -105,6 +107,7 @@ export const sparse: Booklet = {
 
 // 金澤高山 8 天（內容取自 金澤高山自由行_A5.pdf），用於和風直排範本的測試與 Word 驗證
 export const kanazawa: Booklet = {
+  title: '金澤・高山 八日遊',
   flights: [
     { date: '2026-11-26', airline: '', flightNo: '', from: '高雄', departTime: '08:05', to: '小松', arriveTime: '12:05' },
     { date: '2026-12-03', airline: '', flightNo: '', from: '小松', departTime: '12:55', to: '高雄', arriveTime: '15:55' },

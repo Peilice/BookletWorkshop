@@ -7,5 +7,7 @@ export default defineConfig({
   base: './',
   test: {
     include: ['src/**/*.test.ts'],
+    // 網站範本用 ?raw 把 CSS 內嵌進 HTML；不打開的話測試裡會拿到空字串
+    css: true,
   },
 })

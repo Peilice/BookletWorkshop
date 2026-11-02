@@ -4,6 +4,7 @@ import type { Booklet, Day, FoodItem, FoodPlace, Flight, Hotel, InfoItem, Settin
 
 export function emptyBooklet(): Booklet {
   return {
+    title: '',
     flights: [],
     days: [],
     foods: [],

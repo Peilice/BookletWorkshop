@@ -64,6 +64,12 @@ describe('validateBooklet', () => {
       expect(validateBooklet(b, wafu)).toEqual([])
     })
 
+    it('選填的欄位空白時不提醒', () => {
+      const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ name: '景點', content: '' }] }] }
+      const rules = { ...wafu, optionalFields: ['dayTheme' as const] }
+      expect(validateBooklet(b, rules).map((i) => i.text)).not.toContain('Day 1：沒有填主題')
+    })
+
     it('範本用到的新欄位空白時提醒', () => {
       const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ name: '景點', content: '' }] }], hotels: [newHotel()] }
       expect(validateBooklet(b, wafu).map((i) => i.text)).toEqual([
@@ -74,7 +80,7 @@ describe('validateBooklet', () => {
 
     it('沒有內容時，提醒文字不提到範本沒有的部分', () => {
       expect(validateBooklet(emptyBooklet(), wafu).map((i) => i.text)).toEqual([
-        '手冊還沒有航班、行程或飯店，產生的 Word 會是空白的。',
+        '手冊還沒有航班、行程或飯店，產生的手冊會是空白的。',
       ])
     })
 

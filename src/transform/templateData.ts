@@ -36,7 +36,7 @@ export function chineseDay(n: number): string {
 const weekdayShort = (iso: string) => weekday(iso).slice(2)
 
 /** 第一筆是去程；兩筆以上時最後一筆是回程；中間的不標 */
-function flightLeg(i: number, count: number): string {
+export function flightLeg(i: number, count: number): string {
   if (i === 0) return '去程'
   return i === count - 1 ? '回程' : ''
 }

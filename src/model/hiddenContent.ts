@@ -10,6 +10,7 @@ export interface HiddenContent {
 const filled = (s: string) => s.trim() !== ''
 
 const COUNTERS: { field: FormField; label: string; count: (b: Booklet) => number }[] = [
+  { field: 'title', label: '手冊名稱', count: (b) => (filled(b.title) ? 1 : 0) },
   { field: 'airline', label: '航班的航空公司', count: (b) => b.flights.filter((f) => filled(f.airline)).length },
   { field: 'flightNo', label: '航班的班機', count: (b) => b.flights.filter((f) => filled(f.flightNo)).length },
   { field: 'dayTheme', label: '每日行程的主題', count: (b) => b.days.filter((d) => filled(d.theme)).length },

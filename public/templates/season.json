@@ -1,0 +1,85 @@
+{
+  "id": "season",
+  "name": "和風沉穩",
+  "site": "season",
+  "description": "手機優先的行程網站，每天一個沉穩的和色；同一份內容可以存成 A4 的 PDF。",
+  "colorRoles": [
+    { "label": "第一天", "slots": ["accent1"] },
+    { "label": "色階 2", "slots": ["accent2"] },
+    { "label": "色階 3", "slots": ["accent3"] },
+    { "label": "色階 4", "slots": ["accent4"] },
+    { "label": "色階 5", "slots": ["accent5"] },
+    { "label": "最後一天", "slots": ["accent6"] }
+  ],
+  "contrastChecks": [
+    { "slot": "accent1", "where": "第一天日期按鈕的白字" },
+    { "slot": "accent2", "where": "色階 2 日期按鈕的白字" },
+    { "slot": "accent3", "where": "色階 3 日期按鈕的白字" },
+    { "slot": "accent4", "where": "色階 4 日期按鈕的白字" },
+    { "slot": "accent5", "where": "色階 5 日期按鈕的白字" },
+    { "slot": "accent6", "where": "最後一天日期按鈕的白字" }
+  ],
+  "fontRoles": [],
+  "checklistSlots": { "證件": 0, "衣物": 0, "藥品": 0, "其它": 0 },
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "dayTheme",
+    "departTime",
+    "hotelPhone",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "optionalFields": ["dayTheme"],
+  "presets": [
+    {
+      "name": "和風沉穩",
+      "colors": {
+        "accent1": "#5F7036",
+        "accent2": "#7D7436",
+        "accent3": "#8F6936",
+        "accent4": "#844536",
+        "accent5": "#74393F",
+        "accent6": "#5C3B50"
+      }
+    },
+    {
+      "name": "海風",
+      "colors": {
+        "accent1": "#2F6B6B",
+        "accent2": "#2F5D7C",
+        "accent3": "#3B5A8C",
+        "accent4": "#4E5590",
+        "accent5": "#5E4F86",
+        "accent6": "#6A4A78"
+      }
+    },
+    {
+      "name": "櫻與藤",
+      "colors": {
+        "accent1": "#9C4F68",
+        "accent2": "#A04A5A",
+        "accent3": "#8E4A6E",
+        "accent4": "#7A4E8A",
+        "accent5": "#5F5690",
+        "accent6": "#4F5E8E"
+      }
+    },
+    {
+      "name": "森林",
+      "colors": {
+        "accent1": "#3F6B48",
+        "accent2": "#4D6B3A",
+        "accent3": "#5E6A32",
+        "accent4": "#6B6230",
+        "accent5": "#5A5A3A",
+        "accent6": "#45573F"
+      }
+    }
+  ]
+}
