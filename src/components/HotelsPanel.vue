@@ -2,6 +2,8 @@
 import { newHotel } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
 import { useFormFields } from '../store/templates'
+import { keyOf } from '../utils/motion'
+import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
 
@@ -16,10 +18,9 @@ const { has } = useFormFields()
       <p class="hint">房號一律留空，到當地再手寫。沒有填任何飯店時，手冊裡不會出現「飯店資訊」。</p>
     </div>
 
-    <p v-if="booklet.hotels.length === 0" class="empty">還沒有飯店。</p>
-
-    <div v-else class="rows">
-      <div v-for="(h, i) in booklet.hotels" :key="i" class="row-item">
+    <TransitionGroup tag="div" name="row" class="rows">
+      <!-- 一間飯店像一張行李吊牌：編號上方打一個孔 -->
+      <div v-for="(h, i) in booklet.hotels" :key="keyOf(h)" class="row-item tag">
         <span class="seq" aria-hidden="true">{{ i + 1 }}</span>
         <div class="row-body">
           <div class="name-row" :class="{ 'with-city': has('hotelCity') }">
@@ -37,7 +38,8 @@ const { has } = useFormFields()
         </div>
         <ItemActions :list="booklet.hotels" :index="i" :label="`飯店 ${i + 1}`" />
       </div>
-    </div>
+    </TransitionGroup>
+    <EmptyArt v-if="booklet.hotels.length === 0" kind="hotel">還沒有飯店。訂好房間後填進來，手冊裡會附上地址和電話。</EmptyArt>
 
     <div :class="{ 'rows-foot': booklet.hotels.length }">
       <button type="button" class="add" @click="booklet.hotels.push(newHotel())"><Icon name="plus" />新增飯店</button>
@@ -51,6 +53,23 @@ const { has } = useFormFields()
 </template>
 
 <style scoped>
+.tag .seq {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-right: 1.5px dashed var(--hair);
+}
+
+.tag .seq::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 50%;
+}
+
 .two-col {
   display: grid;
   grid-template-columns: 2fr 1fr;

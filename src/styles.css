@@ -341,6 +341,7 @@ input[type='checkbox'] {
 /* ---------- 一筆一列：Anton 編號、內容、操作 ---------- */
 
 .rows {
+  position: relative; /* 刪除時滑走的列以這裡定位 */
   border-top: 2px solid var(--ink);
 }
 
@@ -403,10 +404,87 @@ input[type='checkbox'] {
   min-width: 0;
 }
 
+/* ---------- 動態：滑動的重點色線、翻牌數字、列的進出 ---------- */
+
+/* 4px 重點色線，位置由 useSlider 寫進 --x、--y、--w、--h；--slider-drop 是線比按鈕下緣低多少 */
+.slider {
+  --slider-drop: 0px;
+  position: absolute;
+  left: var(--x);
+  top: calc(var(--y) + var(--h) - 4px + var(--slider-drop));
+  width: var(--w);
+  height: 4px;
+  background: var(--accent);
+  pointer-events: none;
+  transition:
+    left 0.28s cubic-bezier(0.3, 0.9, 0.3, 1),
+    top 0.28s cubic-bezier(0.3, 0.9, 0.3, 1),
+    width 0.28s cubic-bezier(0.3, 0.9, 0.3, 1),
+    background-color 0.3s ease-out;
+}
+
+/* 換新的數字從上方翻下來（元素用 :key 換新） */
+.flip {
+  animation: flip 0.26s ease-out;
+}
+
+@keyframes flip {
+  from {
+    transform: perspective(400px) rotateX(-90deg);
+    opacity: 0;
+  }
+}
+
+/* TransitionGroup name="row"：新增的列從上方墨線往下展開，編號隨後蓋上；刪除時往左滑走，下面的列遞補 */
+.row-enter-active {
+  transition:
+    clip-path 0.32s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.2s;
+}
+
+.row-enter-from {
+  clip-path: inset(0 0 100% 0);
+  opacity: 0;
+}
+
+.row-enter-to {
+  clip-path: inset(0 0 0 0);
+}
+
+.row-enter-active .seq {
+  transition:
+    transform 0.35s 0.15s cubic-bezier(0.3, 1.6, 0.5, 1),
+    opacity 0.2s 0.15s;
+}
+
+.row-enter-from .seq {
+  transform: scale(1.8);
+  opacity: 0;
+}
+
+.row-leave-active {
+  position: absolute;
+  width: 100%;
+  pointer-events: none; /* 正在滑走的列不能再按 */
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+.row-leave-to {
+  opacity: 0;
+  transform: translateX(-24px);
+}
+
+.row-move {
+  transition: transform 0.28s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     transition: none !important;
+    animation: none !important;
   }
 }

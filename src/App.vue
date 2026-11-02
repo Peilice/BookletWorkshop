@@ -20,6 +20,7 @@ import { validateBooklet, type Issue, type TabId } from './model/validate'
 import { useBookletStore } from './store/booklet'
 import { useFormFields, useTemplates } from './store/templates'
 import { downloadFile } from './utils/download'
+import { useSlider } from './utils/motion'
 
 const store = useBookletStore()
 const { booklet, settings, hasUnsavedChanges, pendingRestore } = store
@@ -69,6 +70,10 @@ const optionalTabs: TabId[] = ['foods', 'infos', 'checklist']
 const visibleTabs = computed(() => tabs.filter((t) => !optionalTabs.includes(t.id) || has(t.id as FormField)))
 const activeTab = ref(tabs[0].id)
 const activePanel = computed(() => tabs.find((t) => t.id === activeTab.value)!.component)
+// 目前分頁的重點色線滑過去
+const tabsBox = ref<HTMLElement>()
+// 分頁上的數量變了，按鈕寬度也會變
+const tabBar = useSlider(tabsBox, () => [activeTab.value, styleLabel.value, ...visibleTabs.value.map((t) => t.count?.())])
 // 換範本後目前分頁不見了，回到第一個分頁
 watch(visibleTabs, (v) => {
   if (!v.some((t) => t.id === activeTab.value)) activeTab.value = v[0].id
@@ -134,10 +139,16 @@ async function onRevert() {
   notify('ok', '已回到上次存檔時的內容。')
 }
 
+// 存檔後，頂列的「尚未存檔」小圓點換成一個打勾
+const justSaved = ref(false)
+let savedTimer: ReturnType<typeof setTimeout> | undefined
 function onSave() {
   const text = store.exportSaveFile()
   downloadFile(text, bookletFileName(booklet.value, 'json'), 'application/json')
   notify('ok', '已下載存檔。之後可以用「讀取存檔」繼續編輯。')
+  justSaved.value = true
+  clearTimeout(savedTimer)
+  savedTimer = setTimeout(() => (justSaved.value = false), 2000)
 }
 
 // ---------- 換排版風格：資料全部保留，新風格用不到的欄位只是不顯示 ----------
@@ -301,6 +312,12 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
           <button type="button" class="add" @click="openSwitch">換排版風格</button>
           <span class="spacer" />
           <span v-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
+          <span v-else-if="justSaved" class="status saved">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 8.5l3.2 3L13 4.5" />
+            </svg>
+            已存檔
+          </span>
           <button v-if="hasUnsavedChanges" type="button" @click="onRevert">放棄變更</button>
           <button type="button" @click="onNew">新增手冊</button>
           <button type="button" @click="onOpenClick">讀取存檔</button>
@@ -326,7 +343,8 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
         <input ref="fileInput" type="file" accept=".json,application/json" hidden @change="onFileChosen" />
       </div>
 
-      <nav v-if="stage === 'edit'" class="tabs" role="tablist" aria-label="手冊內容">
+      <nav v-if="stage === 'edit'" ref="tabsBox" class="tabs" role="tablist" aria-label="手冊內容">
+        <span class="slider" :style="tabBar" aria-hidden="true" />
         <button
           v-for="t in visibleTabs"
           :id="`tab-${t.id}`"
@@ -550,8 +568,39 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
   background: currentColor;
 }
 
-/* 主分頁：粗墨線上的文字分頁，目前分頁下方一條重點色 */
+.status.saved {
+  color: var(--ok);
+  font-weight: 700;
+  animation: pop 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.status.saved::before {
+  display: none;
+}
+
+/* 打勾一筆畫出來 */
+.status.saved path {
+  stroke-dasharray: 16;
+  stroke-dashoffset: 16;
+  animation: draw 0.35s 0.1s ease-out forwards;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 主分頁：粗墨線上的文字分頁，目前分頁下方一條重點色（.slider 滑過去，壓在墨線上） */
 .tabs {
+  position: relative;
   display: flex;
   gap: 28px;
   border-bottom: 2px solid var(--ink);
@@ -578,15 +627,8 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
   color: var(--ink);
 }
 
-.tabs button.active::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 4px;
-  background: var(--accent);
-  transition: background-color 0.3s ease-out;
+.tabs .slider {
+  --slider-drop: 2px;
 }
 
 .count {

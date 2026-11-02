@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { CHECKLIST_CATEGORIES, type ChecklistCategory } from '../model/booklet'
 import { useBookletStore } from '../store/booklet'
+import { keyOf } from '../utils/motion'
 import Icon from './Icon.vue'
 
 const { booklet } = useBookletStore()
@@ -35,13 +36,15 @@ function add(category: ChecklistCategory) {
           <span class="group-count">{{ g.items.length }}</span>
         </h3>
         <p v-if="g.items.length === 0" class="hint none">沒有自訂項目。</p>
-        <div v-for="x in g.items" :key="x.index" class="check-row">
-          <span class="box" aria-hidden="true" />
-          <input v-model="x.item.item" :aria-label="`${g.label}的項目`" />
-          <button type="button" class="icon danger" :aria-label="`刪除${x.item.item || '這個項目'}`" @click="booklet.checklist.splice(x.index, 1)">
-            刪除
-          </button>
-        </div>
+        <TransitionGroup tag="div" name="row" class="checks">
+          <div v-for="x in g.items" :key="keyOf(x.item)" class="check-row">
+            <span class="box" aria-hidden="true" />
+            <input v-model="x.item.item" :aria-label="`${g.label}的項目`" />
+            <button type="button" class="icon danger" :aria-label="`刪除${x.item.item || '這個項目'}`" @click="booklet.checklist.splice(x.index, 1)">
+              刪除
+            </button>
+          </div>
+        </TransitionGroup>
         <div>
           <button type="button" class="add" @click="add(g.key)"><Icon name="plus" />新增項目</button>
         </div>
@@ -83,6 +86,13 @@ function add(category: ChecklistCategory) {
 
 .none {
   padding: 8px 0;
+}
+
+.checks {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 /* 和手冊上的空白方格對應 */

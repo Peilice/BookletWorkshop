@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, shallowRef, watchEffect } from 'vue'
+import { computed, ref, shallowRef, watchEffect } from 'vue'
 import type { Day } from '../model/booklet'
 import { newDay, newSpot } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
 import { useFormFields } from '../store/templates'
 import { autoOverview, contentLength } from '../model/validate'
 import { weekday } from '../transform/templateData'
+import { keyOf, useSlider } from '../utils/motion'
+import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
 
@@ -27,6 +29,10 @@ watchEffect(() => {
 })
 
 const activeIndex = computed(() => (activeDay.value ? booklet.value.days.indexOf(activeDay.value) : -1))
+
+// Day 切換的重點色線跟著目前那天滑過去
+const dayTabs = ref<HTMLElement>()
+const dayBar = useSlider(dayTabs, () => [activeIndex.value, booklet.value.days.length])
 
 const overviewText = computed(() => (activeDay.value ? activeDay.value.overview || autoOverview(activeDay.value.spots) : ''))
 
@@ -59,7 +65,7 @@ function posterDate(iso: string): string {
     </div>
 
     <template v-if="booklet.days.length === 0">
-      <p class="empty">還沒有行程。新增第一天後，日期會自動接著往後排。</p>
+      <EmptyArt kind="spot" class="empty">還沒有行程。新增第一天後，日期會自動接著往後排。</EmptyArt>
       <button type="button" class="add" @click="addDay"><Icon name="plus" />新增一天</button>
     </template>
 
@@ -68,12 +74,14 @@ function posterDate(iso: string): string {
       <div class="day-poster">
         <template v-if="activeDay && activeIndex >= 0">
           <span class="day-label" aria-hidden="true">DAY</span>
-          <span class="day-no" aria-hidden="true">{{ pad(activeIndex + 1) }}</span>
-          <span class="day-date" aria-hidden="true">{{ posterDate(activeDay.date) }}</span>
+          <!-- 換天或改日期時，數字像翻牌一樣翻下來 -->
+          <span :key="activeIndex" class="day-no flip" aria-hidden="true">{{ pad(activeIndex + 1) }}</span>
+          <span :key="activeDay.date" class="day-date flip" aria-hidden="true">{{ posterDate(activeDay.date) }}</span>
           <span class="day-weekday">{{ weekday(activeDay.date) || '請填日期' }}</span>
         </template>
 
-        <nav class="day-tabs" role="tablist" aria-label="每日行程">
+        <nav ref="dayTabs" class="day-tabs" role="tablist" aria-label="每日行程">
+          <span class="slider" :style="dayBar" aria-hidden="true" />
           <button
             v-for="(d, i) in booklet.days"
             :id="`day-tab-${i}`"
@@ -133,9 +141,8 @@ function posterDate(iso: string): string {
           總覽有 {{ overviewText.length }} 個字，建議在 {{ overviewLimit }} 字以內，太長可能會超出 Day 方塊。
         </p>
 
-        <div class="spots">
-          <p v-if="activeDay.spots.length === 0" class="hint spots-empty">這一天還沒有景點。</p>
-          <div v-for="(s, j) in activeDay.spots" :key="j" class="row-item spot">
+        <TransitionGroup :key="keyOf(activeDay)" tag="div" name="row" class="spots">
+          <div v-for="(s, j) in activeDay.spots" :key="keyOf(s)" class="row-item spot">
             <span class="seq" aria-hidden="true">{{ j + 1 }}</span>
             <div class="row-body">
               <label class="field"><span class="sr-only">景點 {{ j + 1 }}</span><input v-model="s.name" class="title-input" placeholder="景點名稱" /></label>
@@ -146,7 +153,8 @@ function posterDate(iso: string): string {
             </div>
             <ItemActions :list="activeDay.spots" :index="j" :label="`景點 ${j + 1}`" />
           </div>
-        </div>
+        </TransitionGroup>
+        <EmptyArt v-if="activeDay.spots.length === 0" kind="spot" class="spots-empty">這一天還沒有景點。先寫下最想去的一個地方。</EmptyArt>
 
         <div>
           <button type="button" class="add" @click="activeDay.spots.push(newSpot())"><Icon name="plus" />新增景點</button>
@@ -218,8 +226,9 @@ function posterDate(iso: string): string {
   width: 170px;
 }
 
-/* 天數切換：Anton 數字，目前那天下方一條重點色 */
+/* 天數切換：Anton 數字，目前那天下方一條重點色（.slider 滑過去） */
 .day-tabs {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 4px 18px;
@@ -246,7 +255,6 @@ function posterDate(iso: string): string {
 
 .day-tabs button.active {
   color: var(--ink);
-  border-bottom-color: var(--accent);
 }
 
 .day-poster > .add {
@@ -300,6 +308,7 @@ function posterDate(iso: string): string {
 }
 
 .spots {
+  position: relative;
   margin-top: 14px;
 }
 
@@ -310,7 +319,6 @@ function posterDate(iso: string): string {
 }
 
 .spots-empty {
-  padding: 18px 0;
   border-top: 1px solid var(--hair);
 }
 </style>
