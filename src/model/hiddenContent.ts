@@ -1,0 +1,40 @@
+// 換範本時，哪些已經填好的內容在新範本不會顯示、也不會印出來（資料仍保留在存檔裡，換回來就會再出現）
+
+import type { Booklet, FormField, TemplateRules } from './booklet'
+
+export interface HiddenContent {
+  label: string
+  count: number // 有填內容的筆數
+}
+
+const filled = (s: string) => s.trim() !== ''
+
+const COUNTERS: { field: FormField; label: string; count: (b: Booklet) => number }[] = [
+  { field: 'airline', label: '航班的航空公司', count: (b) => b.flights.filter((f) => filled(f.airline)).length },
+  { field: 'flightNo', label: '航班的班機', count: (b) => b.flights.filter((f) => filled(f.flightNo)).length },
+  { field: 'dayTheme', label: '每日行程的主題', count: (b) => b.days.filter((d) => filled(d.theme)).length },
+  { field: 'departTime', label: '每日行程的出門時間', count: (b) => b.days.filter((d) => filled(d.departTime)).length },
+  { field: 'hotelPhone', label: '飯店的電話', count: (b) => b.hotels.filter((h) => filled(h.phone)).length },
+  { field: 'hotelCity', label: '飯店的城市', count: (b) => b.hotels.filter((h) => filled(h.city)).length },
+  {
+    field: 'hotelStay',
+    label: '飯店的入住、退房日期',
+    count: (b) => b.hotels.filter((h) => filled(h.checkIn) || filled(h.checkOut)).length,
+  },
+  { field: 'hotelNote', label: '住宿備註', count: (b) => (filled(b.hotelNote) ? 1 : 0) },
+  {
+    field: 'foods',
+    label: '美食特產',
+    count: (b) =>
+      b.foods.filter((f) => filled(f.place) || f.items.some((i) => filled(i.name) || filled(i.description))).length,
+  },
+  // 預設的三個標題（氣候、時差、飲水）沒填內容時不算
+  { field: 'infos', label: '旅遊資訊', count: (b) => b.infos.filter((i) => filled(i.content)).length },
+  { field: 'checklist', label: '自訂清單', count: (b) => b.checklist.filter((c) => filled(c.item)).length },
+]
+
+export function hiddenContent(booklet: Booklet, rules: TemplateRules): HiddenContent[] {
+  return COUNTERS.filter((c) => !rules.formFields.includes(c.field))
+    .map((c) => ({ label: c.label, count: c.count(booklet) }))
+    .filter((c) => c.count > 0)
+}

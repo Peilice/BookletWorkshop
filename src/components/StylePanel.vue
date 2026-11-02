@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 範本選擇、配色、字體（規格書 4.3–4.5）
+// 配色、字體（規格書 4.4–4.5）；範本在起始頁或「換排版風格」選
 import { computed, onMounted, ref } from 'vue'
 import { effectiveFonts, effectivePalette } from '../docx/fromSettings'
 import type { AccentSlot, PaletteColors, TemplateManifest } from '../model/booklet'
@@ -14,14 +14,6 @@ onMounted(loadTemplates)
 const manifest = computed<TemplateManifest | undefined>(
   () => templates.value.find((t) => t.id === settings.value.templateId) ?? templates.value[0],
 )
-
-// ---------- 範本 ----------
-
-function chooseTemplate(id: string) {
-  if (id === settings.value.templateId) return
-  // 不同範本的顏色、字體角色不同，換範本時回到該範本的預設
-  settings.value = { templateId: id, palette: null, fonts: {} }
-}
 
 // ---------- 配色 ----------
 
@@ -90,22 +82,6 @@ async function listLocalFonts() {
 <template>
   <section class="style-panel">
     <p v-if="loadError" class="hint warn" role="alert">{{ loadError }}</p>
-
-    <!-- 範本 -->
-    <div class="block">
-      <div class="panel-intro">
-        <h2>範本</h2>
-      </div>
-      <div class="choices">
-        <label v-for="t in templates" :key="t.id" class="choice" :class="{ selected: manifest?.id === t.id }">
-          <input type="radio" name="template" :checked="manifest?.id === t.id" @change="chooseTemplate(t.id)" />
-          <span class="choice-body">
-            <strong>{{ t.name }}</strong>
-            <span class="hint">{{ t.description }}</span>
-          </span>
-        </label>
-      </div>
-    </div>
 
     <!-- 配色 -->
     <div v-if="manifest && palette" class="block">
@@ -202,49 +178,6 @@ async function listLocalFonts() {
 
 .block + .block {
   margin-top: 16px;
-}
-
-.choices {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px;
-  border-top: 2px solid var(--ink);
-  padding-top: 18px;
-}
-
-.choice {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 14px 16px;
-  border: 1.5px solid var(--hair);
-  background: var(--paper);
-  cursor: pointer;
-  transition: border-color 0.15s ease-out;
-}
-
-.choice:hover {
-  border-color: var(--ink-soft);
-}
-
-.choice.selected {
-  border-color: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--ink);
-}
-
-.choice input {
-  width: auto;
-  margin-top: 4px;
-}
-
-.choice-body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.choice-body strong {
-  font-size: 16px;
 }
 
 .swatches {

@@ -286,6 +286,51 @@ input[type='checkbox'] {
   line-height: 1.2;
 }
 
+/* ---------- 單選卡片：排版風格、配色 ---------- */
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  border-top: 2px solid var(--ink);
+  padding-top: 18px;
+}
+
+.choice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border: 1.5px solid var(--hair);
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color 0.15s ease-out;
+}
+
+.choice:hover {
+  border-color: var(--ink-soft);
+}
+
+.choice.selected {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.choice input {
+  width: auto;
+  margin-top: 4px;
+}
+
+.choice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.choice-body strong {
+  font-size: 16px;
+}
+
 .empty {
   margin: 0;
   padding: 36px 0;

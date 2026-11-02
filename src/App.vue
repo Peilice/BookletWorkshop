@@ -7,9 +7,11 @@ import FoodsPanel from './components/FoodsPanel.vue'
 import HotelsPanel from './components/HotelsPanel.vue'
 import InfosPanel from './components/InfosPanel.vue'
 import StylePanel from './components/StylePanel.vue'
+import TemplatePicker from './components/TemplatePicker.vue'
 import { effectivePalette, generateFromSettings } from './docx/fromSettings'
 import { lowContrastSpots, readableOr } from './model/contrast'
 import { bookletFileName } from './model/fileName'
+import { hiddenContent } from './model/hiddenContent'
 import { SaveFileError } from './model/saveFile'
 import type { FormField, TemplateManifest } from './model/booklet'
 import { FALLBACK_RULES } from './model/defaults'
@@ -20,6 +22,31 @@ import { downloadFile } from './utils/download'
 
 const store = useBookletStore()
 const { booklet, settings, hasUnsavedChanges, pendingRestore } = store
+const { templates } = useTemplates()
+
+// ---------- 畫面：先在起始頁選排版風格，再進入填資料 ----------
+
+const stage = ref<'pick' | 'edit'>('pick')
+const pickedTemplate = ref(settings.value.templateId)
+
+function enterEditor() {
+  stage.value = 'edit'
+  activeTab.value = tabs[0].id
+}
+
+function onStart() {
+  store.startBooklet(pickedTemplate.value)
+  enterEditor()
+}
+
+function onRestore() {
+  store.restoreAutosave()
+  if (stage.value === 'pick') enterEditor()
+}
+
+const currentTemplate = computed(
+  () => templates.value.find((t) => t.id === settings.value.templateId) ?? templates.value[0],
+)
 
 // ---------- 分頁 ----------
 
@@ -30,7 +57,7 @@ const tabs: { id: TabId; label: string; component: Component; count?: () => numb
   { id: 'hotels', label: '飯店', component: HotelsPanel, count: () => booklet.value.hotels.length },
   { id: 'infos', label: '旅遊資訊', component: InfosPanel, count: () => booklet.value.infos.length },
   { id: 'checklist', label: '自訂清單', component: ChecklistPanel, count: () => booklet.value.checklist.length },
-  { id: 'style', label: '範本與樣式', component: StylePanel },
+  { id: 'style', label: '字體與顏色', component: StylePanel },
 ]
 // 美食特產、旅遊資訊、自訂清單：範本沒用到就不顯示（資料仍保留在存檔裡）
 const { has } = useFormFields()
@@ -71,8 +98,9 @@ async function confirmDiscard(action: string): Promise<boolean> {
 async function onNew() {
   if (!(await confirmDiscard('新增手冊'))) return
   store.newBooklet()
-  activeTab.value = tabs[0].id
-  notify('ok', '已開始一份新的手冊。')
+  pickedTemplate.value = settings.value.templateId
+  message.value = null
+  stage.value = 'pick'
 }
 
 const fileInput = ref<HTMLInputElement>()
@@ -87,7 +115,8 @@ async function onFileChosen(e: Event) {
   input.value = '' // 讓同一個檔案可以再選一次
   if (!file) return
   try {
-    store.loadSaveFile(await file.text())
+    store.loadSaveFile(await file.text()) // 沿用存檔裡記錄的排版風格
+    if (stage.value === 'pick') enterEditor()
     notify('ok', `已讀取「${file.name}」。`)
   } catch (err) {
     notify('error', err instanceof SaveFileError ? err.message : '讀取存檔時發生錯誤。')
@@ -98,6 +127,25 @@ function onSave() {
   const text = store.exportSaveFile()
   downloadFile(text, bookletFileName(booklet.value, 'json'), 'application/json')
   notify('ok', '已下載存檔。之後可以用「讀取存檔」繼續編輯。')
+}
+
+// ---------- 換排版風格：資料全部保留，新風格用不到的欄位只是不顯示 ----------
+
+const switchTarget = ref<string | null>(null)
+const switchManifest = computed(() => templates.value.find((t) => t.id === switchTarget.value))
+const switchHidden = computed(() => (switchManifest.value ? hiddenContent(booklet.value, switchManifest.value) : []))
+const switchChanged = computed(() => switchTarget.value !== settings.value.templateId)
+
+function openSwitch() {
+  switchTarget.value = settings.value.templateId
+}
+
+function confirmSwitch() {
+  const m = switchManifest.value
+  switchTarget.value = null
+  if (!m || m.id === settings.value.templateId) return
+  store.changeTemplate(m.id)
+  notify('ok', `已換成「${m.name}」排版風格。`)
 }
 
 // ---------- 產生前檢查（規格書 4.6）：有問題時先列出來，使用者可以回去修改或仍然產生 ----------
@@ -202,18 +250,25 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
     <div class="topbar-inner">
       <div class="top-row">
         <h1>旅遊手冊工坊</h1>
-        <span class="spacer" />
-        <span v-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
-        <button type="button" @click="onNew">新增手冊</button>
-        <button type="button" @click="onOpenClick">讀取存檔</button>
-        <button type="button" class="primary" @click="onSave">存檔</button>
-        <button type="button" class="generate" :disabled="generating" @click="onGenerateClick">
-          {{ generating ? '產生中…' : '產生 Word' }}
-        </button>
+        <template v-if="stage === 'edit'">
+          <span v-if="currentTemplate" class="current-style">
+            <span class="hint">排版風格</span>
+            <strong>{{ currentTemplate.name }}</strong>
+          </span>
+          <button type="button" class="add" @click="openSwitch">換排版風格</button>
+          <span class="spacer" />
+          <span v-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
+          <button type="button" @click="onNew">新增手冊</button>
+          <button type="button" @click="onOpenClick">讀取存檔</button>
+          <button type="button" class="primary" @click="onSave">存檔</button>
+          <button type="button" class="generate" :disabled="generating" @click="onGenerateClick">
+            {{ generating ? '產生中…' : '產生 Word' }}
+          </button>
+        </template>
         <input ref="fileInput" type="file" accept=".json,application/json" hidden @change="onFileChosen" />
       </div>
 
-      <nav class="tabs" role="tablist" aria-label="手冊內容">
+      <nav v-if="stage === 'edit'" class="tabs" role="tablist" aria-label="手冊內容">
         <button
           v-for="t in visibleTabs"
           :id="`tab-${t.id}`"
@@ -236,7 +291,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
     <div v-if="pendingRestore" class="banner warn" role="status">
       <span>找到上次編輯到一半的內容（{{ restoreTime }}），要恢復嗎？</span>
       <span class="spacer" />
-      <button type="button" class="primary" @click="store.restoreAutosave()">恢復</button>
+      <button type="button" class="primary" @click="onRestore">恢復</button>
       <button type="button" @click="store.discardAutosave()">捨棄</button>
     </div>
 
@@ -246,10 +301,47 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
       <button type="button" class="icon" aria-label="關閉訊息" @click="message = null">關閉</button>
     </div>
 
-    <div :id="`panel-${activeTab}`" role="tabpanel" :aria-labelledby="`tab-${activeTab}`">
+    <section v-if="stage === 'pick'" class="start">
+      <div class="panel-intro">
+        <h2>選擇排版風格</h2>
+        <p class="hint">選好之後開始填資料。之後隨時可以換風格，已經填好的資料都會保留。</p>
+      </div>
+      <TemplatePicker v-model="pickedTemplate" name="start-template" />
+      <div class="start-actions">
+        <button type="button" class="primary" @click="onStart">開始填寫</button>
+        <span class="hint">已經有存檔？</span>
+        <button type="button" @click="onOpenClick">讀取存檔</button>
+      </div>
+    </section>
+
+    <div v-else :id="`panel-${activeTab}`" role="tabpanel" :aria-labelledby="`tab-${activeTab}`">
       <component :is="activePanel" />
     </div>
   </main>
+
+  <div v-if="switchTarget" class="overlay">
+    <div class="dialog switch-dialog" role="dialog" aria-modal="true" aria-labelledby="switch-title">
+      <h2 id="switch-title">換排版風格</h2>
+      <TemplatePicker v-model="switchTarget" name="switch-template" />
+      <div v-if="switchChanged && switchManifest" class="switch-note">
+        <template v-if="switchHidden.length">
+          <p>換成「{{ switchManifest.name }}」後，下面這些內容不會顯示，也不會出現在 Word 裡：</p>
+          <ul>
+            <li v-for="h in switchHidden" :key="h.label">{{ h.label }}（{{ h.count }} 筆）</li>
+          </ul>
+          <p class="hint">資料仍然保留在存檔裡，換回原本的風格就會再出現。</p>
+        </template>
+        <p v-else>已經填好的內容在「{{ switchManifest.name }}」都會顯示。</p>
+        <p class="hint">配色會換成新風格的預設配色；字體設定會保留。</p>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" @click="switchTarget = null">取消</button>
+        <button type="button" class="primary" :disabled="!switchChanged" @click="confirmSwitch">
+          {{ switchChanged && switchManifest ? `換成「${switchManifest.name}」` : '換排版風格' }}
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div v-if="confirmState" class="overlay">
     <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-text">
@@ -309,6 +401,59 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 .top-row h1 {
   font-size: 20px;
   letter-spacing: 0.08em;
+}
+
+.current-style {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 1px solid var(--hair);
+}
+
+.current-style strong {
+  font-size: 15px;
+}
+
+.start-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.start-actions .hint {
+  margin-left: 16px;
+}
+
+.switch-dialog {
+  max-width: 640px;
+  width: 100%;
+}
+
+.switch-dialog h2 {
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+
+.switch-dialog .choices {
+  margin-bottom: 18px;
+}
+
+.switch-note {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: var(--paper-2);
+}
+
+.dialog .switch-note p {
+  margin: 0 0 6px;
+}
+
+.switch-note ul {
+  margin: 0 0 8px;
+  padding-left: 20px;
 }
 
 .status {

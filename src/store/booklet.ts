@@ -13,6 +13,11 @@ const settings = ref<Settings>(defaultSettings())
 
 const snapshot = () => JSON.stringify({ booklet: booklet.value, settings: settings.value })
 const emptySnapshot = JSON.stringify({ booklet: emptyBooklet(), settings: defaultSettings() })
+// 剛選好範本、還沒填任何東西：不論哪個範本都不需要暫存
+const isBlank = () =>
+  JSON.stringify(booklet.value) === JSON.stringify(emptyBooklet()) &&
+  !settings.value.palette &&
+  !Object.keys(settings.value.fonts).length
 
 // 最後一次「存檔／讀取存檔／新增手冊」時的內容；和目前內容不同就代表有變更還沒存成檔案
 const fileSnapshot = ref(snapshot())
@@ -35,7 +40,7 @@ function readAutosave(): SaveFile | null {
 
 function writeAutosave() {
   try {
-    if (snapshot() === emptySnapshot) localStorage.removeItem(AUTOSAVE_KEY)
+    if (isBlank()) localStorage.removeItem(AUTOSAVE_KEY)
     else localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(createSaveFile(booklet.value, settings.value)))
   } catch {
     // 忽略
@@ -84,6 +89,17 @@ function newBooklet() {
   fileSnapshot.value = snapshot()
 }
 
+/** 在起始頁選好範本，開始填一份空白手冊；上次的暫存還沒決定要不要恢復時，提示繼續保留 */
+function startBooklet(templateId: string) {
+  apply(emptyBooklet(), { ...defaultSettings(), templateId })
+  fileSnapshot.value = snapshot()
+}
+
+/** 換範本：填好的資料全部保留（新範本用不到的欄位只是不顯示）；配色回到新範本的預設，字體沿用同名樣式 */
+function changeTemplate(templateId: string) {
+  settings.value = { templateId, palette: null, fonts: settings.value.fonts }
+}
+
 /** 讀取存檔；格式不對時丟出 SaveFileError（訊息可直接顯示給使用者） */
 function loadSaveFile(text: string) {
   const { booklet: b, settings: s } = parseSaveFile(text)
@@ -108,6 +124,8 @@ export function useBookletStore() {
     restoreAutosave,
     discardAutosave,
     newBooklet,
+    startBooklet,
+    changeTemplate,
     loadSaveFile,
     exportSaveFile,
   }
