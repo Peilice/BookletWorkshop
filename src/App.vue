@@ -127,6 +127,13 @@ async function onFileChosen(e: Event) {
   }
 }
 
+async function onRevert() {
+  const ok = await askConfirm('要放棄所有還沒存檔的變更，回到上次存檔時的內容嗎？', '放棄變更')
+  if (!ok) return
+  store.revertUnsaved()
+  notify('ok', '已回到上次存檔時的內容。')
+}
+
 function onSave() {
   const text = store.exportSaveFile()
   downloadFile(text, bookletFileName(booklet.value, 'json'), 'application/json')
@@ -294,6 +301,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
           <button type="button" class="add" @click="openSwitch">換排版風格</button>
           <span class="spacer" />
           <span v-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
+          <button v-if="hasUnsavedChanges" type="button" @click="onRevert">放棄變更</button>
           <button type="button" @click="onNew">新增手冊</button>
           <button type="button" @click="onOpenClick">讀取存檔</button>
           <button type="button" class="primary" @click="onSave">存檔</button>

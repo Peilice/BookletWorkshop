@@ -108,6 +108,12 @@ function loadSaveFile(text: string) {
   fileSnapshot.value = snapshot()
 }
 
+/** 放棄還沒存檔的變更，回到最後一次「存檔／讀取存檔／新增手冊」時的內容 */
+function revertUnsaved() {
+  const { booklet: b, settings: s } = JSON.parse(fileSnapshot.value) as { booklet: Booklet; settings: Settings }
+  apply(b, s)
+}
+
 /** 產生存檔內容，並記錄為「已存檔」 */
 function exportSaveFile(): string {
   const text = JSON.stringify(createSaveFile(booklet.value, settings.value), null, 2)
@@ -127,6 +133,7 @@ export function useBookletStore() {
     startBooklet,
     changeTemplate,
     loadSaveFile,
+    revertUnsaved,
     exportSaveFile,
   }
 }
