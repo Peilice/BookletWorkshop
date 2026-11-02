@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import type { TemplateManifest } from './booklet'
-import { contrastRatio, lowContrastSpots, MIN_CONTRAST } from './contrast'
+import { contrastRatio, lowContrastSpots, MIN_CONTRAST, readableOr } from './contrast'
 
 const manifest: TemplateManifest = JSON.parse(
   readFileSync(new URL('../../public/templates/classic.json', import.meta.url), 'utf8'),
@@ -14,6 +14,16 @@ describe('contrastRatio', () => {
 
   it('同色對比是 1', () => {
     expect(contrastRatio('5F6B57', '5F6B57')).toBeCloseTo(1)
+  })
+})
+
+describe('readableOr', () => {
+  it('對比夠時用原本的顏色', () => {
+    expect(readableOr('#5F6B57', '#FAF9F5', '#1E1D1A')).toBe('#5F6B57')
+  })
+
+  it('顏色太淺時改用備用色', () => {
+    expect(readableOr('#F0E68C', '#FAF9F5', '#1E1D1A')).toBe('#1E1D1A')
   })
 })
 

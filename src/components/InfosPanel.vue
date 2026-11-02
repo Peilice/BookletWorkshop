@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { newInfo } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
+import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
 
 const { booklet } = useBookletStore()
@@ -13,31 +14,32 @@ const { booklet } = useBookletStore()
       <p class="hint">可以再加其他項目，例如電壓插座、小費、緊急電話。「行李規定」是範本的固定內容，不用填。</p>
     </div>
 
-    <div class="stack">
-      <p v-if="booklet.infos.length === 0" class="empty">還沒有旅遊資訊。</p>
+    <p v-if="booklet.infos.length === 0" class="empty">還沒有旅遊資訊。</p>
 
-      <div v-for="(info, i) in booklet.infos" :key="i" class="card">
-        <div class="card-head bottom">
-          <label class="field title"><span>標題</span><input v-model="info.title" /></label>
-          <span class="spacer" />
-          <ItemActions :list="booklet.infos" :index="i" :label="info.title || `第 ${i + 1} 項`" />
+    <div v-else class="rows">
+      <div v-for="(info, i) in booklet.infos" :key="i" class="row-item">
+        <span class="seq" aria-hidden="true">{{ i + 1 }}</span>
+        <div class="info-body">
+          <label class="field"><span>標題</span><input v-model="info.title" class="title-input" /></label>
+          <label class="field"><span>內容</span><textarea v-model="info.content" rows="3" /></label>
         </div>
-        <label class="field"><span>內容</span><textarea v-model="info.content" rows="3" /></label>
+        <ItemActions :list="booklet.infos" :index="i" :label="info.title || `第 ${i + 1} 項`" />
       </div>
+    </div>
 
-      <div>
-        <button type="button" class="add" @click="booklet.infos.push(newInfo())">＋ 新增項目</button>
-      </div>
+    <div :class="{ 'rows-foot': booklet.infos.length }">
+      <button type="button" class="add" @click="booklet.infos.push(newInfo())"><Icon name="plus" />新增項目</button>
     </div>
   </section>
 </template>
 
 <style scoped>
-.card-head.bottom {
-  align-items: flex-end;
-}
-
-.field.title {
-  width: 240px;
+/* 標題和內容並排，像資訊表 */
+.info-body {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  min-width: 0;
 }
 </style>

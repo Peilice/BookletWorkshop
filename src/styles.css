@@ -1,22 +1,38 @@
+/*
+ * 墨色巨字：暖白紙底、墨色文字、粗墨線分區、巨大 Anton 數字。
+ * 顏色只用在小記號（項目編號、目前分頁、新增、焦點）；--accent、--accent-strong 由 App.vue 依目前範本配色設定。
+ */
 :root {
-  --c-bg: #f6f5f1;
-  --c-surface: #ffffff;
-  --c-text: #23261f;
-  --c-muted: #6b6f66;
-  --c-border: #d9d7cf;
-  --c-primary: #4f5a48;
-  --c-primary-hover: #3e4739;
-  --c-primary-soft: #e9ece4;
-  --c-danger: #a3233a;
-  --c-warn-bg: #fff6dc;
-  --c-warn-border: #e8cf7f;
-  --c-ok-bg: #e7f3e9;
-  --c-ok-border: #9cc7a4;
-  --radius: 6px;
-  font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+  --paper: #faf9f5;
+  --paper-2: #f1efe8;
+  --ink: #1e1d1a;
+  --ink-hover: #3a3833;
+  --ink-soft: #6b685f;
+  --placeholder: #716d64;
+  --hair: #d9d6cd;
+  --field-line: #a9a59a;
+  --accent: #5f6b57;
+  --accent-strong: #bc003f;
+  --danger: #a3233a;
+  --warn: #8a5a00;
+  --warn-bg: #fbf3dc;
+  --ok: #2f6b3c;
+  --ok-bg: #e9f2e6;
+
+  --font-sans: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+  --font-heading: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+  --font-numeral: 'Anton', 'Microsoft JhengHei', sans-serif;
+  --font-label: 'Barlow Condensed', 'Microsoft JhengHei', sans-serif;
+
+  --page-width: 1240px;
+  --gutter: 32px;
+  --seq-col: 72px;
+
+  font-family: var(--font-sans);
   font-size: 15px;
-  line-height: 1.5;
-  color: var(--c-text);
+  line-height: 1.55;
+  color: var(--ink);
+  scrollbar-color: var(--field-line) var(--paper);
 }
 
 * {
@@ -25,69 +41,130 @@
 
 body {
   margin: 0;
-  background: var(--c-bg);
+  background: var(--paper);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 24%, var(--paper));
+  color: var(--ink);
 }
 
 h1,
 h2,
 h3 {
   margin: 0;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  text-wrap: balance;
 }
+
+/* 畫面上看不到、螢幕閱讀器仍會唸出的文字 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- 按鈕：直角、墨框 ---------- */
 
 button {
   font: inherit;
+  font-weight: 700;
   cursor: pointer;
-  border-radius: var(--radius);
-  border: 1px solid var(--c-border);
-  background: var(--c-surface);
-  color: var(--c-text);
+  border-radius: 0;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
   padding: 6px 14px;
+  transition:
+    background-color 0.15s ease-out,
+    color 0.15s ease-out;
 }
 
 button:hover:not(:disabled) {
-  border-color: var(--c-primary);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 button:disabled {
   cursor: default;
-  opacity: 0.5;
+  opacity: 0.35;
 }
 
 button.primary {
-  background: var(--c-primary);
-  border-color: var(--c-primary);
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
 }
 
 button.primary:hover:not(:disabled) {
-  background: var(--c-primary-hover);
+  background: var(--ink-hover);
+  border-color: var(--ink-hover);
+}
+
+/* 產生 Word：整個畫面唯一用強調色填滿的元素 */
+button.generate {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #fff;
+  transition:
+    background-color 0.3s ease-out,
+    border-color 0.3s ease-out;
+}
+
+button.generate:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-strong) 82%, #000);
+  border-color: color-mix(in srgb, var(--accent-strong) 82%, #000);
+  color: #fff;
 }
 
 button.add {
-  border-style: dashed;
-  color: var(--c-primary);
+  border: 0;
+  padding: 6px 0;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+button.add:hover:not(:disabled) {
   background: transparent;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1.5px;
 }
 
 button.icon {
-  padding: 2px 8px;
+  border: 0;
+  padding: 4px 7px;
+  font-weight: 400;
   font-size: 13px;
-  color: var(--c-muted);
+  color: var(--ink-soft);
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+button.icon:hover:not(:disabled) {
+  background: var(--paper-2);
+  color: var(--ink);
 }
 
 button.icon.danger:hover:not(:disabled) {
-  color: var(--c-danger);
-  border-color: var(--c-danger);
+  color: var(--danger);
 }
 
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--c-primary);
-  outline-offset: 1px;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
+
+/* ---------- 欄位：沒有外框，只留底線 ---------- */
 
 input,
 textarea,
@@ -95,95 +172,196 @@ select {
   font: inherit;
   color: inherit;
   width: 100%;
-  padding: 6px 8px;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius);
-  background: #fff;
+  padding: 6px 2px;
+  border: 0;
+  border-bottom: 1.5px solid var(--field-line);
+  border-radius: 0;
+  background: transparent;
+  caret-color: var(--accent);
+  transition:
+    border-color 0.15s ease-out,
+    box-shadow 0.15s ease-out;
 }
 
+input:hover,
+textarea:hover {
+  border-bottom-color: var(--ink);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-bottom-color: var(--accent);
+  box-shadow: 0 1.5px 0 var(--accent);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+}
+
+input[type='date'],
+input[type='time'] {
+  font-variant-numeric: tabular-nums;
+}
+
+input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 0.15s ease-out;
+}
+
+input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* 多行文字也只留底線，隨內容自動長高 */
 textarea {
-  resize: vertical;
-  min-height: 64px;
+  display: block;
+  resize: none;
+  field-sizing: content;
+  min-height: calc(2lh + 14px);
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+input[type='radio'],
+input[type='checkbox'] {
+  accent-color: var(--accent);
 }
 
 /* 欄位：標籤在上、輸入框在下 */
 .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
 }
 
 .field > span {
-  font-size: 13px;
-  color: var(--c-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+
+.field.grow {
+  flex: 1;
+}
+
+/* 名稱類的欄位：字放大，像海報上的標題 */
+.title-input {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 900;
 }
 
 .hint {
   font-size: 13px;
-  color: var(--c-muted);
+  color: var(--ink-soft);
   margin: 0;
 }
 
 .hint.warn {
-  color: #8a5a00;
+  color: var(--warn);
 }
 
-/* 每一筆資料的卡片 */
-.card {
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.card-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.card-head h3 {
-  font-size: 16px;
-}
-
-.card-head .spacer {
+.spacer {
   flex: 1;
 }
 
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+/* ---------- 分頁標題 ---------- */
 
 .panel-intro {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 16px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  padding: 22px 0 12px;
 }
 
 .panel-intro h2 {
-  font-size: 18px;
+  font-size: 32px;
+  line-height: 1.2;
 }
 
 .empty {
-  padding: 24px;
-  text-align: center;
-  color: var(--c-muted);
-  border: 1px dashed var(--c-border);
-  border-radius: var(--radius);
+  margin: 0;
+  padding: 36px 0;
+  color: var(--ink-soft);
+  border-top: 2px solid var(--ink);
 }
 
-/* 子項目（景點、美食項目）縮排在卡片裡 */
+/* ---------- 一筆一列：Anton 編號、內容、操作 ---------- */
+
+.rows {
+  border-top: 2px solid var(--ink);
+}
+
+.row-item {
+  display: grid;
+  grid-template-columns: var(--seq-col) minmax(0, 1fr) auto;
+  gap: 0 20px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.seq {
+  font-family: var(--font-numeral);
+  font-size: 40px;
+  line-height: 0.95;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s ease-out;
+}
+
+.row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.row-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.rows-foot {
+  padding: 14px 0 0 calc(var(--seq-col) + 20px);
+}
+
+/* 卡片內的子項目（景點、美食項目） */
 .sub-item {
-  border-left: 3px solid var(--c-primary-soft);
-  padding-left: 12px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 0 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--hair);
+}
+
+.sub-seq {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.sub-body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
 }

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // 一筆資料的「上移／下移／刪除」按鈕，直接修改傳進來的陣列
+import Icon from './Icon.vue'
+
 const props = defineProps<{
   list: unknown[]
   index: number
@@ -16,7 +18,7 @@ function move(offset: number) {
 <template>
   <div class="item-actions">
     <button type="button" class="icon" :disabled="index === 0" :aria-label="`${label}上移`" title="上移" @click="move(-1)">
-      ↑
+      <Icon name="up" />
     </button>
     <button
       type="button"
@@ -26,7 +28,7 @@ function move(offset: number) {
       title="下移"
       @click="move(1)"
     >
-      ↓
+      <Icon name="down" />
     </button>
     <button type="button" class="icon danger" :aria-label="`刪除${label}`" @click="list.splice(index, 1)">刪除</button>
   </div>
@@ -35,6 +37,7 @@ function move(offset: number) {
 <style scoped>
 .item-actions {
   display: flex;
-  gap: 4px;
+  align-items: flex-start;
+  gap: 2px;
 }
 </style>

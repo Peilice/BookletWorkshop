@@ -11,3 +11,6 @@ scripts/verify/output/
 # 只在本機使用的工具（範本改造、用本機 Word 實測）
 tools/
 scripts/verify/
+
+# Impeccable 審查用的截圖，只在本機使用
+.impeccable/review/

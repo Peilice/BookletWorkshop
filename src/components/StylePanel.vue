@@ -175,8 +175,8 @@ async function listLocalFonts() {
         <option v-for="f in localFonts" :key="f" :value="f" />
       </datalist>
 
-      <div class="stack">
-        <div v-for="role in manifest.fontRoles" :key="role.style" class="card font-role">
+      <div class="font-roles">
+        <div v-for="role in manifest.fontRoles" :key="role.style" class="font-role">
           <label class="field">
             <span>{{ role.label }}</span>
             <input
@@ -197,29 +197,39 @@ async function listLocalFonts() {
 .style-panel {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 16px;
+}
+
+.block + .block {
+  margin-top: 16px;
 }
 
 .choices {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 8px;
+  gap: 10px;
+  border-top: 2px solid var(--ink);
+  padding-top: 18px;
 }
 
 .choice {
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  padding: 12px;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius);
-  background: var(--c-surface);
+  padding: 14px 16px;
+  border: 1.5px solid var(--hair);
+  background: var(--paper);
   cursor: pointer;
+  transition: border-color 0.15s ease-out;
+}
+
+.choice:hover {
+  border-color: var(--ink-soft);
 }
 
 .choice.selected {
-  border-color: var(--c-primary);
-  box-shadow: 0 0 0 1px var(--c-primary);
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
 }
 
 .choice input {
@@ -230,67 +240,87 @@ async function listLocalFonts() {
 .choice-body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+}
+
+.choice-body strong {
+  font-size: 16px;
 }
 
 .swatches {
   display: flex;
-  gap: 3px;
+  gap: 0;
 }
 
 .swatch {
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
+  width: 24px;
+  height: 24px;
 }
 
 .custom-colors {
   display: flex;
-  gap: 24px;
-  margin-top: 16px;
+  gap: 32px;
+  margin-top: 20px;
 }
 
 .color-input {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .color-input input {
   width: 48px;
   height: 36px;
   padding: 2px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  cursor: pointer;
+}
+
+.color-input code {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.06em;
 }
 
 .warnings {
-  margin: 16px 0 0;
+  margin: 20px 0 0;
   padding: 10px 14px 10px 30px;
-  background: var(--c-warn-bg);
-  border: 1px solid var(--c-warn-border);
-  border-radius: var(--radius);
-  color: #6b4700;
+  background: var(--warn-bg);
+  color: var(--warn);
 }
 
 .font-list-action {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
+}
+
+.font-roles {
+  border-top: 2px solid var(--ink);
 }
 
 .font-role {
-  flex-direction: row;
+  display: flex;
   align-items: flex-end;
-  gap: 24px;
+  gap: 32px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--hair);
 }
 
 .font-role .field {
   width: 320px;
+  flex: none;
 }
 
 .preview {
   margin: 0;
-  font-size: 22px;
+  font-size: 24px;
   flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 </style>

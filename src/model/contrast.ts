@@ -18,6 +18,11 @@ export function contrastRatio(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05)
 }
 
+/** 顏色放在 background 上對比夠就用它，不夠就改用 fallback（網站介面用範本配色當重點色時用） */
+export function readableOr(color: string, background: string, fallback: string): string {
+  return contrastRatio(color, background) >= MIN_CONTRAST ? color : fallback
+}
+
 /** 回傳對比不足的位置（白字放在該顏色上） */
 export function lowContrastSpots(
   manifest: TemplateManifest,

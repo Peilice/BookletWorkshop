@@ -1,0 +1,426 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-02T00:00:00Z",
+  "title": "Design System: 旅遊手冊工坊",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "範本主色記號",
+        "canonical": "#5f6b57",
+        "tonalRamp": [
+          "#252a22",
+          "#434c3e",
+          "#616e59",
+          "#7f8f75",
+          "#9faa97",
+          "#bec6b9",
+          "#dbdfd8",
+          "#f2f4f1"
+        ],
+        "note": "執行時 = 範本 accent1，對 paper 對比不足 4.5 時改用 ink；此值為範本讀不到時的預設"
+      },
+      "accent-strong": {
+        "role": "primary",
+        "displayName": "範本強調色",
+        "canonical": "#bc003f",
+        "tonalRamp": [
+          "#4c001a",
+          "#8a002e",
+          "#c70043",
+          "#ff0559",
+          "#ff4282",
+          "#ff80aa",
+          "#ffb8d0",
+          "#ffe5ee"
+        ],
+        "note": "執行時 = 範本 accent5，對白字對比不足 4.5 時改用 ink；只用於「產生 Word」"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "暖白紙",
+        "canonical": "#faf9f5",
+        "tonalRamp": [
+          "#332e1a",
+          "#5c532e",
+          "#857742",
+          "#ac9b58",
+          "#c0b481",
+          "#d4ccaa",
+          "#e7e2cf",
+          "#f7f5ee"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "淡紙",
+        "canonical": "#f1efe8",
+        "tonalRamp": [
+          "#302b1d",
+          "#564e34",
+          "#7c714b",
+          "#a09364",
+          "#b8ad8a",
+          "#cfc8b0",
+          "#e4e0d3",
+          "#f5f4ef"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "墨",
+        "canonical": "#1e1d1a",
+        "tonalRamp": [
+          "#292824",
+          "#4a4740",
+          "#6b675c",
+          "#8b8779",
+          "#a7a49a",
+          "#c4c2bb",
+          "#deddd9",
+          "#f3f3f1"
+        ]
+      },
+      "ink-hover": {
+        "role": "neutral",
+        "displayName": "墨（hover）",
+        "canonical": "#3a3833",
+        "tonalRamp": [
+          "#292724",
+          "#494740",
+          "#6a665d",
+          "#8a857a",
+          "#a7a39b",
+          "#c3c1bb",
+          "#dedcd9",
+          "#f3f3f1"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "淡墨",
+        "canonical": "#6b685f",
+        "tonalRamp": [
+          "#292724",
+          "#494741",
+          "#69665e",
+          "#89867b",
+          "#a6a39b",
+          "#c3c1bb",
+          "#dddcd9",
+          "#f3f3f1"
+        ]
+      },
+      "placeholder": {
+        "role": "neutral",
+        "displayName": "提示字",
+        "canonical": "#716d64",
+        "tonalRamp": [
+          "#292724",
+          "#494641",
+          "#6a665d",
+          "#8a857a",
+          "#a6a39b",
+          "#c3c1bb",
+          "#dddcd9",
+          "#f3f3f1"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "細線",
+        "canonical": "#d9d6cd",
+        "tonalRamp": [
+          "#2b2921",
+          "#4e4a3b",
+          "#716a56",
+          "#938b71",
+          "#aea794",
+          "#c8c4b7",
+          "#e0ded6",
+          "#f4f3f1"
+        ]
+      },
+      "field-line": {
+        "role": "neutral",
+        "displayName": "欄位底線",
+        "canonical": "#a9a59a",
+        "tonalRamp": [
+          "#292823",
+          "#4a473f",
+          "#6b675b",
+          "#8c8778",
+          "#a8a499",
+          "#c4c2ba",
+          "#deddd8",
+          "#f3f3f1"
+        ]
+      },
+      "danger": {
+        "role": "status",
+        "displayName": "危險",
+        "canonical": "#a3233a",
+        "tonalRamp": [
+          "#3f0e16",
+          "#711828",
+          "#a4233a",
+          "#d3314e",
+          "#de647a",
+          "#e896a5",
+          "#f2c4cd",
+          "#faeaed"
+        ]
+      },
+      "warn": {
+        "role": "status",
+        "displayName": "警告",
+        "canonical": "#8a5a00",
+        "tonalRamp": [
+          "#4c3200",
+          "#8a5a00",
+          "#c78200",
+          "#ffa805",
+          "#ffbd42",
+          "#ffd380",
+          "#ffe6b8",
+          "#fff6e5"
+        ]
+      },
+      "warn-bg": {
+        "role": "status",
+        "displayName": "警告底",
+        "canonical": "#fbf3dc",
+        "tonalRamp": [
+          "#453508",
+          "#7c5f0e",
+          "#b28a14",
+          "#e5b21f",
+          "#ecc556",
+          "#f2d88d",
+          "#f8e9bf",
+          "#fcf7e8"
+        ]
+      },
+      "ok": {
+        "role": "status",
+        "displayName": "完成",
+        "canonical": "#2f6b3c",
+        "tonalRamp": [
+          "#17351e",
+          "#2a6036",
+          "#3d8a4d",
+          "#51b366",
+          "#7cc58c",
+          "#a6d8b1",
+          "#cde9d3",
+          "#edf7ef"
+        ]
+      },
+      "ok-bg": {
+        "role": "status",
+        "displayName": "完成底",
+        "canonical": "#e9f2e6",
+        "tonalRamp": [
+          "#20321a",
+          "#3a5b2f",
+          "#548344",
+          "#6eaa5b",
+          "#92be83",
+          "#b5d3ab",
+          "#d6e7d0",
+          "#f0f6ee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "numeral-display": {
+        "displayName": "Numeral Display",
+        "purpose": "每日行程左欄的天數，全站最大的字。"
+      },
+      "numeral-date": {
+        "displayName": "Numeral Date",
+        "purpose": "天數下方的日期。"
+      },
+      "numeral-seq": {
+        "displayName": "Numeral Seq",
+        "purpose": "每一列的項目編號（accent）；Day 切換 30px、清單數量 22px 同字型。"
+      },
+      "headline-input": {
+        "displayName": "Headline Input",
+        "purpose": "每日行程總覽欄位。"
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "分頁標題；對話框標題 24px。"
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "名稱類欄位與清單分組標題。"
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "內文與一般欄位；多行欄位行高 1.65。"
+      },
+      "label-numeric": {
+        "displayName": "Label Numeric",
+        "purpose": "子項目編號、分頁數量、字數統計、色碼（13–18px）。"
+      },
+      "label-field": {
+        "displayName": "Label Field",
+        "purpose": "欄位標籤，永遠在欄位上方。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog-lift",
+        "value": "0 18px 44px rgb(30 29 26 / 28%)",
+        "purpose": "只用在浮於 40% 墨色遮罩上的對話框。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "state",
+        "value": "0.15s ease-out",
+        "purpose": "按鈕反白、欄位底線、選項框等狀態切換。"
+      },
+      {
+        "name": "palette-recolor",
+        "value": "0.3s ease-out",
+        "purpose": "範本配色改變時，編號、分頁底線、產生 Word 按鈕換色。"
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none",
+        "purpose": "prefers-reduced-motion: reduce 時關閉所有轉場。"
+      }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "墨框按鈕",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "一般動作（新增手冊、讀取存檔）：直角墨框，hover 反白。",
+      "html": "<button class=\"ds-btn\">讀取存檔</button>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-btn{font:inherit;font-weight:700;cursor:pointer;border-radius:0;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:6px 14px;transition:background-color .15s ease-out,color .15s ease-out;} .ds-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-btn:hover{background:var(--ink);color:var(--paper);} "
+    },
+    {
+      "name": "主要按鈕",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "存檔等主要動作：墨底紙字。",
+      "html": "<button class=\"ds-btn ds-btn-primary\">存檔</button>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-btn{font:inherit;font-weight:700;cursor:pointer;border-radius:0;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:6px 14px;transition:background-color .15s ease-out,color .15s ease-out;} .ds-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-btn:hover{background:var(--ink);color:var(--paper);} .ds-btn-primary{background:var(--ink);color:var(--paper);} .ds-btn-primary:hover{background:var(--ink-hover);border-color:var(--ink-hover);} "
+    },
+    {
+      "name": "產生 Word 按鈕",
+      "kind": "button",
+      "refersTo": "button-generate",
+      "description": "全畫面唯一以範本強調色填滿的元素。",
+      "html": "<button class=\"ds-btn ds-btn-generate\">產生 Word</button>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-btn{font:inherit;font-weight:700;cursor:pointer;border-radius:0;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:6px 14px;transition:background-color .15s ease-out,color .15s ease-out;} .ds-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-btn:hover{background:var(--ink);color:var(--paper);} .ds-btn-generate{background:var(--accent-strong);border-color:var(--accent-strong);color:#fff;transition:background-color .3s ease-out,border-color .3s ease-out;} .ds-btn-generate:hover{background:color-mix(in srgb,var(--accent-strong) 82%,#000);border-color:color-mix(in srgb,var(--accent-strong) 82%,#000);color:#fff;}"
+    },
+    {
+      "name": "新增按鈕",
+      "kind": "button",
+      "refersTo": "button-add",
+      "description": "無框重點色文字加 16px 加號，hover 出現底線。",
+      "html": "<button class=\"ds-btn-add\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3v10M3 8h10\"/></svg>新增景點</button>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-btn-add{font:inherit;font-weight:700;cursor:pointer;border:0;background:transparent;padding:6px 0;color:var(--accent);display:inline-flex;align-items:center;gap:6px;} .ds-btn-add:hover{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1.5px;} .ds-btn-add:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}"
+    },
+    {
+      "name": "底線欄位",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "標籤在上、欄位只有底線；焦點時底線轉重點色並加粗。",
+      "html": "<label class=\"ds-field\"><span>景點名稱</span><input class=\"ds-input\" placeholder=\"例如：清水寺\"></label>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-field{display:flex;flex-direction:column;gap:2px;width:320px;} .ds-field>span{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ink-soft);} .ds-input{font:inherit;color:inherit;width:100%;padding:6px 2px;border:0;border-bottom:1.5px solid var(--field-line);border-radius:0;background:transparent;caret-color:var(--accent);transition:border-color .15s ease-out,box-shadow .15s ease-out;} .ds-input::placeholder{color:#716d64;} .ds-input:hover{border-bottom-color:var(--ink);} .ds-input:focus-visible{outline:none;border-bottom-color:var(--accent);box-shadow:0 1.5px 0 var(--accent);}"
+    },
+    {
+      "name": "主分頁",
+      "kind": "nav",
+      "refersTo": "tab",
+      "description": "2px 墨線上的文字分頁，目前分頁壓一條 4px 重點色底線。",
+      "html": "<nav class=\"ds-tabs\"><button>航班<span class=\"ds-count\">2</span></button><button class=\"active\">每日行程<span class=\"ds-count\">4</span></button><button>飯店<span class=\"ds-count\">2</span></button></nav>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-tabs{display:flex;gap:28px;border-bottom:2px solid var(--ink);} .ds-tabs button{position:relative;font:inherit;font-weight:700;font-size:16px;cursor:pointer;border:0;background:transparent;padding:10px 0 12px;color:var(--ink-soft);} .ds-tabs button:hover{color:var(--ink);} .ds-tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-tabs button.active{color:var(--ink);} .ds-tabs button.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:4px;background:var(--accent);} .ds-count{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;margin-left:3px;} .ds-tabs button.active .ds-count{color:var(--accent);}"
+    },
+    {
+      "name": "編號列",
+      "kind": "custom",
+      "refersTo": "row-item",
+      "description": "清單的基本單位：Anton 重點色編號、內容、操作，細線分隔，頂端 2px 墨線。",
+      "html": "<div class=\"ds-rows\"><div class=\"ds-row\"><div class=\"ds-seq\">1</div><div class=\"ds-body\"><strong>伏見稻荷大社</strong><span>千本鳥居從山腳一路延伸到稻荷山頂。</span></div><div class=\"ds-acts\"><button aria-label=\"上移\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 13V3M3.5 7.5 8 3l4.5 4.5\"/></svg></button><button class=\"danger\">刪除</button></div></div></div>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-rows{border-top:2px solid var(--ink);} .ds-row{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:0 20px;padding:22px 0;border-bottom:1px solid var(--hair);} .ds-seq{font-family:Anton,sans-serif;font-size:40px;line-height:.95;color:var(--accent);font-variant-numeric:tabular-nums;} .ds-body{display:flex;flex-direction:column;gap:6px;} .ds-body strong{font-family:'Noto Sans TC',sans-serif;font-weight:900;font-size:22px;} .ds-acts{display:flex;align-items:flex-start;gap:2px;} .ds-acts button{font:inherit;font-size:13px;cursor:pointer;border:0;background:transparent;padding:4px 7px;color:var(--ink-soft);display:inline-flex;align-items:center;} .ds-acts button:hover{background:var(--paper-2);color:var(--ink);} .ds-acts button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-acts button.danger:hover{color:var(--danger);}"
+    },
+    {
+      "name": "Day 海報欄",
+      "kind": "custom",
+      "refersTo": "day-poster",
+      "description": "每日行程左欄：DAY 字樣緊貼 220px Anton 天數、日期、Day 切換。",
+      "html": "<div class=\"ds-poster\"><div class=\"ds-day-label\">DAY</div><div class=\"ds-day-no\">02</div><div class=\"ds-day-date\">12.02</div><div class=\"ds-weekday\">星期三</div><div class=\"ds-day-tabs\"><button>01</button><button class=\"active\">02</button><button>03</button></div></div>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-poster{display:flex;flex-direction:column;align-items:flex-start;width:340px;} .ds-day-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:.5em;} .ds-day-no{font-family:Anton,sans-serif;font-size:220px;line-height:.84;margin-left:-6px;} .ds-day-date{font-family:Anton,sans-serif;font-size:48px;line-height:1;margin-top:10px;} .ds-weekday{font-size:17px;font-weight:700;color:var(--ink-soft);margin-top:4px;} .ds-day-tabs{display:flex;gap:4px 18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--hair);width:100%;} .ds-day-tabs button{font-family:Anton,sans-serif;font-size:30px;line-height:1.15;cursor:pointer;border:0;background:transparent;padding:0 0 2px;color:var(--ink-soft);border-bottom:4px solid transparent;} .ds-day-tabs button:hover{color:var(--ink);} .ds-day-tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-day-tabs button.active{color:var(--ink);border-bottom-color:var(--accent);}"
+    },
+    {
+      "name": "對話框",
+      "kind": "card",
+      "refersTo": "dialog",
+      "description": "紙底、2px 墨框、直角，全站唯一帶陰影的元素。",
+      "html": "<div class=\"ds-dialog\"><p>目前的手冊有尚未存檔的變更，確定要讀取其他存檔嗎？</p><div class=\"ds-actions\"><button class=\"ds-btn\">取消</button><button class=\"ds-btn ds-btn-primary\">讀取</button></div></div>",
+      "css": ":host{--paper:#faf9f5;--paper-2:#f1efe8;--ink:#1e1d1a;--ink-hover:#3a3833;--ink-soft:#6b685f;--hair:#d9d6cd;--field-line:#a9a59a;--accent:#5f6b57;--accent-strong:#bc003f;--danger:#a3233a;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',sans-serif;font-size:15px;color:var(--ink);} .ds-btn{font:inherit;font-weight:700;cursor:pointer;border-radius:0;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:6px 14px;transition:background-color .15s ease-out,color .15s ease-out;} .ds-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-btn:hover{background:var(--ink);color:var(--paper);} .ds-btn-primary{background:var(--ink);color:var(--paper);} .ds-btn-primary:hover{background:var(--ink-hover);border-color:var(--ink-hover);} .ds-dialog{background:var(--paper);border:2px solid var(--ink);padding:24px 28px;max-width:460px;box-shadow:0 18px 44px rgb(30 29 26 / 28%);} .ds-dialog p{margin:0 0 20px;} .ds-actions{display:flex;justify-content:flex-end;gap:8px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "墨色巨字",
+    "overview": "這是一張印在暖白紙上的旅行海報，只是每一格都能填寫。介面幾乎只用墨色與紙色兩種顏色，分區靠粗墨線（2px）而不是卡片或色塊；層級靠字的大小與重量，而不是底色。最大的聲音交給 Anton 數字：第幾天、第幾筆、日期都用窄高的海報數字寫出來，讓人一眼知道自己在哪裡。\n\n顏色是小記號，不是面積。項目編號、目前分頁底線、Day 切換底線、新增按鈕、焦點框使用 `accent`；「產生 Word」是整個畫面唯一用 `accent-strong` 填滿的元素。這兩個顏色在執行時由目前範本的配色決定（主色 accent1、強調色 accent5），對比不足 4.5 時退回墨色，所以切換配色時介面上的小記號會跟著換色，預告成品的顏色。frontmatter 中的 `accent`／`accent-strong` 是範本讀不到時的預設值。\n\n密度屬於熟練使用者的工作台：一列一筆、細線分隔、欄位去掉外框只留底線，填起來像在海報上寫字。只支援桌機，版面寬度固定上限。",
+    "keyCharacteristics": [
+      "暖白紙底、墨色文字，顏色只出現在小記號",
+      "粗墨線（2px）分區、細線（1px）分列，沒有卡片",
+      "巨大 Anton 數字標出天數、序號、日期",
+      "直角按鈕、1.5px 墨框；欄位只有底線",
+      "重點色跟著範本配色即時改變，對比不足時退回墨色"
+    ],
+    "rules": [
+      {
+        "name": "The 小記號 Rule",
+        "body": "重點色只能是線、數字、小字或焦點框，不能填滿任何區塊。唯一例外是「產生 Word」按鈕。",
+        "section": "colors"
+      },
+      {
+        "name": "The 退回墨色 Rule",
+        "body": "任何由範本配色驅動的介面顏色都要經過對比檢查（4.5:1），不足時退回 `ink`，不可直接套用使用者選的顏色。",
+        "section": "colors"
+      },
+      {
+        "name": "The 數字定位 Rule",
+        "body": "「第幾」的資訊（天數、序號、日期）用 Anton 或 Barlow Condensed，並開啟 `tabular-nums`；中文內容不使用這兩個字型。",
+        "section": "typography"
+      },
+      {
+        "name": "The 無中間重量 Rule",
+        "body": "標題一律 900，內文一律 400，按鈕與標籤 700；不使用 500／600 的中文字重。",
+        "section": "typography"
+      },
+      {
+        "name": "The 線即層級 Rule",
+        "body": "要分出一個區域時先加墨線，不加底色、不加陰影。",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** 用 2px 墨線分區、1px `hair` 分列，讓每個區域從一條墨線開始。",
+      "**Do** 把「第幾」的資訊寫成 Anton 數字並開啟 `tabular-nums`；項目編號用 `accent`。",
+      "**Do** 讓所有範本驅動的顏色經過 `readableOr` 對比檢查（4.5:1），不足時退回 `ink`。",
+      "**Do** 保持按鈕與欄位直角（0px）、1.5px 線寬。",
+      "**Do** 新圖示照 Icon.vue 的規格：16px、線寬 1.75、`currentColor`。"
+    ],
+    "donts": [
+      "**Don't** 用重點色填滿區塊；`accent-strong` 底色只屬於「產生 Word」。",
+      "**Don't** 用圓角白卡片堆在灰底上、膠囊形分頁或色塊頂列。",
+      "**Don't** 給欄位加四邊外框；欄位只有底線。",
+      "**Don't** 在對話框以外使用陰影。",
+      "**Don't** 在中文標題上方加小字標（eyebrow）；「DAY」字樣只能和天數數字一起出現。",
+      "**Don't** 用文字符號或表情符號當圖示。"
+    ]
+  }
+}

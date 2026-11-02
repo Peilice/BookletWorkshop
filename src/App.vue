@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, type Component } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, type Component } from 'vue'
 import ChecklistPanel from './components/ChecklistPanel.vue'
 import DaysPanel from './components/DaysPanel.vue'
 import FlightsPanel from './components/FlightsPanel.vue'
@@ -8,7 +8,7 @@ import HotelsPanel from './components/HotelsPanel.vue'
 import InfosPanel from './components/InfosPanel.vue'
 import StylePanel from './components/StylePanel.vue'
 import { effectivePalette, generateFromSettings } from './docx/fromSettings'
-import { lowContrastSpots } from './model/contrast'
+import { lowContrastSpots, readableOr } from './model/contrast'
 import { bookletFileName } from './model/fileName'
 import { SaveFileError } from './model/saveFile'
 import { validateBooklet, type Issue, type TabId } from './model/validate'
@@ -146,6 +146,27 @@ async function generate() {
   }
 }
 
+// ---------- 介面重點色跟著目前的範本配色 ----------
+// 主色當小記號（編號、目前分頁），強調色當「產生 Word」的底色；顏色太淺看不清楚時改用墨色
+
+const PAPER = '#FAF9F5'
+const INK = '#1E1D1A'
+
+watch(
+  settings,
+  async (s) => {
+    try {
+      const palette = effectivePalette(await useTemplates().getManifest(s.templateId), s)
+      const root = document.documentElement.style
+      root.setProperty('--accent', readableOr(palette.accent1, PAPER, INK))
+      root.setProperty('--accent-strong', readableOr(palette.accent5, '#FFFFFF', INK))
+    } catch {
+      // 範本讀不到時維持預設顏色
+    }
+  },
+  { deep: true, immediate: true },
+)
+
 // ---------- 自動暫存的恢復提示 ----------
 
 const restoreTime = computed(() =>
@@ -166,16 +187,35 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 <template>
   <header class="topbar">
     <div class="topbar-inner">
-      <h1>旅遊手冊工坊</h1>
-      <span v-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
-      <span class="spacer" />
-      <button type="button" @click="onNew">新增手冊</button>
-      <button type="button" @click="onOpenClick">讀取存檔</button>
-      <button type="button" @click="onSave">存檔</button>
-      <button type="button" class="primary" :disabled="generating" @click="onGenerateClick">
-        {{ generating ? '產生中…' : '產生 Word' }}
-      </button>
-      <input ref="fileInput" type="file" accept=".json,application/json" hidden @change="onFileChosen" />
+      <div class="top-row">
+        <h1>旅遊手冊工坊</h1>
+        <span class="spacer" />
+        <span v-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
+        <button type="button" @click="onNew">新增手冊</button>
+        <button type="button" @click="onOpenClick">讀取存檔</button>
+        <button type="button" class="primary" @click="onSave">存檔</button>
+        <button type="button" class="generate" :disabled="generating" @click="onGenerateClick">
+          {{ generating ? '產生中…' : '產生 Word' }}
+        </button>
+        <input ref="fileInput" type="file" accept=".json,application/json" hidden @change="onFileChosen" />
+      </div>
+
+      <nav class="tabs" role="tablist" aria-label="手冊內容">
+        <button
+          v-for="t in tabs"
+          :id="`tab-${t.id}`"
+          :key="t.id"
+          type="button"
+          role="tab"
+          :aria-selected="activeTab === t.id"
+          :aria-controls="`panel-${t.id}`"
+          :class="{ active: activeTab === t.id }"
+          @click="activeTab = t.id"
+        >
+          {{ t.label }}
+          <sup v-if="t.count" class="count">{{ t.count() }}</sup>
+        </button>
+      </nav>
     </div>
   </header>
 
@@ -190,27 +230,10 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
     <div v-if="message" class="banner" :class="message.kind" :role="message.kind === 'error' ? 'alert' : 'status'">
       <span>{{ message.text }}</span>
       <span class="spacer" />
-      <button type="button" class="icon" aria-label="關閉訊息" @click="message = null">✕</button>
+      <button type="button" class="icon" aria-label="關閉訊息" @click="message = null">關閉</button>
     </div>
 
-    <nav class="tabs" role="tablist" aria-label="手冊內容">
-      <button
-        v-for="t in tabs"
-        :id="`tab-${t.id}`"
-        :key="t.id"
-        type="button"
-        role="tab"
-        :aria-selected="activeTab === t.id"
-        :aria-controls="`panel-${t.id}`"
-        :class="{ active: activeTab === t.id }"
-        @click="activeTab = t.id"
-      >
-        {{ t.label }}
-        <span v-if="t.count" class="count">{{ t.count() }}</span>
-      </button>
-    </nav>
-
-    <div :id="`panel-${activeTab}`" role="tabpanel" :aria-labelledby="`tab-${activeTab}`" class="panel">
+    <div :id="`panel-${activeTab}`" role="tabpanel" :aria-labelledby="`tab-${activeTab}`">
       <component :is="activePanel" />
     </div>
   </main>
@@ -233,7 +256,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
         <section v-for="g in issueGroups" :key="g.tab.id" class="issue-group">
           <div class="issue-head">
             <h3>{{ g.tab.label }}</h3>
-            <button type="button" class="icon" @click="goToIssue(g.tab.id)">前往修改</button>
+            <button type="button" class="add" @click="goToIssue(g.tab.id)">前往修改</button>
           </div>
           <ul>
             <li v-for="(text, i) in g.items" :key="i">{{ text }}</li>
@@ -242,7 +265,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
       </div>
       <div class="dialog-actions">
         <button type="button" @click="checkIssues = null">回去修改</button>
-        <button type="button" class="primary" @click="generateAnyway">仍然產生 Word</button>
+        <button type="button" class="generate" @click="generateAnyway">仍然產生 Word</button>
       </div>
     </div>
   </div>
@@ -250,8 +273,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 
 <style scoped>
 .topbar {
-  background: var(--c-surface);
-  border-bottom: 1px solid var(--c-border);
+  background: var(--paper);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -259,87 +281,58 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 
 .topbar-inner,
 .layout {
-  max-width: 1100px;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--gutter);
 }
 
-.topbar-inner {
+.top-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 60px;
+  height: 64px;
 }
 
-.topbar h1 {
+.top-row h1 {
   font-size: 20px;
-  color: var(--c-primary);
-  margin-right: 8px;
+  letter-spacing: 0.08em;
 }
 
 .status {
-  font-size: 13px;
-  color: #8a5a00;
-}
-
-.spacer {
-  flex: 1;
-}
-
-.layout {
-  padding-top: 20px;
-  padding-bottom: 60px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.banner {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--c-border);
-  background: var(--c-surface);
+  gap: 6px;
+  font-size: 13px;
+  color: var(--warn);
+  margin-right: 8px;
 }
 
-.banner.warn {
-  background: var(--c-warn-bg);
-  border-color: var(--c-warn-border);
+.status::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
-.banner.ok {
-  background: var(--c-ok-bg);
-  border-color: var(--c-ok-border);
-}
-
-.banner.error {
-  background: #fbe9ec;
-  border-color: var(--c-danger);
-  color: var(--c-danger);
-}
-
+/* 主分頁：粗墨線上的文字分頁，目前分頁下方一條重點色 */
 .tabs {
   display: flex;
-  gap: 4px;
-  border-bottom: 1px solid var(--c-border);
+  gap: 28px;
+  border-bottom: 2px solid var(--ink);
 }
 
 .tabs button {
-  border: none;
-  border-bottom: 3px solid transparent;
-  border-radius: 0;
-  background: transparent;
-  padding: 10px 16px;
-  color: var(--c-muted);
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  position: relative;
+  border: 0;
+  padding: 10px 0 12px;
+  font-size: 16px;
+  color: var(--ink-soft);
 }
 
-.tabs button:hover {
-  color: var(--c-text);
+.tabs button:hover:not(:disabled) {
+  background: transparent;
+  color: var(--ink);
 }
 
 .tabs button:last-child {
@@ -347,29 +340,68 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 }
 
 .tabs button.active {
-  color: var(--c-primary);
-  border-bottom-color: var(--c-primary);
-  font-weight: 700;
+  color: var(--ink);
+}
+
+.tabs button.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 4px;
+  background: var(--accent);
+  transition: background-color 0.3s ease-out;
 }
 
 .count {
-  font-size: 12px;
-  min-width: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
-  background: var(--c-primary-soft);
-  color: var(--c-primary);
-  font-weight: 400;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 13px;
+  margin-left: 3px;
+  font-variant-numeric: tabular-nums;
 }
 
-.panel {
-  padding-top: 8px;
+.tabs button.active .count {
+  color: var(--accent);
+}
+
+.layout {
+  padding-bottom: 96px;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 10px 14px;
+  font-size: 14px;
+  background: var(--paper-2);
+}
+
+.banner.warn {
+  background: var(--warn-bg);
+}
+
+.banner.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.banner.error {
+  background: #f8e6e9;
+  color: var(--danger);
+}
+
+.banner .icon {
+  color: inherit;
 }
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgb(0 0 0 / 35%);
+  background: rgb(30 29 26 / 40%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -377,34 +409,37 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 }
 
 .dialog {
-  background: var(--c-surface);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  max-width: 440px;
-  box-shadow: 0 8px 30px rgb(0 0 0 / 20%);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 24px 28px;
+  max-width: 460px;
+  box-shadow: 0 18px 44px rgb(30 29 26 / 28%);
 }
 
 .dialog p {
-  margin: 0 0 16px;
+  margin: 0 0 20px;
 }
 
 .check-dialog {
-  max-width: 560px;
+  max-width: 580px;
   width: 100%;
 }
 
 .check-dialog h2 {
-  font-size: 18px;
-  margin-bottom: 8px;
+  font-size: 24px;
+  margin-bottom: 6px;
 }
 
 .issue-list {
   max-height: 50vh;
   overflow-y: auto;
-  margin-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  margin-bottom: 20px;
+  border-top: 2px solid var(--ink);
+}
+
+.issue-group {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hair);
 }
 
 .issue-head {
@@ -420,7 +455,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 .issue-group ul {
   margin: 4px 0 0;
   padding-left: 20px;
-  color: var(--c-muted);
+  color: var(--ink-soft);
 }
 
 .dialog-actions {

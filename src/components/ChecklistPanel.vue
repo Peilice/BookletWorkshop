@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { CHECKLIST_CATEGORIES, type ChecklistCategory } from '../model/booklet'
 import { useBookletStore } from '../store/booklet'
+import Icon from './Icon.vue'
 
 const { booklet } = useBookletStore()
 
@@ -28,18 +29,21 @@ function add(category: ChecklistCategory) {
     </div>
 
     <div class="groups">
-      <div v-for="g in groups" :key="g.key" class="card">
-        <h3>{{ g.label }}</h3>
-        <p v-if="g.items.length === 0" class="hint">沒有自訂項目。</p>
-        <div v-for="x in g.items" :key="x.index" class="row">
-          <span aria-hidden="true">□</span>
+      <div v-for="g in groups" :key="g.key" class="group">
+        <h3>
+          {{ g.label }}
+          <span class="group-count">{{ g.items.length }}</span>
+        </h3>
+        <p v-if="g.items.length === 0" class="hint none">沒有自訂項目。</p>
+        <div v-for="x in g.items" :key="x.index" class="check-row">
+          <span class="box" aria-hidden="true" />
           <input v-model="x.item.item" :aria-label="`${g.label}的項目`" />
           <button type="button" class="icon danger" :aria-label="`刪除${x.item.item || '這個項目'}`" @click="booklet.checklist.splice(x.index, 1)">
             刪除
           </button>
         </div>
         <div>
-          <button type="button" class="add" @click="add(g.key)">＋ 新增項目</button>
+          <button type="button" class="add" @click="add(g.key)"><Icon name="plus" />新增項目</button>
         </div>
       </div>
     </div>
@@ -49,17 +53,49 @@ function add(category: ChecklistCategory) {
 <style scoped>
 .groups {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 48px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 2px solid var(--ink);
+  padding-top: 12px;
+}
+
+.group h3 {
+  font-size: 22px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.group-count {
+  font-family: var(--font-numeral);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.none {
+  padding: 8px 0;
+}
+
+/* 和手冊上的空白方格對應 */
+.check-row {
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
 
-.groups h3 {
-  font-size: 16px;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.box {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ink);
 }
 </style>
