@@ -1,6 +1,6 @@
 // 表單資料 → 網站範本要顯示的內容。所有顯示邏輯都在這裡，網站範本只負責排版。
 
-import type { Booklet, FormField, PaletteColors, TemplateRules } from '../model/booklet'
+import type { Booklet, ChecklistCategory, FormField, PaletteColors, TemplateRules } from '../model/booklet'
 import { CHECKLIST_CATEGORIES } from '../model/booklet'
 import { autoOverview } from '../model/validate'
 import { flightLeg, shortDate, weekday } from '../transform/templateData'
@@ -9,7 +9,8 @@ import { dayColors, type DayColor } from './colors'
 export interface SiteFlight {
   leg: string // 去程、回程或空白
   date: string
-  weekday: string
+  weekday: string // 星期四
+  weekdayShort: string // 四
   airline: string
   flightNo: string
   from: string
@@ -28,6 +29,7 @@ export interface SiteDay {
   iso: string // YYYY-MM-DD，網站用來找「今天」
   date: string // 12/1
   weekday: string // 星期二
+  weekdayShort: string // 二
   route: string[] // 當日大標，箭頭分開的各段
   theme: string
   departTime: string
@@ -51,18 +53,21 @@ export interface SiteData {
   title: string
   dateRange: string
   tripKey: string // 網站存勾選清單時用，不同手冊不會互相覆蓋
-  colors: DayColor[]
+  palette: PaletteColors // 範本配色，各範本自己決定每個顏色用在哪
+  colors: DayColor[] // 依天數內插的日色
   flights: SiteFlight[]
   days: SiteDay[]
   hotels: SiteHotel[]
   hotelNote: string
   foods: { place: string; items: { name: string; description: string }[] }[]
   infos: { title: string; content: string }[]
-  checklist: { label: string; items: string[] }[]
+  // 範本有用到清單時四個分類都列出（有些範本每個分類有固定項目），items 是使用者填的
+  checklist: { key: ChecklistCategory; label: string; items: string[] }[]
 }
 
 const DEFAULT_TITLE = '旅遊手冊'
 const filled = (s: string) => s.trim() !== ''
+const short = (iso: string) => weekday(iso).slice(2)
 
 /** 出發到回程的日期範圍，例如 2026.12.01 – 12.04 */
 export function dateRange(dates: string[]): string {
@@ -97,6 +102,7 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       iso: d.date,
       date: shortDate(d.date),
       weekday: weekday(d.date),
+      weekdayShort: short(d.date),
       route: overview ? overview.split(/\s*→\s*/).filter(Boolean) : [],
       theme: shown('dayTheme', d.theme),
       departTime: shown('departTime', d.departTime),
@@ -113,11 +119,13 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
     title,
     dateRange: range,
     tripKey: hash(`${title}|${range}`),
+    palette,
     colors,
     flights: b.flights.map((f, i) => ({
       leg: flightLeg(i, b.flights.length),
       date: shortDate(f.date),
       weekday: weekday(f.date),
+      weekdayShort: short(f.date),
       airline: shown('airline', f.airline),
       flightNo: shown('flightNo', f.flightNo),
       from: f.from.trim(),
@@ -151,9 +159,10 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       : [],
     checklist: has('checklist')
       ? CHECKLIST_CATEGORIES.map((c) => ({
+          key: c.key,
           label: c.label,
           items: b.checklist.filter((i) => i.category === c.key && filled(i.item)).map((i) => i.item.trim()),
-        })).filter((c) => c.items.length)
+        }))
       : [],
   }
 }

@@ -152,6 +152,7 @@ async function listLocalFonts() {
           可以輸入任何字體名稱，中文或英文名稱都可以。Word 檔只記錄字體名稱，打開檔案的電腦沒有安裝這個字體時，會換成其他字體顯示；
           需要固定外觀時，請在 Word 裡另存為 PDF（付費字體依授權可能無法嵌入）。
         </p>
+        <p v-if="manifest.site" class="hint">這裡的字體只用在 Word。網站和 PDF 使用風格接近、可以內嵌的免費字型。</p>
       </div>
 
       <div v-if="canListFonts" class="font-list-action">

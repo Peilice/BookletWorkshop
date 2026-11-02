@@ -13,15 +13,13 @@ async function prepare(booklet: Booklet, settings: Settings): Promise<{ manifest
   const manifest = await useTemplates().getManifest(settings.templateId)
   if (!manifest.site) throw new Error(`「${manifest.name}」沒有網站版本`)
   const data = toSiteData(booklet, manifest, effectivePalette(manifest, settings))
-  const font = siteTemplate(manifest.site).font
   let fontCss = ''
   let fontError = false
-  if (font) {
-    try {
-      fontCss = await embedGoogleFont(font.family, font.weights, font.text(data))
-    } catch {
-      fontError = true // 字型下載失敗時改用系統字型，網站照樣能用
-    }
+  try {
+    const css = await Promise.all(siteTemplate(manifest.site).fonts.map((f) => embedGoogleFont(f.family, f.weights, f.text(data))))
+    fontCss = css.join('\n')
+  } catch {
+    fontError = true // 字型下載失敗時改用系統字型，網站照樣能用
   }
   return { manifest, data, fontCss, fontError }
 }

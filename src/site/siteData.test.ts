@@ -75,6 +75,7 @@ describe('toSiteData', () => {
     const b = { ...osakaKyoto, infos: [{ title: '氣候', content: '' }, { title: '時差', content: '慢 1 小時' }] }
     const d = toSiteData(b, manifest, palette)
     expect(d.infos).toEqual([{ title: '時差', content: '慢 1 小時' }])
-    expect(d.checklist.map((c) => c.label)).toContain('其它')
+    expect(d.checklist.map((c) => c.key)).toEqual(['證件', '衣物', '藥品', '其它'])
+    expect(d.checklist.find((c) => c.key === '藥品')!.items).toEqual(['腸胃藥'])
   })
 })

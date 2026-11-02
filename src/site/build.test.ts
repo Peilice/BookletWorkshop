@@ -51,6 +51,31 @@ describe('renderSite（和風沉穩）', () => {
   })
 })
 
+describe('renderSite（經典、和風直排）', () => {
+  const site = (id: string, b = osakaKyoto) => {
+    const m: TemplateManifest = JSON.parse(readFileSync(new URL(`../../public/templates/${id}.json`, import.meta.url), 'utf8'))
+    expect(m.site).toBe(id)
+    return renderSite(id, toSiteData(b, m, m.presets[0].colors))
+  }
+
+  it('經典：Day 框、Word 範本固定的清單項目和行李規定', () => {
+    const html = site('classic')
+    expect(html.match(/class="daybox"/g)).toHaveLength(4)
+    expect(html).toContain('國際信用卡') // 固定項目
+    expect(html).toContain('ICOCA卡') // 使用者填的
+    expect(html).toContain('托運行李')
+    expect(html).toContain('data-check="證件-0"')
+  })
+
+  it('和風直排：只有寫了介紹的景點才有直排卡片', () => {
+    const html = site('wafu', kanazawa)
+    const withContent = kanazawa.days.flatMap((d) => d.spots).filter((s) => s.content.trim()).length
+    expect(html.match(/class="spot"/g)).toHaveLength(withContent)
+    expect(html).toContain('class="tate"')
+    expect(html).toContain('11/26（四）')
+  })
+})
+
 describe('buildSiteZip', () => {
   it('包含網頁、manifest、Service Worker 與圖示', () => {
     const zip = new PizZip(buildSiteZip('season', data(), {}, icons, 'v1'))

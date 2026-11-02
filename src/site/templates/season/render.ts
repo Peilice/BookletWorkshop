@@ -3,32 +3,11 @@
 import type { DayColor } from '../../colors'
 import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteDay, SiteHotel } from '../../siteData'
+import { icon } from '../common/icons'
+import { page } from '../common/page'
 import type { RenderOptions } from '../types'
 import script from './app.js?raw'
 import css from './style.css?raw'
-
-const ICONS: Record<string, string> = {
-  route: '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/>',
-  plane:
-    '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
-  bed: '<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>',
-  book: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
-  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
-  phone:
-    '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
-  chevron: '<path d="m6 9 6 6 6-6"/>',
-  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  food: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
-  check: '<path d="M20 6 9 17l-5-5"/>',
-  print: '<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/>',
-}
-
-const sprite = () =>
-  `<svg width="0" height="0" style="position:absolute" aria-hidden="true">${Object.entries(ICONS)
-    .map(([id, body]) => `<symbol id="i-${id}" viewBox="0 0 24 24">${body}</symbol>`)
-    .join('')}</svg>`
-
-const icon = (id: string, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`
 
 const colorVars = (c: DayColor) => `--day:${c.deep};--day-chip:${c.chip};--day-soft:${c.soft}`
 
@@ -215,14 +194,14 @@ function info(d: SiteData): string {
       .join('')}</div>`,
     )}
     ${when(
-      d.checklist.length,
+      checklist(d).length,
       () => `<h2 class="sec-title">${icon('check', 'ic sec-ic')}行前清單</h2>
-    <div class="progress no-print" aria-live="polite"><div class="bar"><span></span></div><p class="progress-text"></p></div>
-    <div class="checklist">${d.checklist
+    <div class="progress no-print" aria-live="polite"><div class="bar"><span data-progress-bar></span></div><p class="progress-text" data-progress-text></p></div>
+    <div class="checklist">${checklist(d)
       .map(
         (g) => `<section class="check-group">
       <h3 class="box-title">${esc(g.label)}</h3>
-      <ul>${g.items.map((it) => `<li><label><input type="checkbox" data-key="${key++}"><span>${esc(it)}</span></label></li>`).join('')}</ul>
+      <ul>${g.items.map((it) => `<li><label><input type="checkbox" data-check="${key++}"><span>${esc(it)}</span></label></li>`).join('')}</ul>
     </section>`,
       )
       .join('')}</div>`,
@@ -231,7 +210,10 @@ function info(d: SiteData): string {
 </section>`
 }
 
-const hasInfo = (d: SiteData) => d.infos.length > 0 || d.foods.length > 0 || d.checklist.length > 0
+/** 有填項目的清單分類 */
+const checklist = (d: SiteData) => d.checklist.filter((c) => c.items.length)
+
+const hasInfo = (d: SiteData) => d.infos.length > 0 || d.foods.length > 0 || checklist(d).length > 0
 
 /** 會用圓體顯示的文字：網站只內嵌這些字，檔案才不會太大 */
 export function displayText(d: SiteData): string {
@@ -245,7 +227,7 @@ export function displayText(d: SiteData): string {
     ...d.hotels.flatMap((h) => [h.name, h.city]),
     ...d.infos.map((i) => i.title),
     ...d.foods.flatMap((f) => [f.place, ...f.items.map((i) => i.name)]),
-    ...d.checklist.map((c) => c.label),
+    ...checklist(d).map((c) => c.label),
   ].join('')
 }
 
@@ -258,28 +240,13 @@ export function render(d: SiteData, opts: RenderOptions): string {
   ].filter((t) => t.show)
   const head = d.colors[0]
 
-  return `<!doctype html>
-<html lang="zh-Hant-TW" data-trip="${esc(d.tripKey)}"${opts.pwa ? ' data-pwa="1"' : ''} style="${colorVars(head)}">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>${esc(opts.documentTitle ?? d.title)}</title>
-<meta name="theme-color" content="${head.deep}">
-<meta name="generator" content="旅遊手冊工坊">
-${when(opts.pwa, () => '<link rel="manifest" href="manifest.webmanifest">\n<link rel="apple-touch-icon" href="icon-180.png">\n<meta name="apple-mobile-web-app-capable" content="yes">')}
-<style>${opts.fontCss ?? ''}
-${css}</style>
-</head>
-<body${tabs.length > 1 ? ' class="has-tabs"' : ''}>
-${sprite()}
-<a class="skip" href="#main">跳到主要內容</a>
-<header class="mast">
+  const body = `<header class="mast">
   <div class="wrap mast-in">
     <div class="mast-title">
       <h1>${esc(d.title)}</h1>
       ${when(d.dateRange, () => `<p class="mast-dates num">${esc(d.dateRange)}</p>`)}
     </div>
-    <span class="offline" hidden>離線中</span>
+    <span class="offline" data-offline hidden>離線中</span>
     ${when(
       tabs.length > 1,
       () =>
@@ -295,12 +262,16 @@ ${when(hasInfo(d), () => info(d))}
 </main>
 <footer class="foot no-print">
   <div class="wrap">
-    <button type="button" class="btn btn-outline print-btn">${icon('print')}列印／存成 PDF</button>
+    <button type="button" class="btn btn-outline" data-print>${icon('print')}列印／存成 PDF</button>
     <p>以旅遊手冊工坊製作</p>
   </div>
-</footer>
-<script>${script}</script>
-</body>
-</html>
-`
+</footer>`
+  return page(d, opts, {
+    css,
+    body,
+    script,
+    themeColor: head.deep,
+    htmlStyle: colorVars(head),
+    bodyClass: tabs.length > 1 ? 'has-tabs' : undefined,
+  })
 }

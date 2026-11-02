@@ -1,24 +1,8 @@
-// 和風沉穩網站的互動：分頁、選日期、勾選清單、列印、離線快取。沒有 JavaScript 時全部內容依序顯示
+// 和風沉穩網站的互動：分頁、選日期（清單、列印、離線在共用程式）。沒有 JavaScript 時全部內容依序顯示
 ;(function () {
   var root = document.documentElement
-  root.classList.add('js')
-
   var $$ = function (sel) {
     return Array.prototype.slice.call(document.querySelectorAll(sel))
-  }
-  var store = {
-    get: function (k) {
-      try {
-        return localStorage.getItem(k)
-      } catch (e) {
-        return null
-      }
-    },
-    set: function (k, v) {
-      try {
-        localStorage.setItem(k, v)
-      } catch (e) {}
-    },
   }
 
   // ---------- 分頁 ----------
@@ -118,73 +102,4 @@
   route()
   // 網址帶 #day-3 之類打開時，瀏覽器會捲到那一天；改回從頂端開始，日期色階才看得到
   if (location.hash) window.scrollTo(0, 0)
-
-  // ---------- 行前清單：勾選狀態存在這支手機上 ----------
-
-  var boxes = $$('.check-group input')
-  var key = 'booklet-check:' + root.dataset.trip
-  var bar = document.querySelector('.progress .bar span')
-  var text = document.querySelector('.progress-text')
-
-  function progress() {
-    var done = boxes.filter(function (b) {
-      return b.checked
-    }).length
-    if (bar) bar.style.width = (boxes.length ? (done / boxes.length) * 100 : 0) + '%'
-    if (text) {
-      text.textContent = done === boxes.length ? '✓ 全部準備好了' : '已準備 ' + done + ' / ' + boxes.length
-      text.parentNode.classList.toggle('done', done === boxes.length)
-    }
-  }
-
-  if (boxes.length) {
-    var saved = {}
-    try {
-      saved = JSON.parse(store.get(key) || '{}') || {}
-    } catch (e) {}
-    boxes.forEach(function (b) {
-      b.checked = !!saved[b.dataset.key]
-      b.addEventListener('change', function () {
-        saved[b.dataset.key] = b.checked
-        store.set(key, JSON.stringify(saved))
-        progress()
-      })
-    })
-    progress()
-  }
-
-  // ---------- 列印：景點介紹全部展開，印完恢復 ----------
-
-  var closed = []
-  window.addEventListener('beforeprint', function () {
-    closed = $$('details:not([open])')
-    closed.forEach(function (d) {
-      d.open = true
-    })
-  })
-  window.addEventListener('afterprint', function () {
-    closed.forEach(function (d) {
-      d.open = false
-    })
-    closed = []
-  })
-  $$('.print-btn').forEach(function (b) {
-    b.addEventListener('click', function () {
-      window.print()
-    })
-  })
-
-  // ---------- 離線 ----------
-
-  var offline = document.querySelector('.offline')
-  function net() {
-    if (offline) offline.hidden = navigator.onLine !== false
-  }
-  window.addEventListener('online', net)
-  window.addEventListener('offline', net)
-  net()
-
-  if (root.dataset.pwa && 'serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-    navigator.serviceWorker.register('sw.js').catch(function () {})
-  }
 })()

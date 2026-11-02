@@ -9,8 +9,14 @@ export interface RenderOptions {
   documentTitle?: string // <title>；PDF 會拿它當預設檔名
 }
 
+/** 要內嵌的 Google Fonts 字型，以及會用這個字型顯示的字 */
+export interface SiteFont {
+  family: string
+  weights: number[]
+  text(data: SiteData): string
+}
+
 export interface SiteTemplate {
   render(data: SiteData, opts: RenderOptions): string
-  /** 要內嵌的 Google Fonts 字型，以及會用到的字 */
-  font?: { family: string; weights: number[]; text(data: SiteData): string }
+  fonts: SiteFont[]
 }

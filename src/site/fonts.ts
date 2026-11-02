@@ -8,9 +8,10 @@ function toBase64(bytes: Uint8Array): string {
   return btoa(s)
 }
 
-/** 回傳可以直接放進 <style> 的 @font-face；網路不通時丟出錯誤 */
-export async function embedGoogleFont(family: string, weights: number[], text: string): Promise<string> {
-  const chars = [...new Set(text.replace(/\s/g, ''))].join('')
+// 一次請求最多帶這麼多字；內文也用網路字型的範本字數多，分批下載，各批的 unicode-range 不重疊
+const CHUNK = 1000
+
+async function fetchSubset(family: string, weights: number[], chars: string): Promise<string> {
   const query = `family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@${weights.join(';')}&text=${encodeURIComponent(chars)}&display=swap`
   const res = await fetch(`${CSS_URL}?${query}`)
   if (!res.ok) throw new Error(`無法下載字型（${res.status}）`)
@@ -24,4 +25,13 @@ export async function embedGoogleFont(family: string, weights: number[], text: s
     css = css.replaceAll(url, data)
   }
   return css
+}
+
+/** 回傳可以直接放進 <style> 的 @font-face；網路不通時丟出錯誤 */
+export async function embedGoogleFont(family: string, weights: number[], text: string): Promise<string> {
+  const chars = [...new Set(text.replace(/\s/g, ''))]
+  const chunks: string[] = []
+  for (let i = 0; i < chars.length; i += CHUNK) chunks.push(chars.slice(i, i + CHUNK).join(''))
+  const css = await Promise.all(chunks.map((c) => fetchSubset(family, weights, c)))
+  return css.join('\n')
 }

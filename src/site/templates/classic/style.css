@@ -1,0 +1,623 @@
+/* 經典：白紙上的手寫感手冊。--a1…--a6 是範本的六個配色，用途和 Word 範本一致 */
+
+:root {
+  --ink: #2b2723;
+  --ink-soft: #5e5750;
+  --hair: #e4ded6;
+  --paper: #ffffff;
+  --f-hand: 'Iansui', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --f-round: 'Huninn', 'Iansui', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --gutter: 16px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 110px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-hand);
+  font-size: 17px;
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--a2);
+  outline-offset: 2px;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.ic {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.skip {
+  position: absolute;
+  left: 8px;
+  top: -60px;
+  z-index: 50;
+  padding: 6px 12px;
+  background: var(--ink);
+  color: #fff;
+}
+
+.skip:focus {
+  top: 8px;
+}
+
+/* ---------- 頁首：手冊名稱＋雙線，下方是區段目錄 ---------- */
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+}
+
+.top-in {
+  position: relative;
+  padding-top: max(18px, env(safe-area-inset-top));
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.top h1 {
+  font-family: var(--f-round);
+  font-weight: 400;
+  font-size: clamp(24px, 6vw, 34px);
+  line-height: 1.3;
+  color: var(--a2);
+}
+
+.dates {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.offline {
+  position: absolute;
+  right: var(--gutter);
+  top: 14px;
+  font-size: 12px;
+  padding: 0 8px;
+  border: 1px solid var(--a5);
+  color: var(--a5);
+  border-radius: 99px;
+}
+
+.toc {
+  border-top: 4px double var(--a2);
+  border-bottom: 1px solid var(--hair);
+}
+
+.toc .wrap {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.toc a {
+  flex: none;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.toc a:hover {
+  color: var(--a2);
+}
+
+/* ---------- 區段 ---------- */
+
+.sec {
+  padding: 28px 0 8px;
+}
+
+.sec-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+  font-size: 23px;
+  margin-bottom: 14px;
+}
+
+.flower {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.4;
+}
+
+/* 航班：深色表頭的表格；手機上每班一張卡片 */
+.flights {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--a1-line);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.flights th {
+  background: var(--a1);
+  color: #fff;
+  font-weight: 400;
+  font-size: 15px;
+  padding: 6px 4px;
+}
+
+.flights td {
+  padding: 6px 4px;
+  border-top: 1px solid var(--a1-line);
+}
+
+@media screen and (max-width: 640px) {
+  .flights,
+  .flights tbody,
+  .flights tr,
+  .flights td {
+    display: block;
+  }
+
+  .flights {
+    border: 0;
+  }
+
+  .flights thead {
+    display: none;
+  }
+
+  .flights tr {
+    border: 1px solid var(--a1-line);
+    margin-bottom: 12px;
+  }
+
+  .flights td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 12px;
+    text-align: right;
+    border-top: 1px solid var(--a1-line);
+  }
+
+  .flights td:first-child {
+    border-top: 0;
+    background: var(--a1);
+    color: #fff;
+  }
+
+  .flights td::before {
+    content: attr(data-label);
+    color: var(--ink-soft);
+    text-align: left;
+  }
+
+  .flights td:first-child::before {
+    color: inherit;
+    opacity: 0.85;
+  }
+}
+
+/* 行程：圓形 Day 框疊在雙線圓角框左側 */
+.day + .day {
+  margin-top: 8px;
+}
+
+.daybox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 92px;
+  margin: 26px 0 16px 50px;
+  padding: 10px 16px 10px 64px;
+  border: 5px double var(--a2);
+  border-radius: 22px;
+  break-inside: avoid;
+  break-after: avoid;
+}
+
+.daycircle {
+  position: absolute;
+  left: -54px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 108px;
+  height: 108px;
+  border: 5px double var(--a2);
+  border-radius: 50%;
+  background: var(--paper);
+  font-family: var(--f-round);
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.daycircle b {
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.overview {
+  font-family: var(--f-round);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.spot {
+  margin: 0 0 14px;
+  break-inside: avoid;
+}
+
+.spot-name {
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--a4);
+}
+
+.spot p {
+  color: var(--ink-soft);
+}
+
+/* 美食 */
+.food + .food {
+  margin-top: 12px;
+}
+
+.food-place {
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--a4);
+}
+
+.food b {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.food li {
+  color: var(--ink-soft);
+}
+
+/* 飯店：名稱置中、用輔色 */
+.hotel {
+  padding: 14px 0 18px;
+  break-inside: avoid;
+}
+
+.hotel + .hotel {
+  border-top: 1px dashed var(--hair);
+}
+
+.hotel-name {
+  font-family: var(--f-round);
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+  color: var(--a3);
+  margin-bottom: 6px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid var(--a3);
+  border-radius: 99px;
+  color: var(--a3);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.actions a:hover {
+  background: var(--a3);
+  color: #fff;
+}
+
+/* 旅遊資訊：強調色底的小標籤 */
+.info {
+  margin-bottom: 14px;
+  break-inside: avoid;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0 8px;
+  margin-bottom: 4px;
+  background: var(--a6);
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.info p {
+  color: var(--ink-soft);
+}
+
+.info mark {
+  background: none;
+  color: var(--a5);
+}
+
+/* 檢查清單：強調色粗框的大表格 */
+.checktable {
+  border: 3px solid var(--a5);
+}
+
+.check-head {
+  padding: 6px 12px;
+  background: var(--a5);
+  color: #fff;
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+}
+
+.progress {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--a5-line);
+  background: var(--a5-soft);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.progress.done {
+  color: var(--a5);
+}
+
+.bar {
+  height: 6px;
+  margin-bottom: 4px;
+  background: #fff;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--a5);
+  transition: width 0.3s;
+}
+
+.check-group h3 {
+  padding: 6px;
+  border-bottom: 1px solid var(--a5-line);
+  font-weight: 400;
+  font-size: 18px;
+  text-align: center;
+}
+
+.check-group + .check-group h3 {
+  border-top: 1px solid var(--a5-line);
+}
+
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 560px) {
+  .check-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.check-grid li {
+  border-right: 1px solid var(--a5-line);
+  border-bottom: 1px solid var(--a5-line);
+  margin: 0 -1px -1px 0;
+}
+
+.check-grid label {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.check-grid input {
+  appearance: none;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 6px 0 0;
+  border: 1.5px solid var(--ink-soft);
+  background: #fff center / 12px no-repeat;
+  cursor: pointer;
+}
+
+.check-grid input:checked {
+  border-color: var(--a5);
+  background-color: var(--a5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+
+.check-grid input:checked + span {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+
+/* 頁尾 */
+.foot {
+  margin-top: 40px;
+  padding: 20px 0 calc(28px + env(safe-area-inset-bottom));
+  border-top: 4px double var(--a2);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.foot .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.print {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--a2);
+  border-radius: 99px;
+  background: #fff;
+  color: var(--a2);
+  font: inherit;
+  cursor: pointer;
+}
+
+.print:hover {
+  background: var(--a2);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .bar span {
+    transition: none;
+  }
+}
+
+/* ---------- 列印：A4，美食、飯店、資訊、清單各自從新的一頁開始 ---------- */
+
+@page {
+  size: A4;
+  margin: 16mm 16mm 18mm;
+
+  @bottom-center {
+    content: counter(page);
+    font: 9pt 'Iansui', 'Microsoft JhengHei', sans-serif;
+    color: #5e5750;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-size: 11pt;
+    line-height: 1.8;
+  }
+
+  .wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  .no-print,
+  .toc,
+  .offline,
+  .skip {
+    display: none !important;
+  }
+
+  .top {
+    position: static;
+  }
+
+  .top-in {
+    padding: 0 0 14px;
+    border-bottom: 4px double var(--a2);
+  }
+
+  .sec {
+    padding-top: 18px;
+  }
+
+  .sec.page {
+    break-before: page;
+    padding-top: 0;
+  }
+
+  .sec-title {
+    break-after: avoid;
+  }
+
+  .flights tr {
+    break-inside: avoid;
+  }
+
+  .checktable {
+    break-inside: auto;
+  }
+
+  .check-group {
+    break-inside: avoid;
+  }
+
+  .check-grid label {
+    min-height: 0;
+    padding: 3px 8px;
+  }
+}

@@ -2,6 +2,7 @@
   "id": "wafu",
   "name": "和風直排",
   "file": "wafu.docx",
+  "site": "wafu",
   "description": "A5 小冊子：班機與住宿、行程總覽橫排，景點介紹一頁一個、中文直排，上方留照片位置。",
   "colorRoles": [
     { "label": "主色", "slots": ["accent1", "accent2"] }
@@ -11,7 +12,7 @@
     { "label": "內文", "style": "BW-內文", "default": "微軟正黑體" }
   ],
   "checklistSlots": { "證件": 0, "衣物": 0, "藥品": 0, "其它": 0 },
-  "formFields": ["dayTheme", "departTime", "hotelCity", "hotelStay", "hotelNote"],
+  "formFields": ["title", "dayTheme", "departTime", "hotelCity", "hotelStay", "hotelNote"],
   "spotContentLimit": 160,
   "presets": [
     {
