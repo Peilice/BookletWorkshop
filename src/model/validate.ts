@@ -1,7 +1,8 @@
 // 產生 Word 前的檢查：列出空白或可能有問題的欄位。只提醒，不阻止產生（規格書 4.6）
 
-import type { Booklet } from './booklet'
+import type { Booklet, FormField, TemplateRules } from './booklet'
 import { CHECKLIST_CATEGORIES } from './booklet'
+import { FALLBACK_RULES } from './defaults'
 
 export type TabId = 'flights' | 'days' | 'foods' | 'hotels' | 'infos' | 'checklist' | 'style'
 
@@ -10,15 +11,12 @@ export interface Issue {
   text: string
 }
 
-// Day 方塊空間有限（規格書 4.1）
-export const OVERVIEW_LIMIT = 40
-
 const blank = (s: string) => !s.trim()
 
-/** 列出空白的欄位名稱，例如「日期、班機」 */
-function missing(fields: [string, string][]): string {
+/** 列出空白的欄位名稱，例如「日期、班機」；第三項是 false 的欄位（範本沒用到）不檢查 */
+function missing(fields: [string, string, boolean?][]): string {
   return fields
-    .filter(([, v]) => blank(v))
+    .filter(([, v, shown = true]) => shown && blank(v))
     .map(([label]) => label)
     .join('、')
 }
@@ -30,19 +28,25 @@ export function autoOverview(spots: { name: string }[]): string {
     .join(' → ')
 }
 
-export function validateBooklet(b: Booklet): Issue[] {
+/** 數景點內容的字數：不算頭尾空白和換行 */
+export const contentLength = (s: string) => s.trim().replace(/\n/g, '').length
+
+export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULES): Issue[] {
   const issues: Issue[] = []
   const add = (tab: TabId, text: string) => issues.push({ tab, text })
+  const has = (f: FormField) => rules.formFields.includes(f)
 
-  if (!b.flights.length && !b.days.length && !b.foods.length && !b.hotels.length) {
-    add('days', '手冊還沒有航班、行程、美食或飯店，產生的 Word 只會有旅遊資訊和檢查清單。')
+  if (!b.flights.length && !b.days.length && !(has('foods') && b.foods.length) && !b.hotels.length) {
+    const parts = has('foods') ? '航班、行程、美食或飯店' : '航班、行程或飯店'
+    const rest = has('infos') || has('checklist') ? '只會有旅遊資訊和檢查清單' : '會是空白的'
+    add('days', `手冊還沒有${parts}，產生的 Word ${rest}。`)
   }
 
   b.flights.forEach((f, i) => {
     const m = missing([
       ['日期', f.date],
-      ['航空公司', f.airline],
-      ['班機', f.flightNo],
+      ['航空公司', f.airline, has('airline')],
+      ['班機', f.flightNo, has('flightNo')],
       ['起飛地', f.from],
       ['起飛時間', f.departTime],
       ['抵達地', f.to],
@@ -54,17 +58,23 @@ export function validateBooklet(b: Booklet): Issue[] {
   b.days.forEach((d, i) => {
     const day = `Day ${i + 1}`
     if (blank(d.date)) add('days', `${day}：沒有填日期`)
+    if (has('dayTheme') && blank(d.theme)) add('days', `${day}：沒有填主題`)
     if (!d.spots.length) add('days', `${day}：沒有景點`)
     d.spots.forEach((s, j) => {
       if (blank(s.name)) add('days', `${day} 景點 ${j + 1}：沒有填景點名稱`)
+      const length = contentLength(s.content)
+      if (rules.spotContentLimit && length > rules.spotContentLimit) {
+        const name = s.name.trim() || `${day} 景點 ${j + 1}`
+        add('days', `${name}：內容有 ${length} 個字，超過 ${rules.spotContentLimit} 字會接到下一頁`)
+      }
     })
     const overview = d.overview.trim() || autoOverview(d.spots)
-    if (overview.length > OVERVIEW_LIMIT) {
-      add('days', `${day}：每日行程總覽有 ${overview.length} 個字，可能會超出 Day 方塊（建議 ${OVERVIEW_LIMIT} 字以內）`)
+    if (rules.overviewLimit && overview.length > rules.overviewLimit) {
+      add('days', `${day}：每日行程總覽有 ${overview.length} 個字，可能會超出 Day 方塊（建議 ${rules.overviewLimit} 字以內）`)
     }
   })
 
-  b.foods.forEach((p, i) => {
+  if (has('foods')) b.foods.forEach((p, i) => {
     const place = p.place.trim() || `地點 ${i + 1}`
     if (blank(p.place)) add('foods', `地點 ${i + 1}：沒有填地點名稱`)
     if (!p.items.length) add('foods', `${place}：沒有美食或特產，這個地點不會出現在手冊裡`)
@@ -76,13 +86,16 @@ export function validateBooklet(b: Booklet): Issue[] {
   b.hotels.forEach((h, i) => {
     const m = missing([
       ['飯店名稱', h.name],
+      ['城市', h.city, has('hotelCity')],
       ['地址', h.address],
-      ['電話', h.phone],
+      ['電話', h.phone, has('hotelPhone')],
+      ['入住日期', h.checkIn, has('hotelStay')],
+      ['退房日期', h.checkOut, has('hotelStay')],
     ])
     if (m) add('hotels', `飯店 ${i + 1}：沒有填${m}`)
   })
 
-  b.infos.forEach((info, i) => {
+  if (has('infos')) b.infos.forEach((info, i) => {
     const m = missing([
       ['標題', info.title],
       ['內容', info.content],
@@ -90,10 +103,11 @@ export function validateBooklet(b: Booklet): Issue[] {
     if (m) add('infos', `${info.title.trim() || `第 ${i + 1} 項`}：沒有填${m}`)
   })
 
-  for (const c of CHECKLIST_CATEGORIES) {
+  if (has('checklist')) for (const c of CHECKLIST_CATEGORIES) {
     const empty = b.checklist.filter((x) => x.category === c.key && blank(x.item)).length
     if (empty) add('checklist', `${c.label}：有 ${empty} 個空白項目，手冊上會是空白格`)
   }
 
   return issues
 }
+

@@ -3,12 +3,16 @@ import { computed, shallowRef, watchEffect } from 'vue'
 import type { Day } from '../model/booklet'
 import { newDay, newSpot } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
-import { autoOverview, OVERVIEW_LIMIT } from '../model/validate'
+import { useFormFields } from '../store/templates'
+import { autoOverview, contentLength } from '../model/validate'
 import { weekday } from '../transform/templateData'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
 
 const { booklet } = useBookletStore()
+const { rules, has } = useFormFields()
+const overviewLimit = computed(() => rules.value.overviewLimit)
+const spotLimit = computed(() => rules.value.spotContentLimit)
 
 // 用物件本身記住目前分頁，上移／下移後分頁會跟著那一天走
 const activeDay = shallowRef<Day>()
@@ -105,17 +109,28 @@ function posterDate(iso: string): string {
         :aria-labelledby="`day-tab-${activeIndex}`"
         class="day-form"
       >
+        <div v-if="has('dayTheme') || has('departTime')" class="theme-row">
+          <label v-if="has('dayTheme')" class="field">
+            <span>主題</span>
+            <input v-model="activeDay.theme" placeholder="例：高山老街、飛驒古川" />
+          </label>
+          <label v-if="has('departTime')" class="field">
+            <span>出門時間（選填）</span>
+            <input v-model="activeDay.departTime" type="time" />
+          </label>
+        </div>
+
         <label class="field">
           <span class="overview-label">
             每日行程總覽（選填，沒填時自動用景點串起來）
-            <span class="overview-count" :class="{ over: overviewText.length > OVERVIEW_LIMIT }">
-              {{ pad(overviewText.length) }} / {{ OVERVIEW_LIMIT }}
+            <span v-if="overviewLimit" class="overview-count" :class="{ over: overviewText.length > overviewLimit }">
+              {{ pad(overviewText.length) }} / {{ overviewLimit }}
             </span>
           </span>
           <input v-model="activeDay.overview" class="overview-input" :placeholder="autoOverview(activeDay.spots)" />
         </label>
-        <p v-if="overviewText.length > OVERVIEW_LIMIT" class="hint warn">
-          總覽有 {{ overviewText.length }} 個字，建議在 {{ OVERVIEW_LIMIT }} 字以內，太長可能會超出 Day 方塊。
+        <p v-if="overviewLimit && overviewText.length > overviewLimit" class="hint warn">
+          總覽有 {{ overviewText.length }} 個字，建議在 {{ overviewLimit }} 字以內，太長可能會超出 Day 方塊。
         </p>
 
         <div class="spots">
@@ -125,6 +140,9 @@ function posterDate(iso: string): string {
             <div class="row-body">
               <label class="field"><span class="sr-only">景點 {{ j + 1 }}</span><input v-model="s.name" class="title-input" placeholder="景點名稱" /></label>
               <label class="field"><span class="sr-only">景點內容</span><textarea v-model="s.content" rows="2" placeholder="景點內容" /></label>
+              <p v-if="spotLimit && contentLength(s.content) > spotLimit" class="hint warn">
+                內容有 {{ contentLength(s.content) }} 個字，超過 {{ spotLimit }} 字會接到下一頁。
+              </p>
             </div>
             <ItemActions :list="activeDay.spots" :index="j" :label="`景點 ${j + 1}`" />
           </div>
@@ -246,6 +264,12 @@ function posterDate(iso: string): string {
 
 .spot .row-body {
   gap: 6px;
+}
+
+.theme-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 16px;
 }
 
 .overview-label {

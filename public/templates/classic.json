@@ -19,6 +19,8 @@
     { "label": "飯店名稱", "style": "BW-飯店名稱", "default": "華康寶風體W4" }
   ],
   "checklistSlots": { "證件": 0, "衣物": 1, "藥品": 0, "其它": 10 },
+  "formFields": ["airline", "flightNo", "hotelPhone", "foods", "infos", "checklist"],
+  "overviewLimit": 40,
   "presets": [
     {
       "name": "原版",

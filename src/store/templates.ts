@@ -1,7 +1,9 @@
 // 讀取網站內建的範本清單與設定檔（public/templates/）
 
-import { ref } from 'vue'
-import type { TemplateManifest } from '../model/booklet'
+import { computed, ref } from 'vue'
+import type { FormField, TemplateManifest, TemplateRules } from '../model/booklet'
+import { FALLBACK_RULES } from '../model/defaults'
+import { useBookletStore } from './booklet'
 
 const base = `${import.meta.env.BASE_URL}templates/`
 
@@ -40,6 +42,18 @@ async function getTemplateFile(manifest: TemplateManifest): Promise<ArrayBuffer>
   const res = await fetch(`${base}${manifest.file}`)
   if (!res.ok) throw new Error(`無法讀取範本（${res.status}）`)
   return res.arrayBuffer()
+}
+
+// 目前選的範本決定表單顯示哪些欄位；設定檔還沒讀到時照經典範本
+const { settings } = useBookletStore()
+const currentRules = computed<TemplateRules>(
+  () => templates.value.find((t) => t.id === settings.value.templateId) ?? templates.value[0] ?? FALLBACK_RULES,
+)
+
+export function useFormFields() {
+  void loadTemplates()
+  const has = (f: FormField) => currentRules.value.formFields.includes(f)
+  return { rules: currentRules, has }
 }
 
 export function useTemplates() {

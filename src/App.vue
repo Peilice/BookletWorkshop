@@ -11,9 +11,11 @@ import { effectivePalette, generateFromSettings } from './docx/fromSettings'
 import { lowContrastSpots, readableOr } from './model/contrast'
 import { bookletFileName } from './model/fileName'
 import { SaveFileError } from './model/saveFile'
+import type { FormField, TemplateManifest } from './model/booklet'
+import { FALLBACK_RULES } from './model/defaults'
 import { validateBooklet, type Issue, type TabId } from './model/validate'
 import { useBookletStore } from './store/booklet'
-import { useTemplates } from './store/templates'
+import { useFormFields, useTemplates } from './store/templates'
 import { downloadFile } from './utils/download'
 
 const store = useBookletStore()
@@ -30,8 +32,16 @@ const tabs: { id: TabId; label: string; component: Component; count?: () => numb
   { id: 'checklist', label: '自訂清單', component: ChecklistPanel, count: () => booklet.value.checklist.length },
   { id: 'style', label: '範本與樣式', component: StylePanel },
 ]
+// 美食特產、旅遊資訊、自訂清單：範本沒用到就不顯示（資料仍保留在存檔裡）
+const { has } = useFormFields()
+const optionalTabs: TabId[] = ['foods', 'infos', 'checklist']
+const visibleTabs = computed(() => tabs.filter((t) => !optionalTabs.includes(t.id) || has(t.id as FormField)))
 const activeTab = ref(tabs[0].id)
 const activePanel = computed(() => tabs.find((t) => t.id === activeTab.value)!.component)
+// 換範本後目前分頁不見了，回到第一個分頁
+watch(visibleTabs, (v) => {
+  if (!v.some((t) => t.id === activeTab.value)) activeTab.value = v[0].id
+})
 
 // ---------- 訊息 ----------
 
@@ -100,14 +110,17 @@ const issueGroups = computed(() =>
 )
 
 async function collectIssues(): Promise<Issue[]> {
-  const issues = validateBooklet(booklet.value)
+  let manifest: TemplateManifest | null = null
   try {
-    const manifest = await useTemplates().getManifest(settings.value.templateId)
+    manifest = await useTemplates().getManifest(settings.value.templateId)
+  } catch {
+    // 範本讀不到時，產生 Word 那一步會顯示錯誤
+  }
+  const issues = validateBooklet(booklet.value, manifest ?? FALLBACK_RULES)
+  if (manifest) {
     for (const s of lowContrastSpots(manifest, effectivePalette(manifest, settings.value))) {
       issues.push({ tab: 'style', text: `${s.where}可能看不清楚，建議選深一點的顏色` })
     }
-  } catch {
-    // 範本讀不到時，產生 Word 那一步會顯示錯誤
   }
   return issues
 }
@@ -202,7 +215,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload)
 
       <nav class="tabs" role="tablist" aria-label="手冊內容">
         <button
-          v-for="t in tabs"
+          v-for="t in visibleTabs"
           :id="`tab-${t.id}`"
           :key="t.id"
           type="button"

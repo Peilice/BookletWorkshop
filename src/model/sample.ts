@@ -14,6 +14,8 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-01',
       overview: '',
+      theme: '',
+      departTime: '',
       spots: [
         { name: '大阪城公園', content: lorem('大阪城公園') },
         { name: '道頓堀', content: lorem('道頓堀') },
@@ -22,6 +24,8 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-02',
       overview: '京都一日遊',
+      theme: '',
+      departTime: '',
       spots: [
         { name: '伏見稻荷大社', content: lorem('伏見稻荷大社') },
         { name: '清水寺', content: lorem('清水寺') },
@@ -31,6 +35,8 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-03',
       overview: '',
+      theme: '',
+      departTime: '',
       spots: [
         { name: '黑門市場', content: lorem('黑門市場') + '\n第二行：測試換行。\n第三行：再測一次。' },
         { name: '新世界通天閣', content: lorem('新世界通天閣') },
@@ -39,6 +45,8 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-04',
       overview: '臨空城 Outlet 購物後前往機場',
+      theme: '',
+      departTime: '',
       spots: [{ name: '臨空城 Outlet', content: lorem('臨空城 Outlet') }],
     },
   ],
@@ -60,9 +68,10 @@ export const osakaKyoto: Booklet = {
     },
   ],
   hotels: [
-    { name: '大阪難波測試飯店', address: '大阪市中央區難波1-1-1', phone: '06-0000-0000' },
-    { name: '京都四條測試飯店', address: '京都市下京區（測試）', phone: '075-000-0000' },
+    { name: '大阪難波測試飯店', address: '大阪市中央區難波1-1-1', phone: '06-0000-0000', city: '', checkIn: '', checkOut: '' },
+    { name: '京都四條測試飯店', address: '京都市下京區（測試）', phone: '075-000-0000', city: '', checkIn: '', checkOut: '' },
   ],
+  hotelNote: '',
   infos: [
     { title: '氣候', content: '（測試）氣候的說明內容。' },
     { title: '時差', content: '（測試）時差的說明內容。' },
@@ -86,6 +95,7 @@ export const sparse: Booklet = {
   days: osakaKyoto.days.slice(0, 2),
   foods: [],
   hotels: [],
+  hotelNote: '',
   infos: osakaKyoto.infos.slice(0, 3),
   checklist: [
     ...['日幣', '駕照譯本', '旅平險保單', '飯店訂房確認單'].map((item) => ({ category: '證件' as const, item })),

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { newFlight } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
+import { useFormFields } from '../store/templates'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
 
 const { booklet } = useBookletStore()
+const { has } = useFormFields()
 </script>
 
 <template>
@@ -19,10 +21,10 @@ const { booklet } = useBookletStore()
     <div v-else class="rows">
       <div v-for="(f, i) in booklet.flights" :key="i" class="row-item">
         <span class="seq" aria-hidden="true">{{ i + 1 }}</span>
-        <div class="flight-grid">
+        <div class="flight-grid" :class="{ 'no-airline': !has('airline') && !has('flightNo') }">
           <label class="field"><span>日期</span><input v-model="f.date" type="date" /></label>
-          <label class="field"><span>航空公司</span><input v-model="f.airline" /></label>
-          <label class="field"><span>班機</span><input v-model="f.flightNo" class="strong" placeholder="例：CI152" /></label>
+          <label v-if="has('airline')" class="field"><span>航空公司</span><input v-model="f.airline" /></label>
+          <label v-if="has('flightNo')" class="field"><span>班機</span><input v-model="f.flightNo" class="strong" placeholder="例：CI152" /></label>
           <label class="field"><span>起飛地</span><input v-model="f.from" /></label>
           <label class="field"><span>起飛時間</span><input v-model="f.departTime" type="time" /></label>
           <label class="field"><span>抵達地</span><input v-model="f.to" /></label>
@@ -44,6 +46,10 @@ const { booklet } = useBookletStore()
   grid-template-columns: 148px 1fr 96px 1fr 124px 1fr 124px;
   gap: 16px;
   align-items: end;
+}
+
+.flight-grid.no-airline {
+  grid-template-columns: 148px 1fr 124px 1fr 124px;
 }
 
 .strong {

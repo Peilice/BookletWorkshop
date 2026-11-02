@@ -55,6 +55,21 @@ describe('存檔與讀檔', () => {
     expect(booklet.checklist).toEqual([{ category: '其它', item: '轉接頭' }])
     expect(settings).toEqual(defaultSettings())
   })
+
+  it('舊存檔沒有主題、城市、入住退房、住宿備註時補上空白', () => {
+    const text = JSON.stringify({
+      format: 'booklet-workshop',
+      version: 1,
+      booklet: {
+        days: [{ date: '2026-12-01', overview: '', spots: [] }],
+        hotels: [{ name: '測試飯店', address: '地址', phone: '06' }],
+      },
+    })
+    const { booklet } = parseSaveFile(text)
+    expect(booklet.days[0]).toMatchObject({ theme: '', departTime: '' })
+    expect(booklet.hotels[0]).toMatchObject({ city: '', checkIn: '', checkOut: '' })
+    expect(booklet.hotelNote).toBe('')
+  })
 })
 
 describe('預設值', () => {
@@ -64,7 +79,7 @@ describe('預設值', () => {
 
   it('新增的一天日期接在前一天後面（跨月）', () => {
     expect(addDays('2026-11-30', 1)).toBe('2026-12-01')
-    expect(newDay({ date: '2026-12-31', overview: '', spots: [] }).date).toBe('2027-01-01')
+    expect(newDay({ ...newDay(), date: '2026-12-31' }).date).toBe('2027-01-01')
     expect(newDay().date).toBe('')
   })
 })

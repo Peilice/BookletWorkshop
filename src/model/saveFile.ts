@@ -46,13 +46,23 @@ function normalizeBooklet(b: Obj): Booklet {
     days: list(b.days, (d) => ({
       date: str(d.date),
       overview: str(d.overview),
+      theme: str(d.theme),
+      departTime: str(d.departTime),
       spots: list(d.spots, (s) => ({ name: str(s.name), content: str(s.content) })),
     })),
     foods: list(b.foods, (f) => ({
       place: str(f.place),
       items: list(f.items, (i) => ({ name: str(i.name), description: str(i.description) })),
     })),
-    hotels: list(b.hotels, (h) => ({ name: str(h.name), address: str(h.address), phone: str(h.phone) })),
+    hotels: list(b.hotels, (h) => ({
+      name: str(h.name),
+      address: str(h.address),
+      phone: str(h.phone),
+      city: str(h.city),
+      checkIn: str(h.checkIn),
+      checkOut: str(h.checkOut),
+    })),
+    hotelNote: str(b.hotelNote),
     infos: list(b.infos, (i) => ({ title: str(i.title), content: str(i.content) })),
     checklist: list(b.checklist, (c) => ({
       category: (CATEGORY_KEYS.includes(c.category as ChecklistCategory) ? c.category : '其它') as ChecklistCategory,

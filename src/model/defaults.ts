@@ -1,6 +1,6 @@
 // 新增手冊、新增一筆資料時的預設值
 
-import type { Booklet, Day, FoodItem, FoodPlace, Flight, Hotel, InfoItem, Settings, Spot } from './booklet'
+import type { Booklet, Day, FoodItem, FoodPlace, Flight, Hotel, InfoItem, Settings, Spot, TemplateRules } from './booklet'
 
 export function emptyBooklet(): Booklet {
   return {
@@ -8,6 +8,7 @@ export function emptyBooklet(): Booklet {
     days: [],
     foods: [],
     hotels: [],
+    hotelNote: '',
     // 旅遊資訊預設先放這三項（規格書 4.1）
     infos: ['氣候', '時差', '飲水'].map((title) => ({ title, content: '' })),
     checklist: [],
@@ -16,6 +17,12 @@ export function emptyBooklet(): Booklet {
 
 export function defaultSettings(): Settings {
   return { templateId: 'classic', palette: null, fonts: {} }
+}
+
+// 範本設定檔還沒讀到（或讀不到）時，表單和檢查先照經典範本
+export const FALLBACK_RULES: TemplateRules = {
+  formFields: ['airline', 'flightNo', 'hotelPhone', 'foods', 'infos', 'checklist'],
+  overviewLimit: 40,
 }
 
 /** YYYY-MM-DD 加 n 天；格式不對時回傳空字串 */
@@ -43,10 +50,12 @@ export const newSpot = (): Spot => ({ name: '', content: '' })
 export const newDay = (previous?: Day): Day => ({
   date: previous ? addDays(previous.date, 1) : '',
   overview: '',
+  theme: '',
+  departTime: '',
   spots: [newSpot()],
 })
 
 export const newFoodItem = (): FoodItem => ({ name: '', description: '' })
 export const newFoodPlace = (): FoodPlace => ({ place: '', items: [newFoodItem()] })
-export const newHotel = (): Hotel => ({ name: '', address: '', phone: '' })
+export const newHotel = (): Hotel => ({ name: '', address: '', phone: '', city: '', checkIn: '', checkOut: '' })
 export const newInfo = (): InfoItem => ({ title: '', content: '' })

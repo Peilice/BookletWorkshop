@@ -40,6 +40,8 @@ export function toTemplateData(b: Booklet, manifest: TemplateManifest): Record<s
       日期: shortDate(d.date),
       星期: weekday(d.date),
       每日行程總覽: d.overview.trim() || d.spots.map((s) => s.name).join(' → '),
+      主題: d.theme,
+      出門時間: d.departTime,
       景點: d.spots.map((s) => ({ 景點名稱: s.name, 景點內容: s.content })),
     })),
     有美食: b.foods.some((f) => f.items.length > 0),
@@ -47,7 +49,16 @@ export function toTemplateData(b: Booklet, manifest: TemplateManifest): Record<s
       .filter((f) => f.items.length > 0)
       .map((f) => ({ 地點: f.place, 美食: f.items.map((i) => ({ 名稱: i.name, 說明: i.description })) })),
     有飯店: b.hotels.length > 0,
-    飯店: b.hotels.map((h) => ({ 飯店名稱: h.name, 地址: h.address, 電話: h.phone })),
+    飯店: b.hotels.map((h) => ({
+      飯店名稱: h.name,
+      地址: h.address,
+      電話: h.phone,
+      城市: h.city,
+      入住日期: shortDate(h.checkIn),
+      退房日期: shortDate(h.checkOut),
+    })),
+    有住宿備註: b.hotelNote.trim() !== '',
+    住宿備註: b.hotelNote.trim(),
     旅遊資訊: b.infos.map((i) => ({ 標題: i.title, 內容: i.content })),
   }
 
