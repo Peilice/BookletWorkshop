@@ -100,10 +100,10 @@ export type FormField =
   | 'flightNo' // 交通：班機、車次
   | 'dayTheme' // 每日行程：主題
   | 'departTime' // 每日行程：出門時間
-  | 'hotelPhone' // 飯店：電話
-  | 'hotelCity' // 飯店：城市
-  | 'hotelStay' // 飯店：入住、退房日期
-  | 'hotelNote' // 飯店：備註
+  | 'hotelPhone' // 住宿：電話
+  | 'hotelCity' // 住宿：城市
+  | 'hotelStay' // 住宿：入住、退房日期
+  | 'hotelNote' // 住宿：備註
   | 'foods'
   | 'infos'
   | 'checklist'

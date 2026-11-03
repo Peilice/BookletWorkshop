@@ -48,7 +48,7 @@ const sections: { id: SectionId; label: string; component: Component; count: () 
   { id: 'flights', label: '交通', component: FlightsPanel, count: () => booklet.value.flights.length },
   { id: 'days', label: '每日行程', component: DaysPanel, count: () => booklet.value.days.length },
   { id: 'foods', label: '美食特產', component: FoodsPanel, count: () => booklet.value.foods.length, field: 'foods' },
-  { id: 'hotels', label: '飯店', component: HotelsPanel, count: () => booklet.value.hotels.length },
+  { id: 'hotels', label: '住宿', component: HotelsPanel, count: () => booklet.value.hotels.length },
   { id: 'infos', label: '旅遊資訊', component: InfosPanel, count: () => booklet.value.infos.length, field: 'infos' },
   { id: 'checklist', label: '行前清單', component: ChecklistPanel, count: () => booklet.value.checklist.reduce((n, g) => n + g.items.length, 0), field: 'checklist' },
 ]

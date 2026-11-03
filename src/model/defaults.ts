@@ -123,9 +123,13 @@ export const newChecklistGroup = (): ChecklistGroup => ({ name: '', items: [newC
 export const newChecklist = (type: TripType = 'abroad'): ChecklistGroup[] =>
   TRIP_CHECKLIST[type].map(([name, items]) => ({ name, items: items.map((text) => ({ text })) }))
 
-/** 行前清單還是某個類型預設的樣子（完全沒動過），不算使用者填的內容 */
-export const isUntouchedChecklist = (list: ChecklistGroup[]): boolean =>
-  TRIP_TYPES.some((t) => JSON.stringify(list) === JSON.stringify(newChecklist(t.id)))
+/** 行前清單跟哪個類型的預設一模一樣（完全沒動過）；都不是時回傳 null */
+export function presetTripType(list: ChecklistGroup[]): TripType | null {
+  return TRIP_TYPES.find((t) => JSON.stringify(list) === JSON.stringify(newChecklist(t.id)))?.id ?? null
+}
+
+/** 行前清單還是某個類型預設的樣子，不算使用者填的內容 */
+export const isUntouchedChecklist = (list: ChecklistGroup[]): boolean => presetTripType(list) !== null
 
 /** 清單裡有沒有任何一個預設項目（舊存檔沒有時，表單提供按鈕補上出國版的清單） */
 export function hasPresetChecklistItem(list: ChecklistGroup[]): boolean {

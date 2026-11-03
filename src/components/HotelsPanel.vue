@@ -13,16 +13,16 @@ const { booklet } = useBookletStore()
 <template>
   <section>
     <div class="panel-intro">
-      <h2>飯店</h2>
-      <p class="hint">房號一律留空，到當地再手寫。沒有填任何飯店時，手冊裡不會出現「飯店資訊」。</p>
+      <h2>住宿</h2>
+      <p class="hint">房號一律留空，到當地再手寫。飯店、民宿、露營區都填在這裡。沒有填任何住宿時，手冊裡不會出現這一段。</p>
     </div>
 
     <TransitionGroup tag="div" name="row" class="rows">
-      <!-- 一間飯店像一張行李吊牌：編號上方打一個孔 -->
+      <!-- 一筆住宿像一張行李吊牌：編號上方打一個孔 -->
       <div v-for="(h, i) in booklet.hotels" :key="keyOf(h)" class="row-item tag">
         <span class="seq" aria-hidden="true">{{ i + 1 }}</span>
         <div class="row-body">
-          <label class="field"><span>飯店名稱</span><input v-model="h.name" class="title-input" /></label>
+          <label class="field"><span>住宿名稱</span><input v-model="h.name" class="title-input" /></label>
           <div class="stay-row">
             <label class="field"><span>城市<UnusedMark field="hotelCity" /></span><input v-model="h.city" placeholder="例：高山" /></label>
             <label class="field"><span>入住日期<UnusedMark field="hotelStay" /></span><input v-model="h.checkIn" type="date" /></label>
@@ -34,13 +34,13 @@ const { booklet } = useBookletStore()
           </div>
           <label class="field"><span>備註（選填，例如備品、洗衣服務）<UnusedMark field="hotelNote" /></span><textarea v-model="h.note" rows="2" /></label>
         </div>
-        <ItemActions :list="booklet.hotels" :index="i" :label="`飯店 ${i + 1}`" />
+        <ItemActions :list="booklet.hotels" :index="i" :label="`住宿 ${i + 1}`" />
       </div>
     </TransitionGroup>
-    <EmptyArt v-if="booklet.hotels.length === 0" kind="hotel">還沒有飯店。訂好房間後填進來，手冊裡會附上地址和電話。</EmptyArt>
+    <EmptyArt v-if="booklet.hotels.length === 0" kind="hotel">還沒有住宿。訂好飯店或民宿後填進來，手冊裡會附上地址和電話；一日遊不用填。</EmptyArt>
 
     <div :class="{ 'rows-foot': booklet.hotels.length }">
-      <button type="button" class="add" @click="booklet.hotels.push(newHotel())"><Icon name="plus" />新增飯店</button>
+      <button type="button" class="add" @click="booklet.hotels.push(newHotel())"><Icon name="plus" />新增住宿</button>
     </div>
   </section>
 </template>

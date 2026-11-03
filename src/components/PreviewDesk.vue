@@ -23,7 +23,7 @@ const SECTION_LABEL: Record<SectionId, string> = {
   flights: '交通',
   days: '每日行程',
   foods: '美食特產',
-  hotels: '飯店',
+  hotels: '住宿',
   infos: '旅遊資訊',
   checklist: '行前清單',
 }

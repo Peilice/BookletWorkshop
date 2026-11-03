@@ -83,7 +83,7 @@ function foods(d: SiteData): string {
 
 function hotels(d: SiteData): string {
   return `<section class="sec page" id="hotels" aria-labelledby="h-hotels">
-  ${title('hotels', '飯店資訊')}
+  ${title('hotels', '住宿資訊')}
   ${d.hotels
     .map(
       (h) => `<article class="hotel">
@@ -128,13 +128,13 @@ function checklist(d: SiteData): string {
 
 const BOX_FIXED = 'Day0123456789/星期一二三四五六日→'
 
-/** Day 框、飯店名稱、手冊名稱用圓體 */
+/** Day 框、住宿名稱、手冊名稱用圓體 */
 export function boxText(d: SiteData): string {
   return [BOX_FIXED, d.title, ...d.days.map((x) => x.route.join('')), ...d.hotels.map((h) => h.name)].join('')
 }
 
 export function bodyText(d: SiteData): string {
-  return allText(d, `航班資訊行程規劃當地美食特產飯店旅遊資訊萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期交通業者班次出發`)
+  return allText(d, `航班資訊行程規劃當地美食特產住宿旅遊資訊萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期交通業者班次出發`)
 }
 
 export function render(d: SiteData, opts: RenderOptions): string {
@@ -143,7 +143,7 @@ export function render(d: SiteData, opts: RenderOptions): string {
     { id: 'flights', label: d.onlyFlights ? '航班' : '交通', show: d.flights.length > 0 },
     { id: 'days', label: '行程', show: d.days.length > 0 },
     { id: 'foods', label: '美食', show: d.foods.length > 0 },
-    { id: 'hotels', label: '飯店', show: d.hotels.length > 0 },
+    { id: 'hotels', label: '住宿', show: d.hotels.length > 0 },
     { id: 'info', label: '資訊', show: true },
     { id: 'checklist', label: '清單', show: d.checklist.length > 0 },
   ].filter((n) => n.show)

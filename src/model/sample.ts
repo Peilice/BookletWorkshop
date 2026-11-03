@@ -1,7 +1,7 @@
-// 範例資料（內容取自 測試輸出_大阪京都.docx），用於自動測試
+// 範例資料（內容取自 測試輸出_大阪京都.docx），用於自動測試，也是還沒填內容時預覽、風格縮圖用的範例行程
 
 import type { Booklet } from './booklet'
-import { newLuggageRules } from './defaults'
+import { newChecklist, newLuggageRules } from './defaults'
 
 const lorem = (name: string) =>
   `（測試內容）${name}的介紹文字，約兩到三行，用來確認段落格式、字型和換行是否正確。這裡再多寫一些字讓它換行。`
@@ -207,4 +207,42 @@ export const kanazawa: Booklet = {
   ],
   infos: [],
   checklist: [],
+}
+
+// 國內一日遊：開車來回、景點有時間、沒有住宿；空白的一日遊手冊預覽、縮圖用這份
+export const dayTrip: Booklet = {
+  title: '大溪・石門 一日遊',
+  flights: [
+    { mode: 'car', date: '2026-12-05', airline: '', flightNo: '', from: '台北', departTime: '08:00', to: '大溪老街', arriveTime: '09:00' },
+    { mode: 'car', date: '2026-12-05', airline: '', flightNo: '', from: '石門水庫', departTime: '17:00', to: '台北', arriveTime: '18:10' },
+  ],
+  days: [
+    {
+      date: '2026-12-05',
+      overview: '',
+      theme: '老街與湖光',
+      departTime: '08:00',
+      spots: [
+        { time: '09:00', name: '大溪老街', content: lorem('大溪老街') },
+        { time: '11:30', name: '大溪橋', content: lorem('大溪橋') },
+        { time: '13:30', name: '慈湖', content: lorem('慈湖') },
+        { time: '15:30', name: '石門水庫', content: lorem('石門水庫') },
+      ],
+    },
+  ],
+  foods: [
+    {
+      place: '大溪',
+      items: [
+        { name: '豆干', description: '測試說明一。' },
+        { name: '花生糖', description: '測試說明二。' },
+      ],
+    },
+  ],
+  hotels: [],
+  infos: [
+    { title: '天氣', content: '（測試）天氣的說明內容。' },
+    { title: '集合地點', content: '（測試）集合地點的說明內容。' },
+  ],
+  checklist: newChecklist('dayTrip'),
 }

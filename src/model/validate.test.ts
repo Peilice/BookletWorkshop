@@ -46,12 +46,12 @@ describe('validateBooklet', () => {
     expect(issues).toEqual([{ tab: 'days', text: expect.stringContaining('41 個字') }])
   })
 
-  it('美食地點、飯店空白', () => {
+  it('美食地點、住宿空白', () => {
     const b = { ...emptyBooklet(), foods: [newFoodPlace()], hotels: [newHotel()] }
     const texts = validateBooklet(b).map((i) => i.text)
     expect(texts).toContain('地點 1：沒有填地點名稱')
     expect(texts).toContain('地點 1 第 1 項：沒有填名稱')
-    expect(texts).toContain('飯店 1：沒有填飯店名稱、地址、電話')
+    expect(texts).toContain('住宿 1：沒有填住宿名稱、地址、電話')
   })
 
   it('旅遊資訊內容空白（新手冊預設的三項）', () => {
@@ -89,13 +89,13 @@ describe('validateBooklet', () => {
       const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ time: '', name: '景點', content: '' }] }], hotels: [newHotel()] }
       expect(validateBooklet(b, wafu).map((i) => i.text)).toEqual([
         'Day 1：沒有填主題',
-        '飯店 1：沒有填飯店名稱、城市、地址、入住日期、退房日期',
+        '住宿 1：沒有填住宿名稱、城市、地址、入住日期、退房日期',
       ])
     })
 
     it('沒有內容時，提醒文字不提到範本沒有的部分', () => {
       expect(validateBooklet(emptyBooklet(), wafu).map((i) => i.text)).toEqual([
-        '手冊還沒有交通、行程或飯店，產生的手冊會是空白的。',
+        '手冊還沒有交通、行程或住宿，產生的手冊會是空白的。',
       ])
     })
 

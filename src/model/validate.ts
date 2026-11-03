@@ -37,7 +37,7 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
   const has = (f: FormField) => rules.formFields.includes(f)
 
   if (!b.flights.length && !b.days.length && !(has('foods') && b.foods.length) && !b.hotels.length) {
-    const parts = has('foods') ? '交通、行程、美食或飯店' : '交通、行程或飯店'
+    const parts = has('foods') ? '交通、行程、美食或住宿' : '交通、行程或住宿'
     const rest = has('infos') || has('checklist') ? '只會有旅遊資訊和行前清單' : '會是空白的'
     add('days', `手冊還沒有${parts}，產生的手冊${rest}。`)
   }
@@ -86,14 +86,14 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
 
   b.hotels.forEach((h, i) => {
     const m = missing([
-      ['飯店名稱', h.name],
+      ['住宿名稱', h.name],
       ['城市', h.city, has('hotelCity')],
       ['地址', h.address],
       ['電話', h.phone, has('hotelPhone')],
       ['入住日期', h.checkIn, has('hotelStay')],
       ['退房日期', h.checkOut, has('hotelStay')],
     ])
-    if (m) add('hotels', `飯店 ${i + 1}：沒有填${m}`)
+    if (m) add('hotels', `住宿 ${i + 1}：沒有填${m}`)
   })
 
   if (has('infos')) b.infos.forEach((info, i) => {

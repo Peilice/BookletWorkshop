@@ -1,8 +1,8 @@
 // 工作台右邊的成品預覽、風格縮圖：用真正的網站範本畫出來，但字型直接連 Google Fonts，不像輸出時那樣內嵌
 
 import type { Booklet, PaletteColors, TemplateManifest } from '../model/booklet'
-import { isUntouchedChecklist, isUntouchedInfo } from '../model/defaults'
-import { osakaKyoto } from '../model/sample'
+import { isUntouchedChecklist, isUntouchedInfo, presetTripType } from '../model/defaults'
+import { dayTrip, osakaKyoto } from '../model/sample'
 import { renderSite, siteTemplate } from './build'
 import { toSiteData } from './siteData'
 
@@ -22,8 +22,10 @@ export function isBlankBooklet(b: Booklet): boolean {
   )
 }
 
+/** 空白手冊用範例行程；選了一日遊的空白手冊用一日遊的範例 */
 export function previewBooklet(b: Booklet): Booklet {
-  return isBlankBooklet(b) ? osakaKyoto : b
+  if (!isBlankBooklet(b)) return b
+  return presetTripType(b.checklist) === 'dayTrip' ? dayTrip : osakaKyoto
 }
 
 export function renderPreview(booklet: Booklet, manifest: TemplateManifest, colors: PaletteColors, print = false): string {
