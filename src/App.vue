@@ -262,7 +262,7 @@ async function generate(kind: OutputKind) {
       notify(fontError ? 'error' : 'ok', fontError ? `已下載網站 zip。${FONT_FALLBACK}` : '已下載網站 zip。解壓縮後整個資料夾上傳到 GitHub Pages 或 Netlify，就能離線瀏覽、加到手機主畫面。')
     } else {
       const { fontError } = await printPdfFromSettings(b, s)
-      notify(fontError ? 'error' : 'ok', fontError ? `已叫出列印視窗。${FONT_FALLBACK}` : '在列印視窗的「目的地」選「另存為 PDF」，紙張會是 A4；建議取消勾選「頁首和頁尾」。')
+      notify(fontError ? 'error' : 'ok', fontError ? `已叫出列印視窗。${FONT_FALLBACK}` : '在列印視窗的「目的地」選「另存為 PDF」，紙張會是 A4；「邊界」選「預設」才會有頁碼，建議取消勾選「頁首和頁尾」。')
     }
   } catch (err) {
     notify('error', `${OUTPUT_LABEL[kind]}失敗：${err instanceof Error ? err.message : String(err)}`)

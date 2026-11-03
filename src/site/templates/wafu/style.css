@@ -422,7 +422,8 @@ a {
 
 @page {
   size: A4;
-  margin: 15mm 16mm 17mm;
+  /* 留白放在 body 上，列印視窗的「邊界」選「無」時版面也不會貼齊紙邊；這裡只留頁碼的位置 */
+  margin: 0 0 10mm;
 
   @bottom-center {
     content: counter(page);
@@ -438,6 +439,9 @@ a {
   }
 
   body {
+    padding: 15mm 16mm 7mm;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
     font-size: 10.5pt;
   }
 

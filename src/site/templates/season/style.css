@@ -1068,7 +1068,8 @@ details[open] .chev {
 
 @page {
   size: A4;
-  margin: 14mm 14mm 16mm;
+  /* 留白放在 body 上，列印視窗的「邊界」選「無」時版面也不會貼齊紙邊；這裡只留頁碼的位置 */
+  margin: 0 0 10mm;
 
   @bottom-center {
     content: counter(page);
@@ -1088,6 +1089,9 @@ details[open] .chev {
   }
 
   body {
+    padding: 14mm 14mm 6mm;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
     font-size: 10.5pt;
     line-height: 1.65;
   }
