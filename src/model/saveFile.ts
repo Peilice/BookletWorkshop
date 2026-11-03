@@ -4,7 +4,7 @@ import type { AccentSlot, Booklet, PaletteColors, Settings } from './booklet'
 import { defaultSettings } from './defaults'
 
 export const SAVE_FORMAT = 'booklet-workshop'
-export const SAVE_VERSION = 2
+export const SAVE_VERSION = 3
 
 export interface SaveFile {
   format: typeof SAVE_FORMAT
@@ -60,8 +60,8 @@ function normalizeBooklet(b: Obj): Booklet {
       city: str(h.city),
       checkIn: str(h.checkIn),
       checkOut: str(h.checkOut),
+      note: str(h.note),
     })),
-    hotelNote: str(b.hotelNote),
     infos: list(b.infos, (i) => ({ title: str(i.title), content: str(i.content) })),
     checklist: list(b.checklist, (g) => ({
       name: str(g.name),
@@ -103,6 +103,12 @@ function migrate(data: Obj, version: number): Obj {
       items: old.filter((c) => keyOf(c) === key).map((c) => ({ text: str(c.item) })),
     })).filter((g) => g.items.length)
     data = { ...data, booklet: { ...data.booklet, checklist } }
+  }
+  // 第 3 版：住宿備註從全部飯店共用改成每間飯店各自一個；舊的共用備註抄到每間飯店
+  if (version < 3 && isObj(data.booklet) && str(data.booklet.hotelNote).trim() && Array.isArray(data.booklet.hotels)) {
+    const note = str(data.booklet.hotelNote)
+    const hotels = data.booklet.hotels.map((h) => (isObj(h) ? { ...h, note } : h))
+    data = { ...data, booklet: { ...data.booklet, hotels } }
   }
   return data
 }

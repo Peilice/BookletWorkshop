@@ -27,6 +27,7 @@ function travel(d: SiteData): string {
       ${when(stay, () => `<p class="num">${esc(stay)}</p>`)}
       ${when(h.address, () => `<p>地址：${esc(h.address)}</p>`)}
       ${when(h.phone, () => `<p>電話：<span class="num">${esc(h.phone)}</span></p>`)}
+      ${when(h.note, () => `<div class="note">${paragraphs(`※ ${h.note}`)}</div>`)}
       <p class="links no-print">
         ${when(h.name || h.address, () => `<a href="${esc(h.mapUrl)}" target="_blank" rel="noopener">${icon('pin')}地圖</a>`)}
         ${when(h.phone, () => `<a href="tel:${esc(h.phone.replace(/[^\d+]/g, ''))}">${icon('phone')}撥打電話</a>`)}
@@ -37,7 +38,6 @@ function travel(d: SiteData): string {
   <h2 class="sec-title" id="h-travel">${d.flights.length && d.hotels.length ? '班機與住宿' : d.flights.length ? '班機' : '住宿'}</h2>
   ${when(flights.length, () => `<h3 class="sub">【班機】</h3><ul class="flights">${flights.join('')}</ul>`)}
   ${when(hotels.length, () => `<h3 class="sub">【住宿】</h3><div class="hotels">${hotels.join('')}</div>`)}
-  ${when(d.hotelNote, () => `<div class="note">${paragraphs(`※ ${d.hotelNote}`)}</div>`)}
 </section>`
 }
 
@@ -96,7 +96,7 @@ export function render(d: SiteData, opts: RenderOptions): string {
   ${when(nav.length > 1, () => `<nav class="toc" aria-label="手冊內容"><div class="wrap">${nav.map((n) => `<a href="#${n.id}">${n.label}</a>`).join('')}</div></nav>`)}
 </header>
 <main id="main" class="wrap">
-${when(d.flights.length || d.hotels.length || d.hotelNote, () => travel(d))}
+${when(d.flights.length || d.hotels.length, () => travel(d))}
 ${when(d.days.length, () => overview(d))}
 ${when(
   hasSpots(d),

@@ -56,7 +56,7 @@ describe('存檔與讀檔', () => {
     expect(settings).toEqual(defaultSettings())
   })
 
-  it('舊存檔沒有主題、城市、入住退房、住宿備註時補上空白', () => {
+  it('舊存檔沒有主題、城市、入住退房、備註時補上空白', () => {
     const text = JSON.stringify({
       format: 'booklet-workshop',
       version: 1,
@@ -67,8 +67,18 @@ describe('存檔與讀檔', () => {
     })
     const { booklet } = parseSaveFile(text)
     expect(booklet.days[0]).toMatchObject({ theme: '', departTime: '' })
-    expect(booklet.hotels[0]).toMatchObject({ city: '', checkIn: '', checkOut: '' })
-    expect(booklet.hotelNote).toBe('')
+    expect(booklet.hotels[0]).toMatchObject({ city: '', checkIn: '', checkOut: '', note: '' })
+  })
+
+  it('第 2 版的共用住宿備註抄到每間飯店', () => {
+    const text = JSON.stringify({
+      format: 'booklet-workshop',
+      version: 2,
+      booklet: { hotels: [{ name: 'A' }, { name: 'B' }], hotelNote: '牙刷自備' },
+    })
+    const { booklet } = parseSaveFile(text)
+    expect(booklet.hotels.map((h) => h.note)).toEqual(['牙刷自備', '牙刷自備'])
+    expect('hotelNote' in booklet).toBe(false)
   })
 })
 

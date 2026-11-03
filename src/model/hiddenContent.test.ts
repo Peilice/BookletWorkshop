@@ -35,17 +35,16 @@ describe('換範本後不會顯示的內容', () => {
     ])
   })
 
-  it('和風直排換成經典：列出主題、出門時間、城市、入住退房、住宿備註', () => {
+  it('和風直排換成經典：列出主題、出門時間、城市、入住退房、飯店備註', () => {
     const b = emptyBooklet()
     b.days = [{ date: '', overview: '', theme: '古都', departTime: '08:30', spots: [] }]
-    b.hotels = [{ ...newHotel(), city: '高山', checkOut: '2026-12-02' }]
-    b.hotelNote = '含早餐'
+    b.hotels = [{ ...newHotel(), city: '高山', checkOut: '2026-12-02', note: '含早餐' }]
     expect(hiddenContent(b, classic)).toEqual([
       { label: '每日行程的主題', count: 1 },
       { label: '每日行程的出門時間', count: 1 },
       { label: '飯店的城市', count: 1 },
       { label: '飯店的入住、退房日期', count: 1 },
-      { label: '住宿備註', count: 1 },
+      { label: '飯店的備註', count: 1 },
     ])
   })
 })

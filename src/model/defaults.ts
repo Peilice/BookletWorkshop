@@ -9,7 +9,6 @@ export function emptyBooklet(): Booklet {
     days: [],
     foods: [],
     hotels: [],
-    hotelNote: '',
     // 旅遊資訊預設先放這三項（規格書 4.1），再加行李規定
     infos: [...['氣候', '時差', '飲水'].map((title) => ({ title, content: '' })), newLuggageRules()],
     checklist: newChecklist(),
@@ -58,7 +57,7 @@ export const newDay = (previous?: Day): Day => ({
 
 export const newFoodItem = (): FoodItem => ({ name: '', description: '' })
 export const newFoodPlace = (): FoodPlace => ({ place: '', items: [newFoodItem()] })
-export const newHotel = (): Hotel => ({ name: '', address: '', phone: '', city: '', checkIn: '', checkOut: '' })
+export const newHotel = (): Hotel => ({ name: '', address: '', phone: '', city: '', checkIn: '', checkOut: '', note: '' })
 export const newInfo = (): InfoItem => ({ title: '', content: '' })
 
 // 旅遊資訊「行李規定」的預設內容（原本是範本裡印死的固定內容），一行一條

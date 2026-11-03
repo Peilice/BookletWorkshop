@@ -44,6 +44,7 @@ export interface SiteHotel {
   city: string
   checkIn: string
   checkOut: string
+  note: string
   nights: number[] // 住在這間的是第幾天的晚上（days 的索引）
   mapUrl: string
 }
@@ -57,7 +58,6 @@ export interface SiteData {
   flights: SiteFlight[]
   days: SiteDay[]
   hotels: SiteHotel[]
-  hotelNote: string
   foods: { place: string; items: { name: string; description: string }[] }[]
   infos: { title: string; content: string }[]
   // 照畫面上的清單；沒填的項目和沒有項目的分類不放
@@ -140,10 +140,10 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       city: shown('hotelCity', h.city),
       checkIn: stay ? shortDate(h.checkIn) : '',
       checkOut: stay ? shortDate(h.checkOut) : '',
+      note: shown('hotelNote', h.note),
       nights: days.filter((d) => d.hotel === i).map((d) => d.n - 1),
       mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${h.name} ${h.address}`.trim())}`,
     })),
-    hotelNote: shown('hotelNote', b.hotelNote),
     foods: has('foods')
       ? b.foods
           .map((f) => ({

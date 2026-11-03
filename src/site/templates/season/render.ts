@@ -65,6 +65,7 @@ function hotelCard(h: SiteHotel, d: SiteData, compact: boolean): string {
   <div class="hotel-body">
     ${when(h.address, () => `<p class="fact">${icon('pin')}<span>${esc(h.address)}</span></p>`)}
     ${when(h.phone, () => `<p class="fact">${icon('phone')}<span class="num">${esc(h.phone)}</span></p>`)}
+    ${when(h.note, () => `<div class="note">${paragraphs(h.note)}</div>`)}
     <div class="actions no-print">
       ${when(h.name || h.address, () => `<a class="btn" href="${esc(h.mapUrl)}" target="_blank" rel="noopener">${icon('pin')}地圖</a>`)}
       ${when(h.phone, () => `<a class="btn btn-outline" href="tel:${esc(h.phone.replace(/[^\d+]/g, ''))}">${icon('phone')}撥打電話</a>`)}
@@ -78,7 +79,6 @@ function stay(d: SiteData): string {
   <div class="wrap">
     <h2 class="sec-title" id="h-stay">住宿</h2>
     <div class="hotels">${d.hotels.map((h) => hotelCard(h, d, false)).join('')}</div>
-    ${when(d.hotelNote, () => `<div class="note"><h3 class="box-title">住宿備註</h3>${paragraphs(d.hotelNote)}</div>`)}
   </div>
 </section>`
 }

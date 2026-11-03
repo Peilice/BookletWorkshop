@@ -23,7 +23,7 @@ const COUNTERS: { field: FormField; label: string; count: (b: Booklet) => number
     label: '飯店的入住、退房日期',
     count: (b) => b.hotels.filter((h) => filled(h.checkIn) || filled(h.checkOut)).length,
   },
-  { field: 'hotelNote', label: '住宿備註', count: (b) => (filled(b.hotelNote) ? 1 : 0) },
+  { field: 'hotelNote', label: '飯店的備註', count: (b) => b.hotels.filter((h) => filled(h.note)).length },
   {
     field: 'foods',
     label: '美食特產',

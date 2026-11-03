@@ -70,10 +70,9 @@ export const osakaKyoto: Booklet = {
     },
   ],
   hotels: [
-    { name: '大阪難波測試飯店', address: '大阪市中央區難波1-1-1', phone: '06-0000-0000', city: '', checkIn: '', checkOut: '' },
-    { name: '京都四條測試飯店', address: '京都市下京區（測試）', phone: '075-000-0000', city: '', checkIn: '', checkOut: '' },
+    { name: '大阪難波測試飯店', address: '大阪市中央區難波1-1-1', phone: '06-0000-0000', city: '', checkIn: '', checkOut: '', note: '' },
+    { name: '京都四條測試飯店', address: '京都市下京區（測試）', phone: '075-000-0000', city: '', checkIn: '', checkOut: '', note: '' },
   ],
-  hotelNote: '',
   infos: [
     { title: '氣候', content: '（測試）氣候的說明內容。' },
     { title: '時差', content: '（測試）時差的說明內容。' },
@@ -97,7 +96,6 @@ export const sparse: Booklet = {
   days: osakaKyoto.days.slice(0, 2),
   foods: [],
   hotels: [],
-  hotelNote: '',
   infos: osakaKyoto.infos.slice(0, 3),
   checklist: [
     { name: '重要必備證件資料', items: ['日幣', '駕照譯本', '旅平險保單', '飯店訂房確認單'].map((text) => ({ text })) },
@@ -204,10 +202,9 @@ export const kanazawa: Booklet = {
   ],
   foods: [],
   hotels: [
-    { name: 'Mine House', address: '4-chōme-16-59 Ōshinmachi, Takayama, Gifu 506-0851', phone: '', city: '高山', checkIn: '2026-11-26', checkOut: '2026-11-29' },
-    { name: 'ARU Kanazawa', address: '6-32 Koshōmachi, Kanazawa, Ishikawa 920-0932', phone: '', city: '金澤', checkIn: '2026-11-29', checkOut: '2026-12-03' },
+    { name: 'Mine House', address: '4-chōme-16-59 Ōshinmachi, Takayama, Gifu 506-0851', phone: '', city: '高山', checkIn: '2026-11-26', checkOut: '2026-11-29', note: '有提供毛巾、洗髮沐浴用品、吹風機和洗衣烘衣服務，牙刷需自備。' },
+    { name: 'ARU Kanazawa', address: '6-32 Koshōmachi, Kanazawa, Ishikawa 920-0932', phone: '', city: '金澤', checkIn: '2026-11-29', checkOut: '2026-12-03', note: '有提供毛巾、洗髮沐浴用品、吹風機和洗衣烘衣服務，牙刷需自備。' },
   ],
-  hotelNote: '民宿均有提供毛巾、洗髮沐浴用品、吹風機，且都有洗衣烘衣服務，但牙刷需自備。',
   infos: [],
   checklist: [],
 }

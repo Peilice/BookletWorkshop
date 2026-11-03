@@ -40,6 +40,7 @@ export interface Hotel {
   city: string // 以下只有部分範本用到（見 FormField）
   checkIn: string // YYYY-MM-DD
   checkOut: string
+  note: string // 備註，例如備品、洗衣服務
 }
 
 export interface InfoItem {
@@ -63,7 +64,6 @@ export interface Booklet {
   days: Day[]
   foods: FoodPlace[]
   hotels: Hotel[]
-  hotelNote: string // 住宿備註，只有部分範本用到
   infos: InfoItem[]
   checklist: ChecklistGroup[]
 }
@@ -97,7 +97,7 @@ export type FormField =
   | 'hotelPhone' // 飯店：電話
   | 'hotelCity' // 飯店：城市
   | 'hotelStay' // 飯店：入住、退房日期
-  | 'hotelNote' // 飯店：住宿備註
+  | 'hotelNote' // 飯店：備註
   | 'foods'
   | 'infos'
   | 'checklist'

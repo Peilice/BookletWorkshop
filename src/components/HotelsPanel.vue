@@ -32,6 +32,7 @@ const { booklet } = useBookletStore()
             <label class="field"><span>地址</span><input v-model="h.address" /></label>
             <label class="field"><span>電話<UnusedMark field="hotelPhone" /></span><input v-model="h.phone" type="tel" /></label>
           </div>
+          <label class="field"><span>備註（選填，例如備品、洗衣服務）<UnusedMark field="hotelNote" /></span><textarea v-model="h.note" rows="2" /></label>
         </div>
         <ItemActions :list="booklet.hotels" :index="i" :label="`飯店 ${i + 1}`" />
       </div>
@@ -41,11 +42,6 @@ const { booklet } = useBookletStore()
     <div :class="{ 'rows-foot': booklet.hotels.length }">
       <button type="button" class="add" @click="booklet.hotels.push(newHotel())"><Icon name="plus" />新增飯店</button>
     </div>
-
-    <label class="field note">
-      <span>住宿備註（選填，例如備品、洗衣服務）<UnusedMark field="hotelNote" /></span>
-      <textarea v-model="booklet.hotelNote" rows="2" />
-    </label>
   </section>
 </template>
 
@@ -77,9 +73,5 @@ const { booklet } = useBookletStore()
   display: grid;
   grid-template-columns: minmax(0, 1fr) 160px 160px;
   gap: 16px;
-}
-
-.note {
-  margin-top: 28px;
 }
 </style>

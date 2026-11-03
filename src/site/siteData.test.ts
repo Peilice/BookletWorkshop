@@ -61,7 +61,7 @@ describe('toSiteData', () => {
     const d = toSiteData(kanazawa, rules, palette)
     expect(d.title).toBe('旅遊手冊')
     expect(d.days.every((x) => x.hotel === null)).toBe(true)
-    expect(d.hotelNote).toBe('')
+    expect(d.hotels.every((h) => h.note === '')).toBe(true)
     expect(d.foods).toEqual([])
   })
 
