@@ -19,7 +19,8 @@ function addPreset() {
   <section>
     <div class="panel-intro">
       <h2>行前清單</h2>
-      <p class="hint">
+      <button type="button" class="add intro-add" @click="booklet.checklist.push(newChecklistGroup())"><Icon name="plus" />新增分類</button>
+      <p class="hint intro-hint">
         已先列好常用的分類和項目，可以直接修改、刪除或新增。手冊上的清單就是這裡的內容，空白的項目不會出現；網站上可以逐項打勾。
       </p>
       <button v-if="!hasPreset" type="button" class="add" @click="addPreset"><Icon name="plus" />加入預設項目</button>
@@ -46,10 +47,6 @@ function addPreset() {
         </div>
       </div>
     </TransitionGroup>
-
-    <div class="groups-foot">
-      <button type="button" class="add" @click="booklet.checklist.push(newChecklistGroup())"><Icon name="plus" />新增分類</button>
-    </div>
   </section>
 </template>
 
@@ -106,7 +103,12 @@ function addPreset() {
   gap: 12px;
 }
 
-.groups-foot {
-  padding-top: 32px;
+/* 新增分類放在標題列右邊，說明文字換到下一行 */
+.intro-add {
+  margin-left: auto;
+}
+
+.intro-hint {
+  flex-basis: 100%;
 }
 </style>
