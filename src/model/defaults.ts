@@ -17,7 +17,7 @@ export function emptyBooklet(): Booklet {
 }
 
 export function defaultSettings(): Settings {
-  return { templateId: 'classic', palette: null, fonts: {} }
+  return { templateId: 'classic', palette: null }
 }
 
 // 範本設定檔還沒讀到（或讀不到）時，表單和檢查先照經典範本

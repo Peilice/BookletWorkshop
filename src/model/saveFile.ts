@@ -83,12 +83,6 @@ function normalizeSettings(s: unknown): Settings {
     for (const k of ['dk2', 'lt2'] as const) if (isHex(p[k])) palette[k] = str(p[k])
     result.palette = palette
   }
-  if (isObj(s.fonts)) {
-    result.fonts = Object.fromEntries(Object.entries(s.fonts).filter(([, v]) => typeof v === 'string')) as Record<
-      string,
-      string
-    >
-  }
   return result
 }
 

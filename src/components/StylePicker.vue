@@ -59,12 +59,11 @@ function pick(t: TemplateManifest) {
       >
         <span class="thumb">
           <iframe v-if="thumbs[t.id]" :srcdoc="thumbs[t.id]" tabindex="-1" aria-hidden="true" scrolling="no" />
-          <span v-else-if="!t.site" class="thumb-none">只有 Word 版</span>
+          <span v-else-if="!t.site" class="thumb-none">沒有網站版</span>
         </span>
         <strong>{{ t.name }}</strong>
         <span class="hint">{{ t.description }}</span>
         <span class="badges">
-          <span :class="{ off: !t.file }">Word</span>
           <span :class="{ off: !t.site }">網站</span>
           <span :class="{ off: !t.site }">PDF</span>
         </span>

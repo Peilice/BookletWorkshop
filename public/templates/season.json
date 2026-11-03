@@ -19,8 +19,6 @@
     { "slot": "accent5", "where": "色階 5 日期按鈕的白字" },
     { "slot": "accent6", "where": "最後一天日期按鈕的白字" }
   ],
-  "fontRoles": [],
-  "checklistSlots": { "證件": 0, "衣物": 0, "藥品": 0, "其它": 0 },
   "formFields": [
     "title",
     "airline",

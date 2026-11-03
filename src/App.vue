@@ -10,8 +10,7 @@ import InfosPanel from './components/InfosPanel.vue'
 import PreviewDesk from './components/PreviewDesk.vue'
 import StylePanel from './components/StylePanel.vue'
 import StylePicker from './components/StylePicker.vue'
-import { effectivePalette, generateFromSettings } from './docx/fromSettings'
-import { printPdfFromSettings, siteHtmlFromSettings, siteZipFromSettings } from './site/fromSettings'
+import { effectivePalette, printPdfFromSettings, siteHtmlFromSettings, siteZipFromSettings } from './site/fromSettings'
 import { lowContrastSpots, readableOr } from './model/contrast'
 import { bookletFileName } from './model/fileName'
 import { SaveFileError } from './model/saveFile'
@@ -134,20 +133,19 @@ function onSave() {
   savedTimer = setTimeout(() => (justSaved.value = false), 2000)
 }
 
-// ---------- 輸出手冊：一顆按鈕，再選 Word／網站／PDF；目前風格沒有的格式不能選 ----------
+// ---------- 輸出手冊：一顆按鈕，再選網站／PDF；目前風格沒有的格式不能選 ----------
 
 const outputOpen = ref(false)
 const outputBox = ref<HTMLElement>()
 const outputs = computed(() => {
   const t = currentTemplate.value
   return [
-    { id: 'docx' as const, label: 'Word', note: '可以在 Word 裡再修改、自己做封面', ok: !!t?.file },
     { id: 'site' as const, label: '網站', note: '手機用，單一 HTML 檔或可以離線的 zip', ok: !!t?.site },
     { id: 'pdf' as const, label: 'PDF', note: 'A4，可以直接列印', ok: !!t?.site },
   ]
 })
 
-function chooseOutput(id: 'docx' | 'site' | 'pdf') {
+function chooseOutput(id: 'site' | 'pdf') {
   outputOpen.value = false
   if (id === 'site') siteChoice.value = true
   else void onGenerateClick(id)
@@ -190,15 +188,14 @@ async function collectIssues(): Promise<Issue[]> {
   return issues
 }
 
-// 產出：Word、網站（單一 HTML 或 zip）、PDF；先檢查，有問題時列出來
-type OutputKind = 'docx' | 'html' | 'zip' | 'pdf'
+// 產出：網站（單一 HTML 或 zip）、PDF；先檢查，有問題時列出來
+type OutputKind = 'html' | 'zip' | 'pdf'
 const OUTPUT_LABEL: Record<OutputKind, string> = {
-  docx: '產生 Word',
   html: '下載網站',
   zip: '下載網站',
   pdf: '產生 PDF',
 }
-const pendingOutput = ref<OutputKind>('docx')
+const pendingOutput = ref<OutputKind>('html')
 
 async function onGenerateClick(kind: OutputKind) {
   siteChoice.value = false
@@ -234,15 +231,7 @@ async function generate(kind: OutputKind) {
   try {
     const b = booklet.value
     const s = settings.value
-    if (kind === 'docx') {
-      const docx = await generateFromSettings(b, s)
-      downloadFile(
-        docx as BlobPart,
-        bookletFileName(b, 'docx'),
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      )
-      notify('ok', '已產生 Word。需要 PDF 時，請在 Word 裡「另存為 PDF」。')
-    } else if (kind === 'html') {
+    if (kind === 'html') {
       const { output, fontError } = await siteHtmlFromSettings(b, s)
       downloadFile(output, bookletFileName(b, 'html'), 'text/html')
       notify(fontError ? 'error' : 'ok', fontError ? `已下載網站。${FONT_FALLBACK}` : '已下載網站。用瀏覽器打開這個 .html 檔就能看，也可以直接傳到手機。')

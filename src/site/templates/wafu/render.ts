@@ -1,9 +1,9 @@
-// 和風直排：Word 範本「和風直排」的網站版。班機住宿、行程總覽橫排，景點介紹是中文直排的卡片；列印成 A4、一頁兩個景點
+// 和風直排：A5 小冊子風格。班機住宿、行程總覽橫排，景點介紹是中文直排的卡片；列印成 A4、一頁兩個景點
 
 import { mix } from '../../colors'
 import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteDay } from '../../siteData'
-import { chineseDay } from '../../../transform/templateData'
+import { chineseDay } from '../../../model/dates'
 import { icon } from '../common/icons'
 import { page } from '../common/page'
 import type { RenderOptions } from '../types'

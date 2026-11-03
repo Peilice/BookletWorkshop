@@ -3,7 +3,7 @@
 import type { Booklet, ChecklistCategory, FormField, PaletteColors, TemplateRules } from '../model/booklet'
 import { CHECKLIST_CATEGORIES } from '../model/booklet'
 import { autoOverview } from '../model/validate'
-import { flightLeg, shortDate, weekday } from '../transform/templateData'
+import { flightLeg, shortDate, weekday } from '../model/dates'
 import { dayColors, type DayColor } from './colors'
 
 export interface SiteFlight {

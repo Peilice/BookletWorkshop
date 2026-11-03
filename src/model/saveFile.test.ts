@@ -6,7 +6,7 @@ import { createSaveFile, parseSaveFile, SAVE_VERSION, SaveFileError } from './sa
 
 describe('存檔與讀檔', () => {
   it('存檔後讀回來，內容和設定完全恢復', () => {
-    const settings = { templateId: 'classic', palette: null, fonts: { 'BW-內文': '華康圓緣體W4' } }
+    const settings = { templateId: 'classic', palette: null }
     const text = JSON.stringify(createSaveFile(osakaKyoto, settings))
     expect(parseSaveFile(text)).toEqual({ booklet: osakaKyoto, settings })
   })
@@ -17,7 +17,7 @@ describe('存檔與讀檔', () => {
       accent4: '#444444', accent5: '#555555', accent6: '#666666',
       dk2: '#123456', lt2: '#FEDCBA',
     }
-    const settings = { templateId: 'classic', palette, fonts: {} }
+    const settings = { templateId: 'classic', palette }
     expect(parseSaveFile(JSON.stringify(createSaveFile(emptyBooklet(), settings))).settings).toEqual(settings)
   })
 
@@ -86,7 +86,7 @@ describe('預設值', () => {
 
 describe('檔名', () => {
   it('用第一筆航班的日期', () => {
-    expect(bookletFileName(osakaKyoto, 'docx')).toBe('旅遊手冊_20261201.docx')
+    expect(bookletFileName(osakaKyoto, 'html')).toBe('旅遊手冊_20261201.html')
   })
 
   it('沒有航班時用 Day 1 的日期，都沒有時不加日期', () => {

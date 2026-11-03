@@ -38,13 +38,6 @@ async function getManifest(id: string): Promise<TemplateManifest> {
   return found
 }
 
-async function getTemplateFile(manifest: TemplateManifest): Promise<ArrayBuffer> {
-  if (!manifest.file) throw new Error(`「${manifest.name}」沒有 Word 版本`)
-  const res = await fetch(`${base}${manifest.file}`)
-  if (!res.ok) throw new Error(`無法讀取範本（${res.status}）`)
-  return res.arrayBuffer()
-}
-
 // 目前選的範本決定表單顯示哪些欄位；設定檔還沒讀到時照經典範本
 const { settings } = useBookletStore()
 const currentRules = computed<TemplateRules>(
@@ -58,5 +51,5 @@ export function useFormFields() {
 }
 
 export function useTemplates() {
-  return { templates, loadError, loadTemplates, getManifest, getTemplateFile }
+  return { templates, loadError, loadTemplates, getManifest }
 }

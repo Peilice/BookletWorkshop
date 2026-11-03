@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// 工作台第 3 步「外觀」：配色、字體（規格書 4.4–4.5）；手冊名稱在頂列，排版風格在第 2 步選
+// 工作台第 3 步「外觀」：配色（規格書 4.4）；手冊名稱在頂列，排版風格在第 2 步選
 import { computed, onMounted, ref } from 'vue'
-import { effectiveFonts, effectivePalette } from '../docx/fromSettings'
+import { effectivePalette } from '../site/fromSettings'
 import type { AccentSlot, PaletteColors, TemplateManifest } from '../model/booklet'
 import { lowContrastSpots, MIN_CONTRAST } from '../model/contrast'
 import { useBookletStore } from '../store/booklet'
@@ -51,32 +51,6 @@ function setRoleColor(slots: AccentSlot[], color: string) {
 
 const warnings = computed(() => (manifest.value && palette.value ? lowContrastSpots(manifest.value, palette.value) : []))
 
-// ---------- 字體 ----------
-
-const fonts = computed(() => (manifest.value ? effectiveFonts(manifest.value, settings.value) : {}))
-
-function setFont(style: string, value: string) {
-  const next = { ...settings.value.fonts }
-  if (value.trim()) next[style] = value
-  else delete next[style]
-  settings.value.fonts = next
-}
-
-// Chrome、Edge 可以列出電腦裡已安裝的字體（Local Font Access，會先徵求同意）
-const canListFonts = typeof window !== 'undefined' && 'queryLocalFonts' in window
-const localFonts = ref<string[]>([])
-const fontListState = ref<'idle' | 'loading' | 'done' | 'denied'>('idle')
-
-async function listLocalFonts() {
-  fontListState.value = 'loading'
-  try {
-    const list = await window.queryLocalFonts!()
-    localFonts.value = [...new Set(list.map((f) => f.family))].sort((a, b) => a.localeCompare(b, 'zh-Hant'))
-    fontListState.value = 'done'
-  } catch {
-    fontListState.value = 'denied'
-  }
-}
 </script>
 
 <template>
@@ -131,43 +105,6 @@ async function listLocalFonts() {
       </ul>
     </div>
 
-    <!-- 字體 -->
-    <div v-if="manifest?.fontRoles.length" class="block">
-      <div class="panel-intro">
-        <h2>字體</h2>
-        <p class="hint">
-          可以輸入任何字體名稱，中文或英文名稱都可以。Word 檔只記錄字體名稱，打開檔案的電腦沒有安裝這個字體時，會換成其他字體顯示；
-          需要固定外觀時，請在 Word 裡另存為 PDF（付費字體依授權可能無法嵌入）。
-        </p>
-        <p v-if="manifest.site" class="hint">這裡的字體只用在 Word。網站和 PDF 使用風格接近、可以內嵌的免費字型。</p>
-      </div>
-
-      <div v-if="canListFonts" class="font-list-action">
-        <button type="button" :disabled="fontListState === 'loading'" @click="listLocalFonts">
-          {{ fontListState === 'done' ? `已列出 ${localFonts.length} 個字體` : '列出電腦裡的字體' }}
-        </button>
-        <span v-if="fontListState === 'denied'" class="hint warn">沒有取得權限，仍可以直接輸入字體名稱。</span>
-        <span v-else class="hint">瀏覽器會先詢問是否允許讀取字體清單。</span>
-      </div>
-      <datalist id="local-fonts">
-        <option v-for="f in localFonts" :key="f" :value="f" />
-      </datalist>
-
-      <div class="font-roles">
-        <div v-for="role in manifest.fontRoles" :key="role.style" class="font-role">
-          <label class="field">
-            <span>{{ role.label }}</span>
-            <input
-              :value="settings.fonts[role.style] ?? ''"
-              :placeholder="`預設：${role.default}`"
-              list="local-fonts"
-              @input="setFont(role.style, ($event.target as HTMLInputElement).value)"
-            />
-          </label>
-          <p class="preview" :style="{ fontFamily: `'${fonts[role.style]}', serif` }">旅遊手冊 Day 1 大阪城公園 12/1</p>
-        </div>
-      </div>
-    </div>
   </section>
 </template>
 
@@ -228,35 +165,4 @@ async function listLocalFonts() {
   color: var(--warn);
 }
 
-.font-list-action {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.font-roles {
-  border-top: 2px solid var(--ink);
-}
-
-.font-role {
-  display: flex;
-  align-items: flex-end;
-  gap: 32px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--hair);
-}
-
-.font-role .field {
-  width: 320px;
-  flex: none;
-}
-
-.preview {
-  margin: 0;
-  font-size: 24px;
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
 </style>

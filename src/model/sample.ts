@@ -1,4 +1,4 @@
-// 範例資料（內容取自 測試輸出_大阪京都.docx），用於自動測試與 Word 驗證
+// 範例資料（內容取自 測試輸出_大阪京都.docx），用於自動測試
 
 import type { Booklet } from './booklet'
 
@@ -90,7 +90,7 @@ export const osakaKyoto: Booklet = {
   ],
 }
 
-// 只有行程和旅遊資訊：航班、美食、飯店要整段隱藏；檢查清單項目多到要加列
+// 只有行程和旅遊資訊：航班、美食、飯店要整段隱藏；檢查清單項目比較多
 export const sparse: Booklet = {
   title: '',
   flights: [],
@@ -105,7 +105,7 @@ export const sparse: Booklet = {
   ],
 }
 
-// 金澤高山 8 天（內容取自 金澤高山自由行_A5.pdf），用於和風直排範本的測試與 Word 驗證
+// 金澤高山 8 天（內容取自 金澤高山自由行_A5.pdf），用於和風直排範本的測試
 export const kanazawa: Booklet = {
   title: '金澤・高山 八日遊',
   flights: [

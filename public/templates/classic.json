@@ -1,7 +1,6 @@
 {
   "id": "classic",
   "name": "經典",
-  "file": "classic.docx",
   "site": "classic",
   "description": "Alice 設計的第一份旅遊手冊範本：Day 方塊有圓形日期框，檢查清單整頁獨立。",
   "colorRoles": [
@@ -14,12 +13,6 @@
     { "slot": "accent5", "where": "檢查清單標題列的白字" },
     { "slot": "accent6", "where": "旅遊資訊標籤的白字" }
   ],
-  "fontRoles": [
-    { "label": "內文", "style": "BW-內文", "default": "華康秀風體W3" },
-    { "label": "Day 方塊", "style": "BW-Day方塊", "default": "華康棒棒體W5" },
-    { "label": "飯店名稱", "style": "BW-飯店名稱", "default": "華康寶風體W4" }
-  ],
-  "checklistSlots": { "證件": 0, "衣物": 1, "藥品": 0, "其它": 10 },
   "formFields": ["title", "airline", "flightNo", "hotelPhone", "foods", "infos", "checklist"],
   "overviewLimit": 40,
   "presets": [

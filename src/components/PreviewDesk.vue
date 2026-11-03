@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 深色桌面上的成品：用真正的網站範本畫出目前的手冊，跟著正在填的區塊跳過去
 import { computed, ref, watch } from 'vue'
-import { effectivePalette } from '../docx/fromSettings'
+import { effectivePalette } from '../site/fromSettings'
 import type { FormField, TemplateManifest } from '../model/booklet'
 import { isBlankBooklet, previewBooklet, renderPreview } from '../site/preview'
 import { useBookletStore } from '../store/booklet'
@@ -130,7 +130,7 @@ watch(anchor, () => jump(false))
       <div v-if="manifest?.site" class="sheet" :class="view">
         <iframe ref="frame" :srcdoc="html" title="成品預覽" @load="onLoad" />
       </div>
-      <p v-else-if="manifest" class="desk-empty">「{{ manifest.name }}」只有 Word 版，沒有可以在這裡預覽的網站版。</p>
+      <p v-else-if="manifest" class="desk-empty">「{{ manifest.name }}」沒有可以在這裡預覽的網站版。</p>
     </div>
     <p class="desk-note">{{ view === 'phone' ? '網站輸出後就是這個樣子，可以直接捲動、點選' : '產生 PDF 時的 A4 版面，可以捲動看後面幾頁' }}</p>
   </section>

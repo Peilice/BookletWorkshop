@@ -77,14 +77,11 @@ export interface Booklet {
 export interface TemplateManifest {
   id: string
   name: string
-  file?: string // Word 範本檔；沒有時不能產生 Word
   site?: string // 網站範本（src/site/templates）；沒有時不能產生網站和 PDF
   description: string
   colorRoles: { label: string; slots: AccentSlot[] }[]
   // 深色底上放白字的位置，顏色太淺時提醒（規格書 4.4、Q12）
   contrastChecks: { slot: AccentSlot; where: string }[]
-  fontRoles: { label: string; style: string; default: string }[]
-  checklistSlots: Record<ChecklistCategory, number>
   // 這份範本用到的選填欄位；表單只顯示這些，其他欄位一律顯示
   formFields: FormField[]
   // 有顯示但可以不填的欄位：產生前不提醒
@@ -118,9 +115,8 @@ export type AccentSlot = 'accent1' | 'accent2' | 'accent3' | 'accent4' | 'accent
 // 一組配色：6 個強調色必填；文字 2（dk2）、背景 2（lt2）選填，沒有時沿用範本原本的顏色（規格書 7.1、Q13）
 export type PaletteColors = Record<AccentSlot, string> & { dk2?: string; lt2?: string }
 
-// 產生 Word、網站時的選項，也一起記在存檔裡（規格書 4.2）
+// 產生網站時的選項，也一起記在存檔裡（規格書 4.2）
 export interface Settings {
   templateId: string
   palette: PaletteColors | null // null：用範本的第一組預設配色
-  fonts: Record<string, string> // 樣式名稱 → 字體；沒有列出的用範本預設字體
 }

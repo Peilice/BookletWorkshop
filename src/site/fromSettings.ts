@@ -1,13 +1,17 @@
 // 依目前的手冊與設定產生網站（單一 HTML、zip）與 PDF
 
-import type { Booklet, Settings, TemplateManifest } from '../model/booklet'
-import { effectivePalette } from '../docx/fromSettings'
+import type { Booklet, PaletteColors, Settings, TemplateManifest } from '../model/booklet'
 import { bookletFileName } from '../model/fileName'
 import { useTemplates } from '../store/templates'
 import { siteIcons, printHtml } from './browser'
 import { buildSiteZip, renderSite, siteTemplate } from './build'
 import { embedGoogleFont } from './fonts'
 import { toSiteData, type SiteData } from './siteData'
+
+/** 實際使用的配色：沒有指定時用範本的第一組預設配色 */
+export function effectivePalette(manifest: TemplateManifest, settings: Settings): PaletteColors {
+  return settings.palette ?? manifest.presets[0].colors
+}
 
 async function prepare(booklet: Booklet, settings: Settings): Promise<{ manifest: TemplateManifest; data: SiteData; fontCss: string; fontError: boolean }> {
   const manifest = await useTemplates().getManifest(settings.templateId)
