@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { addSuggestion, suggestChecklist } from '../model/checklistSuggest'
 import { hasPresetChecklistItem, mergePresetChecklist, newChecklistGroup, newChecklistItem } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
@@ -13,6 +14,9 @@ const hasPreset = computed(() => hasPresetChecklistItem(booklet.value.checklist)
 function addPreset() {
   booklet.value.checklist = mergePresetChecklist(booklet.value.checklist)
 }
+
+// 看交通方式和目的地建議還沒列的東西，按了才加進清單
+const suggestions = computed(() => suggestChecklist(booklet.value))
 </script>
 
 <template>
@@ -24,6 +28,19 @@ function addPreset() {
         已先列好常用的分類和項目，可以直接修改、刪除或新增。手冊上的清單就是這裡的內容，空白的項目不會出現；網站上可以逐項打勾。
       </p>
       <button v-if="!hasPreset" type="button" class="add" @click="addPreset"><Icon name="plus" />加入預設項目</button>
+      <div v-if="suggestions.length" class="suggestions">
+        <span class="hint">依行程建議加入</span>
+        <button
+          v-for="s in suggestions"
+          :key="s.text"
+          type="button"
+          class="add"
+          :title="s.reason"
+          @click="addSuggestion(booklet.checklist, s)"
+        >
+          <Icon name="plus" />{{ s.text }}
+        </button>
+      </div>
     </div>
 
     <TransitionGroup tag="div" name="row" class="groups">
@@ -101,6 +118,15 @@ function addPreset() {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* 建議項目排成一行，放在說明文字下面 */
+.suggestions {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 20px;
 }
 
 /* 新增分類放在標題列右邊，說明文字換到下一行 */
