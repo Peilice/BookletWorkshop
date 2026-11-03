@@ -596,6 +596,13 @@ summary.stop-row::-webkit-details-marker {
   font-variant-numeric: tabular-nums;
 }
 
+.stop-time {
+  flex: none;
+  min-width: 3.2em;
+  color: var(--day);
+  font-size: 17px;
+}
+
 .stop-name {
   flex: 1;
   min-width: 0;

@@ -87,8 +87,8 @@ function stay(d: SiteData): string {
 // ---------- 行程 ----------
 
 /** 當日大標：短地名不斷行，箭頭跟著前一個地名 */
-function route(day: SiteDay): string {
-  if (!day.route.length) return `Day ${day.n}`
+function route(day: SiteDay, single: boolean): string {
+  if (!day.route.length) return single ? '當日行程' : `Day ${day.n}`
   return day.route
     .map((part, i) => {
       const arrow = i < day.route.length - 1 ? '<span class="arr" aria-label="到">→</span>' : ''
@@ -101,7 +101,8 @@ function stops(day: SiteDay, open: boolean): string {
   if (!day.spots.length) return '<p class="empty">這天還沒有景點。</p>'
   const items = day.spots.map((s, i) => {
     const mark = `<span class="stop-mark">${icon('pin')}<span class="badge">${i + 1}</span></span>`
-    const name = `<span class="stop-name">${esc(s.name || `景點 ${i + 1}`)}</span>`
+    const time = s.time ? `<b class="stop-time num">${esc(s.time)}</b>` : ''
+    const name = `${time}<span class="stop-name">${esc(s.name || `景點 ${i + 1}`)}</span>`
     if (!s.content) return `<li class="stop"><div class="stop-row">${mark}${name}</div></li>`
     return `<li class="stop"><details${open ? ' open' : ''}><summary class="stop-row">${mark}${name}${icon('chevron', 'ic chev')}</summary><div class="stop-body">${paragraphs(s.content)}</div></details></li>`
   })
@@ -119,8 +120,13 @@ function day(day: SiteDay, d: SiteData, open: boolean): string {
   return `<article class="day" id="day-${day.n}" role="tabpanel" aria-labelledby="tab-day-${day.n}" data-date="${esc(day.iso)}" data-deep="${day.color.deep}" data-chip="${day.color.chip}" data-soft="${day.color.soft}" style="${colorVars(day.color)}">
   <header class="day-head">
     <div class="wrap">
-      <h3 class="route">${route(day)}</h3>
-      <p class="day-meta"><b>Day ${day.n}</b>${when(day.date, () => ` · ${esc(dateLine(day.date, day.weekday))}`)}</p>
+      <h3 class="route">${route(day, d.singleDay)}</h3>
+      ${
+        // 一日遊不標 Day 1，只寫日期
+        d.singleDay
+          ? when(day.date, () => `<p class="day-meta"><b>${esc(dateLine(day.date, day.weekday))}</b></p>`)
+          : `<p class="day-meta"><b>Day ${day.n}</b>${when(day.date, () => ` · ${esc(dateLine(day.date, day.weekday))}`)}</p>`
+      }
       ${when(chips.length, () => `<p class="day-chips">${chips.join('')}</p>`)}
     </div>
   </header>
@@ -152,13 +158,16 @@ function trip(d: SiteData, open: boolean): string {
     (day) =>
       `<button type="button" class="daybtn" role="tab" id="tab-day-${day.n}" aria-controls="day-${day.n}" aria-selected="${day.n === 1}" data-day="${day.n}" style="--c:${day.color.chip}"><span class="today" hidden>今天</span><b>${day.n}</b><small>${esc(day.date)}</small></button>`,
   )
+  // 只有一天時不需要選日期，也不需要列印版的總覽表
   return `<section class="panel" id="trip" aria-labelledby="h-trip">
-  <div class="wrap">${overview(d)}</div>
+  ${when(!d.singleDay, () => `<div class="wrap">${overview(d)}</div>`)}
   <div class="season">
     <div class="wrap">
       <h2 class="sr-only" id="h-trip">每日行程</h2>
       ${
-        d.days.length
+        d.singleDay
+          ? ''
+          : d.days.length
           ? `<div class="daybar" role="tablist" aria-label="選擇日期" style="--n:${d.days.length}">${buttons.join('')}</div>`
           : '<p class="empty empty-on-color">還沒有行程。</p>'
       }
@@ -218,7 +227,7 @@ export function displayText(d: SiteData): string {
   return [
     d.title,
     d.dateRange,
-    '行程航班交通住宿資訊旅遊吃什麼行前清單今天今晚入住退房晚地圖撥打電話出門到總覽天數日期離線中列印存成全部準備好了未命名的',
+    '行程航班交通住宿資訊當日旅遊吃什麼行前清單今天今晚入住退房晚地圖撥打電話出門到總覽天數日期離線中列印存成全部準備好了未命名的',
     'DayABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:/→·（）',
     ...d.flights.flatMap((f) => [f.leg, f.modeLabel, f.date, f.weekday, f.airline, f.flightNo, f.from, f.to]),
     ...d.days.flatMap((x) => [...x.route, x.date, x.weekday, x.theme, ...x.spots.map((s) => s.name)]),

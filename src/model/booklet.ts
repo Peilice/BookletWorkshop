@@ -16,6 +16,7 @@ export interface Flight {
 }
 
 export interface Spot {
+  time: string // HH:mm，選填；有填時手冊排成時間軸
   name: string
   content: string
 }

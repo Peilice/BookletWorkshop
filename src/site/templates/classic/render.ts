@@ -45,13 +45,18 @@ function days(d: SiteData): string {
     .map(
       (day) => `<article class="day" id="day-${day.n}">
     <div class="daybox">
-      <p class="daycircle"><b>Day ${day.n}</b>${when(day.date, () => `<span>${esc(day.date)}</span>`)}${when(day.weekday, () => `<span>${esc(day.weekday)}</span>`)}</p>
+      ${
+        // 一日遊不標 Day 1，圓框裡直接放日期
+        d.singleDay && day.date
+          ? `<p class="daycircle"><b>${esc(day.date)}</b>${when(day.weekday, () => `<span>${esc(day.weekday)}</span>`)}</p>`
+          : `<p class="daycircle"><b>Day ${day.n}</b>${when(day.date, () => `<span>${esc(day.date)}</span>`)}${when(day.weekday, () => `<span>${esc(day.weekday)}</span>`)}</p>`
+      }
       <p class="overview">${esc(day.route.join(' → '))}</p>
     </div>
     ${day.spots
       .map(
         (s) => `<div class="spot">
-      <h3 class="spot-name">【${esc(s.name)}】</h3>
+      <h3 class="spot-name">${when(s.time, () => `<span class="spot-time num">${esc(s.time)}</span>`)}【${esc(s.name)}】</h3>
       ${paragraphs(s.content)}
     </div>`,
       )

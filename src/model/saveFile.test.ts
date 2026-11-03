@@ -91,6 +91,13 @@ describe('交通方式', () => {
   })
 })
 
+describe('景點時間', () => {
+  it('舊存檔的景點沒有時間，讀進來補成空白', () => {
+    const old = { format: SAVE_FORMAT, version: 4, booklet: { days: [{ spots: [{ name: '清水寺', content: '' }] }] } }
+    expect(parseSaveFile(JSON.stringify(old)).booklet.days[0].spots[0]).toEqual({ time: '', name: '清水寺', content: '' })
+  })
+})
+
 describe('預設值', () => {
   it('新手冊的旅遊資訊預設有氣候、時差、飲水、行李規定', () => {
     expect(emptyBooklet().infos.map((i) => i.title)).toEqual(['氣候', '時差', '飲水', '行李規定'])

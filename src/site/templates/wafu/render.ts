@@ -49,25 +49,31 @@ function overview(d: SiteData): string {
       <h3 class="num">${head.map(esc).join('<span class="gap"></span>')}</h3>
       ${when(day.theme, () => `<p>主題：${esc(day.theme)}</p>`)}
       ${when(day.route.length, () => `<p>行程：${esc(day.route.join(' → '))}</p>`)}
+      ${when(
+        // 有填景點時間時，橫排列出時間軸（直排卡片裡的數字不好讀）
+        day.spots.some((s) => s.time),
+        () => `<ol class="times">${day.spots.map((s) => `<li><span class="num">${esc(s.time)}</span>${esc(s.name)}</li>`).join('')}</ol>`,
+      )}
     </article>`
   })
   return `<section class="sec" id="overview" aria-labelledby="h-overview">
-  <h2 class="sec-title" id="h-overview">行程總覽</h2>
+  <h2 class="sec-title" id="h-overview">${d.singleDay ? '當日行程' : '行程總覽'}</h2>
   <div class="ovs">${days.join('')}</div>
 </section>`
 }
 
-function spotGroup(day: SiteDay): string {
+function spotGroup(day: SiteDay, single: boolean): string {
   const spots = day.spots.filter((s) => s.content)
   if (!spots.length) return ''
-  const n = chineseDay(day.n)
+  // 一日遊不標第一天
+  const n = single ? '' : chineseDay(day.n)
   return `<div class="spot-day">
-    <h3 class="sub">${esc(n)}${when(day.date, () => `<span class="num">${esc(dateW(day.date, day.weekdayShort))}</span>`)}</h3>
+    ${when(!single, () => `<h3 class="sub">${esc(n)}${when(day.date, () => `<span class="num">${esc(dateW(day.date, day.weekdayShort))}</span>`)}</h3>`)}
     <div class="spots">${spots
       .map(
         (s) => `<article class="spot">
       <div class="tate">
-        <h4>${esc(s.name)}<small>（${esc(n)}）</small></h4>
+        <h4>${esc(s.name)}${when(n, () => `<small>（${esc(n)}）</small>`)}</h4>
         ${paragraphs(s.content)}
       </div>
     </article>`,
@@ -82,7 +88,7 @@ export function render(d: SiteData, opts: RenderOptions): string {
   const accent = d.palette.accent1
   const nav = [
     { id: 'travel', label: d.onlyFlights ? '班機住宿' : '交通住宿', show: d.flights.length > 0 || d.hotels.length > 0 },
-    { id: 'overview', label: '行程總覽', show: d.days.length > 0 },
+    { id: 'overview', label: d.singleDay ? '當日行程' : '行程總覽', show: d.days.length > 0 },
     { id: 'spots', label: '景點介紹', show: hasSpots(d) },
   ].filter((n) => n.show)
 
@@ -103,7 +109,7 @@ ${when(
   hasSpots(d),
   () => `<section class="sec spots-sec" id="spots" aria-labelledby="h-spots">
   <h2 class="sec-title" id="h-spots">景點介紹</h2>
-  ${d.days.map(spotGroup).join('')}
+  ${d.days.map((x) => spotGroup(x, d.singleDay)).join('')}
 </section>`,
 )}
 </main>

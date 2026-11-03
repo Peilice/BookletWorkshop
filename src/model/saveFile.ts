@@ -5,7 +5,7 @@ import { defaultSettings } from './defaults'
 import { isTransportMode } from './transport'
 
 export const SAVE_FORMAT = 'booklet-workshop'
-export const SAVE_VERSION = 4
+export const SAVE_VERSION = 5
 
 export interface SaveFile {
   format: typeof SAVE_FORMAT
@@ -49,7 +49,7 @@ function normalizeBooklet(b: Obj): Booklet {
       overview: str(d.overview),
       theme: str(d.theme),
       departTime: str(d.departTime),
-      spots: list(d.spots, (s) => ({ name: str(s.name), content: str(s.content) })),
+      spots: list(d.spots, (s) => ({ time: str(s.time), name: str(s.name), content: str(s.content) })),
     })),
     foods: list(b.foods, (f) => ({
       place: str(f.place),
@@ -113,6 +113,7 @@ function migrate(data: Obj, version: number): Obj {
     data = { ...data, booklet: { ...data.booklet, hotels } }
   }
   // 第 4 版：航班改成交通，每筆多了交通方式；舊存檔沒有這個欄位，讀檔時一律當成飛機（normalizeBooklet）
+  // 第 5 版：景點多了選填的時間；舊存檔沒有，讀檔時補成空白（normalizeBooklet）
   return data
 }
 

@@ -285,6 +285,19 @@ a {
   font-size: 15px;
 }
 
+.times {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+}
+
+.times .num {
+  display: inline-block;
+  min-width: 3.4em;
+  color: var(--accent);
+}
+
 /* ---------- 景點介紹：直排卡片 ---------- */
 
 .spot-day + .spot-day {

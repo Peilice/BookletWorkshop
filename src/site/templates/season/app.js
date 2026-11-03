@@ -54,7 +54,8 @@
   days.forEach(function (d, i) {
     if (d.dataset.date === todayIso) todayN = i + 1
   })
-  if (todayN) dayBtns[todayN - 1].querySelector('.today').hidden = false
+  // 一日遊沒有選日期的按鈕
+  if (todayN && dayBtns[todayN - 1]) dayBtns[todayN - 1].querySelector('.today').hidden = false
 
   function setHash(h) {
     try {

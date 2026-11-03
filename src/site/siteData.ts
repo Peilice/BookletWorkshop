@@ -25,6 +25,7 @@ export interface SiteFlight {
 }
 
 export interface SiteSpot {
+  time: string // HH:mm 或空白
   name: string
   content: string
 }
@@ -61,6 +62,7 @@ export interface SiteData {
   tripKey: string // 網站存勾選清單時用，不同手冊不會互相覆蓋
   palette: PaletteColors // 範本配色，各範本自己決定每個顏色用在哪
   onlyFlights: boolean // 交通全部都是飛機：標題沿用「航班」，不然叫「交通」
+  singleDay: boolean // 只有一天（一日遊）：範本不標 Day 1、第一天，也不放天數切換和總覽表
   colors: DayColor[] // 依天數內插的日色
   flights: SiteFlight[]
   days: SiteDay[]
@@ -112,7 +114,7 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       route: overview ? overview.split(/\s*→\s*/).filter(Boolean) : [],
       theme: shown('dayTheme', d.theme),
       departTime: shown('departTime', d.departTime),
-      spots: d.spots.filter((s) => filled(s.name) || filled(s.content)).map((s) => ({ name: s.name.trim(), content: s.content.trim() })),
+      spots: d.spots.filter((s) => filled(s.name) || filled(s.content)).map((s) => ({ time: s.time, name: s.name.trim(), content: s.content.trim() })),
       color: colors[i],
       hotel: hotel >= 0 ? hotel : null,
     }
@@ -127,6 +129,7 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
     tripKey: hash(`${title}|${range}`),
     palette,
     onlyFlights: onlyFlights(b.flights),
+    singleDay: b.days.length === 1,
     colors,
     flights: b.flights.map((f, i) => ({
       mode: f.mode,

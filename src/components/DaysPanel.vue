@@ -67,7 +67,7 @@ function posterDate(iso: string): string {
   <section>
     <div class="panel-intro">
       <h2>每日行程</h2>
-      <p class="hint">天數依排列順序自動編號，星期依日期自動計算。</p>
+      <p class="hint">天數依排列順序自動編號，星期依日期自動計算。景點前面可以填時間（選填），手冊會排成時間軸；只有一天時，手冊不標 Day 1。</p>
     </div>
 
     <template v-if="booklet.days.length === 0">
@@ -151,7 +151,12 @@ function posterDate(iso: string): string {
           <div v-for="(s, j) in activeDay.spots" :key="keyOf(s)" class="row-item spot">
             <span class="seq" aria-hidden="true">{{ j + 1 }}</span>
             <div class="row-body">
-              <label class="field"><span class="sr-only">景點 {{ j + 1 }}</span><input v-model="s.name" class="title-input" placeholder="景點名稱" /></label>
+              <div class="spot-head">
+                <label class="field spot-time" title="選填；有填時手冊排成時間軸">
+                  <span class="sr-only">景點 {{ j + 1 }} 時間（選填）</span><input v-model="s.time" type="time" />
+                </label>
+                <label class="field"><span class="sr-only">景點 {{ j + 1 }}</span><input v-model="s.name" class="title-input" placeholder="景點名稱" /></label>
+              </div>
               <label class="field"><span class="sr-only">景點內容</span><textarea v-model="s.content" rows="2" placeholder="景點內容" /></label>
               <p v-if="spotLimit && contentLength(s.content) > spotLimit" class="hint warn">
                 內容有 {{ contentLength(s.content) }} 個字，超過 {{ spotLimit }} 字會接到下一頁。
@@ -171,6 +176,14 @@ function posterDate(iso: string): string {
 </template>
 
 <style scoped>
+/* 景點：時間（選填）＋名稱在同一行 */
+.spot-head {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  align-items: end;
+}
+
 .day-layout {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);

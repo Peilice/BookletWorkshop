@@ -306,6 +306,13 @@ a {
   color: var(--a4);
 }
 
+/* 景點時間：時間軸的刻度，接在景點名稱前面 */
+.spot-time {
+  margin-right: 0.3em;
+  font-weight: 700;
+  color: var(--a1);
+}
+
 .spot p {
   color: var(--ink-soft);
 }

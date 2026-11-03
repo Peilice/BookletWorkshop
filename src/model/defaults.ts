@@ -62,7 +62,7 @@ export const newFlight = (): Flight => ({
   arriveTime: '',
 })
 
-export const newSpot = (): Spot => ({ name: '', content: '' })
+export const newSpot = (): Spot => ({ time: '', name: '', content: '' })
 
 /** 新的一天：日期接在前一天後面 */
 export const newDay = (previous?: Day): Day => ({

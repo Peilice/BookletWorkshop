@@ -109,6 +109,38 @@ describe('交通方式', () => {
   })
 })
 
+describe('一日遊與景點時間', () => {
+  const m = (id: string): TemplateManifest =>
+    JSON.parse(readFileSync(new URL(`../../public/templates/${id}.json`, import.meta.url), 'utf8'))
+  const site = (id: string, b: typeof osakaKyoto) => renderSite(id, toSiteData(b, m(id), m(id).presets[0].colors))
+  const timed = osakaKyoto.days[1].spots.map((s, i) => ({ ...s, time: i === 0 ? '09:30' : '' }))
+  const oneDay = { ...osakaKyoto, flights: [], hotels: [], days: [{ ...osakaKyoto.days[1], spots: timed }] }
+
+  it('只有一天時不標 Day 1、第一天，也沒有選日期的按鈕和總覽表', () => {
+    const classic = site('classic', oneDay)
+    expect(classic).not.toContain('Day 1')
+    expect(classic).toContain('<b>12/2</b>')
+    const season = site('season', oneDay)
+    expect(season).not.toContain('class="daybar"')
+    expect(season).not.toContain('<b>Day 1</b>')
+    expect(season).not.toContain('class="overview print-only"')
+    const wafu = site('wafu', oneDay)
+    expect(wafu).not.toContain('第一天')
+    expect(wafu).toContain('當日行程')
+  })
+
+  it('多天時照舊標天數', () => {
+    expect(site('classic', osakaKyoto)).toContain('Day 1')
+    expect(site('season', osakaKyoto)).toContain('class="daybar"')
+  })
+
+  it('景點有填時間時，三份範本都顯示出來', () => {
+    expect(site('classic', oneDay)).toContain('<span class="spot-time num">09:30</span>')
+    expect(site('season', oneDay)).toContain('<b class="stop-time num">09:30</b>')
+    expect(site('wafu', oneDay)).toContain('<span class="num">09:30</span>')
+  })
+})
+
 describe('buildSiteZip', () => {
   it('包含網頁、manifest、Service Worker 與圖示', () => {
     const zip = new PizZip(buildSiteZip('season', data(), {}, icons, 'v1'))

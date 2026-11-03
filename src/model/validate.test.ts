@@ -41,7 +41,7 @@ describe('validateBooklet', () => {
   })
 
   it('行程總覽太長', () => {
-    const day = { ...newDay(), date: '2026-12-01', overview: '很'.repeat(41), spots: [{ name: '景點', content: '' }] }
+    const day = { ...newDay(), date: '2026-12-01', overview: '很'.repeat(41), spots: [{ time: '', name: '景點', content: '' }] }
     const issues = validateBooklet({ ...osakaKyoto, days: [day] })
     expect(issues).toEqual([{ tab: 'days', text: expect.stringContaining('41 個字') }])
   })
@@ -80,13 +80,13 @@ describe('validateBooklet', () => {
     })
 
     it('選填的欄位空白時不提醒', () => {
-      const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ name: '景點', content: '' }] }] }
+      const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ time: '', name: '景點', content: '' }] }] }
       const rules = { ...wafu, optionalFields: ['dayTheme' as const] }
       expect(validateBooklet(b, rules).map((i) => i.text)).not.toContain('Day 1：沒有填主題')
     })
 
     it('範本用到的新欄位空白時提醒', () => {
-      const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ name: '景點', content: '' }] }], hotels: [newHotel()] }
+      const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ time: '', name: '景點', content: '' }] }], hotels: [newHotel()] }
       expect(validateBooklet(b, wafu).map((i) => i.text)).toEqual([
         'Day 1：沒有填主題',
         '飯店 1：沒有填飯店名稱、城市、地址、入住日期、退房日期',
@@ -100,22 +100,22 @@ describe('validateBooklet', () => {
     })
 
     it('景點內容超過字數上限時提醒（不算頭尾空白和換行）', () => {
-      const day = (spots: { name: string; content: string }[]) => ({ ...newDay(), date: '2026-11-27', theme: '主題', spots })
+      const day = (spots: { time: '', name: string; content: string }[]) => ({ ...newDay(), date: '2026-11-27', theme: '主題', spots })
       const b = {
         ...emptyBooklet(),
         days: [
           day([
-            { name: '宮川朝市', content: '很'.repeat(160) },
-            { name: '高山三町老街', content: `${'很'.repeat(80)}\n${'很'.repeat(80)}\n` },
+            { time: '', name: '宮川朝市', content: '很'.repeat(160) },
+            { time: '', name: '高山三町老街', content: `${'很'.repeat(80)}\n${'很'.repeat(80)}\n` },
           ]),
-          day([{ name: '新穗高纜車', content: '很'.repeat(161) }]),
+          day([{ time: '', name: '新穗高纜車', content: '很'.repeat(161) }]),
         ],
       }
       expect(validateBooklet(b, wafu)).toEqual([{ tab: 'days', text: '新穗高纜車：內容有 161 個字，超過 160 字會接到下一頁' }])
     })
 
     it('範本沒有字數上限時不檢查', () => {
-      const day = { ...osakaKyoto.days[0], overview: '很'.repeat(41), spots: [{ name: '景點', content: '很'.repeat(500) }] }
+      const day = { ...osakaKyoto.days[0], overview: '很'.repeat(41), spots: [{ time: '', name: '景點', content: '很'.repeat(500) }] }
       expect(validateBooklet({ ...osakaKyoto, days: [day] }, { formFields: [] })).toEqual([])
     })
   })
