@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { newFlight } from '../model/defaults'
+import { nextFlight } from '../model/autofill'
 import { TRANSPORTS, transportOf } from '../model/transport'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
@@ -56,7 +56,7 @@ const { booklet } = useBookletStore()
     <EmptyArt v-if="booklet.flights.length === 0" kind="flight">還沒有交通。訂好機票、車票後，把班次和時間填進來；自己開車也可以記一筆。</EmptyArt>
 
     <div :class="{ 'rows-foot': booklet.flights.length }">
-      <button type="button" class="add" @click="booklet.flights.push(newFlight())"><Icon name="plus" />新增交通</button>
+      <button type="button" class="add" @click="booklet.flights.push(nextFlight(booklet))"><Icon name="plus" />新增交通</button>
     </div>
   </section>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, watch, watchEffect } from 'vue'
 import type { Day } from '../model/booklet'
+import { daysFromTrip } from '../model/autofill'
 import { newDay, newSpot } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
 import { useFocus } from '../store/focus'
@@ -50,6 +51,13 @@ function addDay() {
   activeDay.value = days.at(-1)
 }
 
+// 交通、住宿已經有日期時，可以一次排好每一天
+const tripDays = computed(() => daysFromTrip(booklet.value))
+function addTripDays() {
+  booklet.value.days.push(...tripDays.value)
+  activeDay.value = booklet.value.days[0]
+}
+
 const pad = (n: number) => String(n).padStart(2, '0')
 
 /** 分頁上的短日期，例如「11/3 一」 */
@@ -74,7 +82,12 @@ function posterDate(iso: string): string {
 
     <template v-if="booklet.days.length === 0">
       <EmptyArt kind="spot" class="empty">還沒有行程。第一天會先帶入交通的日期，之後的日期自動接著往後排。</EmptyArt>
-      <button type="button" class="add" @click="addDay"><Icon name="plus" />新增一天</button>
+      <div class="empty-actions">
+        <button v-if="tripDays.length > 1" type="button" class="add" @click="addTripDays">
+          <Icon name="plus" />依交通、住宿的日期建立 {{ tripDays.length }} 天（{{ shortDate(tripDays[0].date) }}–{{ shortDate(tripDays.at(-1)!.date) }}）
+        </button>
+        <button type="button" class="add" @click="addDay"><Icon name="plus" />新增一天</button>
+      </div>
     </template>
 
     <div v-else class="day-layout">
@@ -172,6 +185,12 @@ function posterDate(iso: string): string {
 </template>
 
 <style scoped>
+.empty-actions {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
 /* 景點：時間（選填）＋名稱在同一行 */
 .spot-head {
   display: grid;

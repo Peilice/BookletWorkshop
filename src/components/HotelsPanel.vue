@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { newHotel } from '../model/defaults'
+import { nextHotel } from '../model/autofill'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
 import EmptyArt from './EmptyArt.vue'
@@ -40,7 +40,7 @@ const { booklet } = useBookletStore()
     <EmptyArt v-if="booklet.hotels.length === 0" kind="hotel">還沒有住宿。</EmptyArt>
 
     <div :class="{ 'rows-foot': booklet.hotels.length }">
-      <button type="button" class="add" @click="booklet.hotels.push(newHotel())"><Icon name="plus" />新增住宿</button>
+      <button type="button" class="add" @click="booklet.hotels.push(nextHotel(booklet))"><Icon name="plus" />新增住宿</button>
     </div>
   </section>
 </template>
