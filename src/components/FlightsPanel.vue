@@ -96,7 +96,7 @@ const { booklet } = useBookletStore()
   position: relative;
   align-self: stretch;
   margin: -22px 0;
-  padding: 22px 0 22px 16px;
+  padding: 22px 0 22px 10px;
   border-left: 1.5px dashed var(--field-line);
 }
 

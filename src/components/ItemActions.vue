@@ -40,4 +40,11 @@ function move(offset: number) {
   align-items: flex-start;
   gap: 2px;
 }
+
+/* 列表每一筆右側的按鈕直排，讓按鈕欄盡量窄，把寬度讓給表單 */
+.row-item > .item-actions,
+.sub-item > .item-actions {
+  flex-direction: column;
+  align-items: center;
+}
 </style>

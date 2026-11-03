@@ -35,12 +35,10 @@ const { booklet } = useBookletStore()
 </template>
 
 <style scoped>
-/* 標題和內容並排，像資訊表 */
+/* 標題在上、內容在下 */
 .info-body {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
+  gap: 16px;
   min-width: 0;
 }
 </style>
