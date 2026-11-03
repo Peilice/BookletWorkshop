@@ -9,6 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "1.3.0",
     "@fontsource/anton": "5.2.5",
     "@fontsource/barlow-condensed": "5.2.5",
     "@fontsource/noto-sans-tc": "5.2.9",

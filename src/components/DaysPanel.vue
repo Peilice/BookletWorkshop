@@ -9,9 +9,11 @@ import { useFormFields } from '../store/templates'
 import { autoOverview, contentLength } from '../model/validate'
 import { shortDate as monthDay, weekday } from '../model/dates'
 import { keyOf, useSlider } from '../utils/motion'
+import AiKeySetting from './AiKeySetting.vue'
 import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
+import SpotIntro from './SpotIntro.vue'
 import UnusedMark from './UnusedMark.vue'
 
 const { booklet } = useBookletStore()
@@ -170,6 +172,7 @@ function posterDate(iso: string): string {
               <p v-if="spotLimit && contentLength(s.content) > spotLimit" class="hint warn">
                 內容有 {{ contentLength(s.content) }} 個字，超過 {{ spotLimit }} 字會接到下一頁。
               </p>
+              <SpotIntro :spot="s" :day="activeDay" />
             </div>
             <ItemActions :list="activeDay.spots" :index="j" :label="`景點 ${j + 1}`" />
           </div>
@@ -179,6 +182,7 @@ function posterDate(iso: string): string {
         <div>
           <button type="button" class="add" @click="activeDay.spots.push(newSpot())"><Icon name="plus" />新增景點</button>
         </div>
+        <AiKeySetting />
       </div>
     </div>
   </section>
