@@ -50,7 +50,7 @@ const sections: { id: SectionId; label: string; component: Component; count: () 
   { id: 'foods', label: '美食特產', component: FoodsPanel, count: () => booklet.value.foods.length, field: 'foods' },
   { id: 'hotels', label: '飯店', component: HotelsPanel, count: () => booklet.value.hotels.length },
   { id: 'infos', label: '旅遊資訊', component: InfosPanel, count: () => booklet.value.infos.length, field: 'infos' },
-  { id: 'checklist', label: '自訂清單', component: ChecklistPanel, count: () => booklet.value.checklist.length, field: 'checklist' },
+  { id: 'checklist', label: '行前清單', component: ChecklistPanel, count: () => booklet.value.checklist.reduce((n, g) => n + g.items.length, 0), field: 'checklist' },
 ]
 const { has } = useFormFields()
 const unusedSection = (s: (typeof sections)[number]) => !!s.field && !has(s.field)

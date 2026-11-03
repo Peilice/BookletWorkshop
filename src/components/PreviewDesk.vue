@@ -25,7 +25,7 @@ const SECTION_LABEL: Record<SectionId, string> = {
   foods: '美食特產',
   hotels: '飯店',
   infos: '旅遊資訊',
-  checklist: '自訂清單',
+  checklist: '行前清單',
 }
 const sectionHidden = computed(() => {
   const f = SECTION_FIELD[section.value]

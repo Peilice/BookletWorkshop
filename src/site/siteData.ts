@@ -1,7 +1,6 @@
 // 表單資料 → 網站範本要顯示的內容。所有顯示邏輯都在這裡，網站範本只負責排版。
 
-import type { Booklet, ChecklistCategory, FormField, PaletteColors, TemplateRules } from '../model/booklet'
-import { CHECKLIST_CATEGORIES } from '../model/booklet'
+import type { Booklet, FormField, PaletteColors, TemplateRules } from '../model/booklet'
 import { autoOverview } from '../model/validate'
 import { flightLeg, shortDate, weekday } from '../model/dates'
 import { dayColors, type DayColor } from './colors'
@@ -61,8 +60,8 @@ export interface SiteData {
   hotelNote: string
   foods: { place: string; items: { name: string; description: string }[] }[]
   infos: { title: string; content: string }[]
-  // 範本有用到清單時四個分類都列出（有些範本每個分類有固定項目），items 是使用者填的
-  checklist: { key: ChecklistCategory; label: string; items: string[] }[]
+  // 照畫面上的清單；沒填的項目和沒有項目的分類不放
+  checklist: { name: string; items: string[] }[]
 }
 
 const DEFAULT_TITLE = '旅遊手冊'
@@ -158,11 +157,9 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       ? b.infos.filter((i) => filled(i.content)).map((i) => ({ title: i.title.trim(), content: i.content.trim() }))
       : [],
     checklist: has('checklist')
-      ? CHECKLIST_CATEGORIES.map((c) => ({
-          key: c.key,
-          label: c.label,
-          items: b.checklist.filter((i) => i.category === c.key && filled(i.item)).map((i) => i.item.trim()),
-        }))
+      ? b.checklist
+          .map((g) => ({ name: g.name.trim(), items: g.items.filter((i) => filled(i.text)).map((i) => i.text.trim()) }))
+          .filter((g) => g.items.length)
       : [],
   }
 }

@@ -47,19 +47,14 @@ export interface InfoItem {
   content: string
 }
 
-export type ChecklistCategory = '證件' | '衣物' | '藥品' | '其它'
-
-// 表單下拉選單顯示的分類名稱（和範本檢查清單的標題一致）
-export const CHECKLIST_CATEGORIES: { key: ChecklistCategory; label: string }[] = [
-  { key: '證件', label: '重要必備證件資料' },
-  { key: '衣物', label: '衣物&用品' },
-  { key: '藥品', label: '常備藥品' },
-  { key: '其它', label: '其它' },
-]
-
+// 行前清單：分類和項目都由使用者在畫面上增刪，手冊照這裡的內容產生
 export interface ChecklistItem {
-  category: ChecklistCategory
-  item: string
+  text: string
+}
+
+export interface ChecklistGroup {
+  name: string
+  items: ChecklistItem[]
 }
 
 export interface Booklet {
@@ -70,7 +65,7 @@ export interface Booklet {
   hotels: Hotel[]
   hotelNote: string // 住宿備註，只有部分範本用到
   infos: InfoItem[]
-  checklist: ChecklistItem[]
+  checklist: ChecklistGroup[]
 }
 
 // 範本設定檔（public/templates/*.json）
@@ -92,7 +87,7 @@ export interface TemplateManifest {
   presets: { name: string; colors: PaletteColors }[]
 }
 
-// 不是每份範本都有的欄位。分頁（美食特產、旅遊資訊、自訂清單）也算在內，範本沒用到就整頁隱藏
+// 不是每份範本都有的欄位。分頁（美食特產、旅遊資訊、行前清單）也算在內，範本沒用到就整頁隱藏
 export type FormField =
   | 'title' // 手冊名稱
   | 'airline' // 航班：航空公司

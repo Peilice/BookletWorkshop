@@ -59,7 +59,7 @@ describe('validateBooklet', () => {
         foods: [newFoodPlace()],
         hotels: [{ ...newHotel(), name: '飯店', address: '地址', city: '高山', checkIn: '2026-11-26', checkOut: '2026-11-29' }],
         infos: emptyBooklet().infos,
-        checklist: [{ category: '藥品' as const, item: '' }],
+        checklist: [{ name: '常備藥品', items: [{ text: '' }] }],
       }
       expect(validateBooklet(b, wafu)).toEqual([])
     })
@@ -106,7 +106,8 @@ describe('validateBooklet', () => {
   })
 
   it('檢查清單的空白項目', () => {
-    const b = { ...osakaKyoto, checklist: [{ category: '藥品' as const, item: ' ' }] }
-    expect(validateBooklet(b)).toEqual([{ tab: 'checklist', text: '常備藥品：有 1 個空白項目，手冊上會是空白格' }])
+    const b = { ...osakaKyoto, checklist: [{ name: '常備藥品', items: [{ text: ' ' }] }] }
+    const rules: TemplateRules = { formFields: ['airline', 'flightNo', 'hotelPhone', 'foods', 'infos', 'checklist'] }
+    expect(validateBooklet(b, rules)).toEqual([{ tab: 'checklist', text: '常備藥品：有 1 個空白項目，不會出現在手冊上' }])
   })
 })

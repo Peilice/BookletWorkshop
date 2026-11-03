@@ -2,7 +2,7 @@
   "id": "classic",
   "name": "經典",
   "site": "classic",
-  "description": "Alice 設計的第一份旅遊手冊範本：Day 方塊有圓形日期框，檢查清單整頁獨立。",
+  "description": "Alice 設計的第一份旅遊手冊範本：Day 方塊有圓形日期框，旅遊資訊最後附上行李規定。",
   "colorRoles": [
     { "label": "主色", "slots": ["accent1", "accent2"] },
     { "label": "輔色", "slots": ["accent3", "accent4"] },
@@ -10,7 +10,7 @@
   ],
   "contrastChecks": [
     { "slot": "accent1", "where": "航班表頭的白字" },
-    { "slot": "accent5", "where": "檢查清單標題列的白字" },
+    { "slot": "accent5", "where": "行前清單標題列的白字" },
     { "slot": "accent6", "where": "旅遊資訊標籤的白字" }
   ],
   "formFields": ["title", "airline", "flightNo", "hotelPhone", "foods", "infos", "checklist"],

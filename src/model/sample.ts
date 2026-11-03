@@ -1,6 +1,7 @@
 // 範例資料（內容取自 測試輸出_大阪京都.docx），用於自動測試
 
 import type { Booklet } from './booklet'
+import { newLuggageRules } from './defaults'
 
 const lorem = (name: string) =>
   `（測試內容）${name}的介紹文字，約兩到三行，用來確認段落格式、字型和換行是否正確。這裡再多寫一些字讓它換行。`
@@ -79,14 +80,13 @@ export const osakaKyoto: Booklet = {
     { title: '飲水', content: '（測試）飲水的說明內容。' },
     { title: '電壓插座', content: '（測試）電壓插座的說明內容。\n第二行：100V，雙平腳插座。' },
     { title: '緊急電話', content: '（測試）緊急電話的說明內容。' },
+    newLuggageRules(),
   ],
   checklist: [
-    { category: '證件', item: 'Visit Japan Web QR' },
-    { category: '衣物', item: '暖暖包' },
-    { category: '衣物', item: '圍巾' },
-    { category: '藥品', item: '腸胃藥' },
-    { category: '其它', item: '行動電源' },
-    { category: '其它', item: 'ICOCA卡' },
+    { name: '重要必備證件資料', items: [{ text: 'Visit Japan Web QR' }] },
+    { name: '衣物&用品', items: [{ text: '暖暖包' }, { text: '圍巾' }] },
+    { name: '常備藥品', items: [{ text: '腸胃藥' }] },
+    { name: '其它', items: [{ text: '行動電源' }, { text: 'ICOCA卡' }] },
   ],
 }
 
@@ -100,8 +100,8 @@ export const sparse: Booklet = {
   hotelNote: '',
   infos: osakaKyoto.infos.slice(0, 3),
   checklist: [
-    ...['日幣', '駕照譯本', '旅平險保單', '飯店訂房確認單'].map((item) => ({ category: '證件' as const, item })),
-    ...Array.from({ length: 12 }, (_, i) => ({ category: '其它' as const, item: `其它項目${i + 1}` })),
+    { name: '重要必備證件資料', items: ['日幣', '駕照譯本', '旅平險保單', '飯店訂房確認單'].map((text) => ({ text })) },
+    { name: '其它', items: Array.from({ length: 12 }, (_, i) => ({ text: `其它項目${i + 1}` })) },
   ],
 }
 

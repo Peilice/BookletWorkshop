@@ -52,7 +52,7 @@ describe('存檔與讀檔', () => {
     const { booklet, settings } = parseSaveFile(text)
     expect(booklet.flights[0]).toMatchObject({ airline: '長榮航空', date: '', flightNo: '' })
     expect(booklet.days).toEqual([])
-    expect(booklet.checklist).toEqual([{ category: '其它', item: '轉接頭' }])
+    expect(booklet.checklist).toEqual([{ name: '其它', items: [{ text: '轉接頭' }] }])
     expect(settings).toEqual(defaultSettings())
   })
 
@@ -73,8 +73,8 @@ describe('存檔與讀檔', () => {
 })
 
 describe('預設值', () => {
-  it('新手冊的旅遊資訊預設有氣候、時差、飲水', () => {
-    expect(emptyBooklet().infos.map((i) => i.title)).toEqual(['氣候', '時差', '飲水'])
+  it('新手冊的旅遊資訊預設有氣候、時差、飲水、行李規定', () => {
+    expect(emptyBooklet().infos.map((i) => i.title)).toEqual(['氣候', '時差', '飲水', '行李規定'])
   })
 
   it('新增的一天日期接在前一天後面（跨月）', () => {

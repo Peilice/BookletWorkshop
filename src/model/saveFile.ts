@@ -1,11 +1,10 @@
 // 存檔（.json）的格式、讀檔檢查與版本升級（規格書 4.2）
 
-import type { AccentSlot, Booklet, ChecklistCategory, PaletteColors, Settings } from './booklet'
-import { CHECKLIST_CATEGORIES } from './booklet'
+import type { AccentSlot, Booklet, PaletteColors, Settings } from './booklet'
 import { defaultSettings } from './defaults'
 
 export const SAVE_FORMAT = 'booklet-workshop'
-export const SAVE_VERSION = 1
+export const SAVE_VERSION = 2
 
 export interface SaveFile {
   format: typeof SAVE_FORMAT
@@ -30,7 +29,6 @@ const str = (v: unknown): string => (typeof v === 'string' ? v : '')
 const list = <T>(v: unknown, map: (o: Obj) => T): T[] => (Array.isArray(v) ? v.filter(isObj).map(map) : [])
 
 const ACCENTS: AccentSlot[] = ['accent1', 'accent2', 'accent3', 'accent4', 'accent5', 'accent6']
-const CATEGORY_KEYS = CHECKLIST_CATEGORIES.map((c) => c.key)
 
 function normalizeBooklet(b: Obj): Booklet {
   return {
@@ -65,9 +63,9 @@ function normalizeBooklet(b: Obj): Booklet {
     })),
     hotelNote: str(b.hotelNote),
     infos: list(b.infos, (i) => ({ title: str(i.title), content: str(i.content) })),
-    checklist: list(b.checklist, (c) => ({
-      category: (CATEGORY_KEYS.includes(c.category as ChecklistCategory) ? c.category : '其它') as ChecklistCategory,
-      item: str(c.item),
+    checklist: list(b.checklist, (g) => ({
+      name: str(g.name),
+      items: list(g.items, (i) => ({ text: str(i.text) })),
     })),
   }
 }
@@ -86,8 +84,26 @@ function normalizeSettings(s: unknown): Settings {
   return result
 }
 
-// 以後欄位改了，在這裡把舊版本的資料升級成新版本（例如 if (version < 2) { ... }）
-function migrate(data: Obj, _version: number): Obj {
+// 第 1 版的清單分類是固定的四類，代號對應的分類名稱
+const V1_CATEGORIES: [string, string][] = [
+  ['證件', '重要必備證件資料'],
+  ['衣物', '衣物&用品'],
+  ['藥品', '常備藥品'],
+  ['其它', '其它'],
+]
+
+// 以後欄位改了，在這裡把舊版本的資料升級成新版本
+function migrate(data: Obj, version: number): Obj {
+  // 第 2 版：清單從「固定分類的項目」改成可以自訂的分類，每個分類各自有項目；不認得的分類放到「其它」
+  if (version < 2 && isObj(data.booklet) && Array.isArray(data.booklet.checklist)) {
+    const old = data.booklet.checklist.filter(isObj)
+    const keyOf = (c: Obj) => (V1_CATEGORIES.some(([k]) => k === c.category) ? c.category : '其它')
+    const checklist = V1_CATEGORIES.map(([key, name]) => ({
+      name,
+      items: old.filter((c) => keyOf(c) === key).map((c) => ({ text: str(c.item) })),
+    })).filter((g) => g.items.length)
+    data = { ...data, booklet: { ...data.booklet, checklist } }
+  }
   return data
 }
 

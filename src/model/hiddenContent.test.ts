@@ -22,8 +22,8 @@ describe('換範本後不會顯示的內容', () => {
     b.foods = [{ place: '大阪', items: [] }]
     b.infos[0].content = '晴天'
     b.checklist = [
-      { category: '證件', item: '護照' },
-      { category: '其它', item: ' ' },
+      { name: '證件', items: [{ text: '護照' }] },
+      { name: '其它', items: [{ text: ' ' }] },
     ]
     expect(hiddenContent(b, wafu)).toEqual([
       { label: '航班的航空公司', count: 2 },
@@ -31,7 +31,7 @@ describe('換範本後不會顯示的內容', () => {
       { label: '飯店的電話', count: 1 },
       { label: '美食特產', count: 1 },
       { label: '旅遊資訊', count: 1 },
-      { label: '自訂清單', count: 1 },
+      { label: '行前清單', count: 1 },
     ])
   })
 

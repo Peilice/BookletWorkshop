@@ -1,60 +1,61 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { CHECKLIST_CATEGORIES, type ChecklistCategory } from '../model/booklet'
+import { hasPresetChecklistItem, mergePresetChecklist, newChecklistGroup, newChecklistItem } from '../model/defaults'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
 import Icon from './Icon.vue'
+import ItemActions from './ItemActions.vue'
 
 const { booklet } = useBookletStore()
 
-// 依分類分組顯示；存檔裡仍是一個清單，記錄每項的原始位置方便刪除
-const groups = computed(() =>
-  CHECKLIST_CATEGORIES.map((c) => ({
-    ...c,
-    items: booklet.value.checklist.map((item, index) => ({ item, index })).filter((x) => x.item.category === c.key),
-  })),
-)
-
-function add(category: ChecklistCategory) {
-  booklet.value.checklist.push({ category, item: '' })
+// 舊手冊只有自訂項目時，給一個按鈕補上預設的清單
+const hasPreset = computed(() => hasPresetChecklistItem(booklet.value.checklist))
+function addPreset() {
+  booklet.value.checklist = mergePresetChecklist(booklet.value.checklist)
 }
 </script>
 
 <template>
   <section>
     <div class="panel-intro">
-      <h2>自訂檢查項目</h2>
+      <h2>行前清單</h2>
       <p class="hint">
-        範本裡已經印好常用的檢查項目，這裡只填要另外加的。項目會先填進該分類的空白 □ 格，不夠才加列；剩下的空白格保留給你手寫。
+        已先列好常用的分類和項目，可以直接修改、刪除或新增。手冊上的清單就是這裡的內容，空白的項目不會出現；網站上可以逐項打勾。
       </p>
+      <button v-if="!hasPreset" type="button" class="add" @click="addPreset"><Icon name="plus" />加入預設項目</button>
     </div>
 
-    <div class="groups">
-      <div v-for="g in groups" :key="g.key" class="group">
-        <h3>
-          {{ g.label }}
+    <TransitionGroup tag="div" name="row" class="groups">
+      <div v-for="(g, gi) in booklet.checklist" :key="keyOf(g)" class="group">
+        <div class="group-head">
+          <input v-model="g.name" class="title-input" placeholder="分類名稱" :aria-label="`第 ${gi + 1} 個分類的名稱`" />
           <span class="group-count">{{ g.items.length }}</span>
-        </h3>
-        <p v-if="g.items.length === 0" class="hint none">沒有自訂項目。</p>
+          <ItemActions :list="booklet.checklist" :index="gi" :label="g.name || `第 ${gi + 1} 個分類`" />
+        </div>
+        <p v-if="g.items.length === 0" class="hint none">沒有項目。</p>
         <TransitionGroup tag="div" name="row" class="checks">
-          <div v-for="x in g.items" :key="keyOf(x.item)" class="check-row">
-            <span class="box" aria-hidden="true" />
-            <input v-model="x.item.item" :aria-label="`${g.label}的項目`" />
-            <button type="button" class="icon danger" :aria-label="`刪除${x.item.item || '這個項目'}`" @click="booklet.checklist.splice(x.index, 1)">
+          <div v-for="(item, i) in g.items" :key="keyOf(item)" class="check-row">
+            <input v-model="item.text" :aria-label="`${g.name || '這個分類'}的項目`" />
+            <button type="button" class="icon danger" :aria-label="`刪除${item.text || '這個項目'}`" @click="g.items.splice(i, 1)">
               刪除
             </button>
           </div>
         </TransitionGroup>
         <div>
-          <button type="button" class="add" @click="add(g.key)"><Icon name="plus" />新增項目</button>
+          <button type="button" class="add" @click="g.items.push(newChecklistItem())"><Icon name="plus" />新增項目</button>
         </div>
       </div>
+    </TransitionGroup>
+
+    <div class="groups-foot">
+      <button type="button" class="add" @click="booklet.checklist.push(newChecklistGroup())"><Icon name="plus" />新增分類</button>
     </div>
   </section>
 </template>
 
 <style scoped>
 .groups {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 40px 48px;
@@ -68,12 +69,16 @@ function add(category: ChecklistCategory) {
   padding-top: 12px;
 }
 
-.group h3 {
-  font-size: 22px;
+.group-head {
   display: flex;
   align-items: baseline;
   gap: 10px;
   margin-bottom: 4px;
+}
+
+.group-head input {
+  flex: 1;
+  min-width: 0;
 }
 
 .group-count {
@@ -95,17 +100,13 @@ function add(category: ChecklistCategory) {
   gap: 4px;
 }
 
-/* 和手冊上的空白方格對應 */
 .check-row {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.box {
-  flex: none;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--ink);
+.groups-foot {
+  padding-top: 32px;
 }
 </style>

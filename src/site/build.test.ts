@@ -58,13 +58,14 @@ describe('renderSite（經典、和風直排）', () => {
     return renderSite(id, toSiteData(b, m, m.presets[0].colors))
   }
 
-  it('經典：Day 框、Word 範本固定的清單項目和行李規定', () => {
+  it('經典：Day 框，行李規定照旅遊資訊填的內容，行前清單只有畫面上填的項目', () => {
     const html = site('classic')
     expect(html.match(/class="daybox"/g)).toHaveLength(4)
-    expect(html).toContain('國際信用卡') // 固定項目
-    expect(html).toContain('ICOCA卡') // 使用者填的
-    expect(html).toContain('托運行李')
-    expect(html).toContain('data-check="證件-0"')
+    expect(html).toContain('托運行李') // 範例手冊的行李規定
+    expect(html.match(/>行李規定</g)).toHaveLength(1) // 範本不再另外印一份
+    expect(html).toContain('ICOCA卡')
+    expect(html).not.toContain('國際信用卡') // 範本裡不再有固定項目
+    expect(html.match(/data-check=/g)).toHaveLength(6)
   })
 
   it('和風直排：只有寫了介紹的景點才有直排卡片', () => {

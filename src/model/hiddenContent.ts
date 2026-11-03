@@ -1,6 +1,7 @@
 // 換範本時，哪些已經填好的內容在新範本不會顯示、也不會印出來（資料仍保留在存檔裡，換回來就會再出現）
 
 import type { Booklet, FormField, TemplateRules } from './booklet'
+import { isUntouchedChecklist, isUntouchedInfo } from './defaults'
 
 export interface HiddenContent {
   label: string
@@ -29,9 +30,14 @@ const COUNTERS: { field: FormField; label: string; count: (b: Booklet) => number
     count: (b) =>
       b.foods.filter((f) => filled(f.place) || f.items.some((i) => filled(i.name) || filled(i.description))).length,
   },
-  // 預設的三個標題（氣候、時差、飲水）沒填內容時不算
-  { field: 'infos', label: '旅遊資訊', count: (b) => b.infos.filter((i) => filled(i.content)).length },
-  { field: 'checklist', label: '自訂清單', count: (b) => b.checklist.filter((c) => filled(c.item)).length },
+  // 預設的項目（氣候、時差、飲水沒填內容、行李規定沒改過）不算
+  { field: 'infos', label: '旅遊資訊', count: (b) => b.infos.filter((i) => !isUntouchedInfo(i)).length },
+  // 行前清單沒動過時不算
+  {
+    field: 'checklist',
+    label: '行前清單',
+    count: (b) => (isUntouchedChecklist(b.checklist) ? 0 : b.checklist.flatMap((g) => g.items).filter((i) => filled(i.text)).length),
+  },
 ]
 
 export function hiddenContent(booklet: Booklet, rules: TemplateRules): HiddenContent[] {

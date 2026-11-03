@@ -1,28 +1,13 @@
-// 經典：Word 範本「經典」的網站版。手寫感字型、圓形 Day 框、表格式航班與檢查清單；整頁捲動閱讀，列印成 A4
+// 經典：Alice 的第一份範本。手寫感字型、圓形 Day 框、表格式航班與行前清單；整頁捲動閱讀，列印成 A4
 
 import { mix } from '../../colors'
 import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteFlight } from '../../siteData'
-import type { ChecklistCategory } from '../../../model/booklet'
 import { icon } from '../common/icons'
 import { page } from '../common/page'
 import { allText } from '../common/text'
 import type { RenderOptions } from '../types'
 import css from './style.css?raw'
-
-// Word 範本裡印好的清單項目，使用者填的接在後面
-const FIXED_CHECKLIST: Record<ChecklistCategory, string[]> = {
-  證件: ['護照', '機票', '現金', '備用護照影本', '備用相片', '國際信用卡'],
-  衣物: ['換洗衣物', '毛巾(足湯)', '保養品', '防寒衣物', '貼身衣物', '面紙、濕紙巾', '牙刷/牙膏', '隨身包/背包', '軟式購物袋', '襪子', '輕便拖鞋/涼鞋', '生理用品', '睡衣褲', '水壺/保溫瓶', '防曬用品', '塑膠袋', '雨具'],
-  藥品: ['習慣性用藥', '綠油精、萬金油', 'OK繃', '腸胃藥'],
-  其它: ['手機', '充電器', '行動電源'],
-}
-
-// Word 範本「旅遊資訊」最後固定的行李規定
-const LUGGAGE = [
-  ['手機、相機、MP3 和手提電腦等鋰電池要放在', '隨身攜帶行李'],
-  ['刀具（含指甲刀）、超過 100ml 之液體，請放', '托運行李'],
-]
 
 const title = (id: string, text: string) => `<h2 class="sec-title" id="h-${id}">${icon('flower', 'ic flower')}${esc(text)}</h2>`
 
@@ -111,23 +96,19 @@ function info(d: SiteData): string {
   return `<section class="sec page" id="info" aria-labelledby="h-info">
   ${title('info', '旅遊資訊')}
   ${d.infos.map((i) => `<div class="info"><h3 class="tag">${esc(i.title)}</h3>${paragraphs(i.content)}</div>`).join('')}
-  <div class="info">
-    <h3 class="tag">行李規定</h3>
-    ${LUGGAGE.map(([text, mark]) => `<p>＊${text}<mark>${mark}</mark></p>`).join('')}
-  </div>
 </section>`
 }
 
 function checklist(d: SiteData): string {
-  const groups = d.checklist.map((c) => {
-    const items = [...FIXED_CHECKLIST[c.key], ...c.items]
-    return `<div class="check-group">
-      <h3>${esc(c.label)}</h3>
-      <ul class="check-grid">${items
-        .map((it, i) => `<li><label><input type="checkbox" data-check="${c.key}-${i}"><span>${esc(it)}</span></label></li>`)
+  let key = 0
+  const groups = d.checklist.map(
+    (c) => `<div class="check-group">
+      ${when(c.name, () => `<h3>${esc(c.name)}</h3>`)}
+      <ul class="check-grid">${c.items
+        .map((it) => `<li><label><input type="checkbox" data-check="${key++}"><span>${esc(it)}</span></label></li>`)
         .join('')}</ul>
-    </div>`
-  })
+    </div>`,
+  )
   return `<section class="sec page" id="checklist" aria-labelledby="h-checklist">
   <div class="checktable">
     <h2 class="check-head" id="h-checklist">萬全的準備是愉快旅程的開始！</h2>
@@ -145,7 +126,7 @@ export function boxText(d: SiteData): string {
 }
 
 export function bodyText(d: SiteData): string {
-  return allText(d, `航班資訊行程規劃當地美食特產飯店旅遊資訊行李規定萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期${Object.values(FIXED_CHECKLIST).flat().join('')}${LUGGAGE.flat().join('')}`)
+  return allText(d, `航班資訊行程規劃當地美食特產飯店旅遊資訊萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期`)
 }
 
 export function render(d: SiteData, opts: RenderOptions): string {

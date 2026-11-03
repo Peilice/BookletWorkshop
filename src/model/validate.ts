@@ -1,7 +1,6 @@
 // 產生手冊前的檢查：列出空白或可能有問題的欄位。只提醒，不阻止產生（規格書 4.6）
 
 import type { Booklet, FormField, TemplateRules } from './booklet'
-import { CHECKLIST_CATEGORIES } from './booklet'
 import { FALLBACK_RULES } from './defaults'
 
 export type TabId = 'flights' | 'days' | 'foods' | 'hotels' | 'infos' | 'checklist' | 'style'
@@ -38,7 +37,7 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
 
   if (!b.flights.length && !b.days.length && !(has('foods') && b.foods.length) && !b.hotels.length) {
     const parts = has('foods') ? '航班、行程、美食或飯店' : '航班、行程或飯店'
-    const rest = has('infos') || has('checklist') ? '只會有旅遊資訊和檢查清單' : '會是空白的'
+    const rest = has('infos') || has('checklist') ? '只會有旅遊資訊和行前清單' : '會是空白的'
     add('days', `手冊還沒有${parts}，產生的手冊${rest}。`)
   }
 
@@ -103,10 +102,12 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
     if (m) add('infos', `${info.title.trim() || `第 ${i + 1} 項`}：沒有填${m}`)
   })
 
-  if (has('checklist')) for (const c of CHECKLIST_CATEGORIES) {
-    const empty = b.checklist.filter((x) => x.category === c.key && blank(x.item)).length
-    if (empty) add('checklist', `${c.label}：有 ${empty} 個空白項目，手冊上會是空白格`)
-  }
+  if (has('checklist')) b.checklist.forEach((g, i) => {
+    const name = g.name.trim() || `第 ${i + 1} 個分類`
+    if (blank(g.name) && g.items.some((x) => !blank(x.text))) add('checklist', `${name}：沒有填分類名稱`)
+    const empty = g.items.filter((x) => blank(x.text)).length
+    if (empty) add('checklist', `${name}：有 ${empty} 個空白項目，不會出現在手冊上`)
+  })
 
   return issues
 }

@@ -71,11 +71,11 @@ describe('toSiteData', () => {
     expect(d.days[1].route).toEqual(['京都一日遊'])
   })
 
-  it('沒填內容的旅遊資訊不顯示，清單依分類分組', () => {
+  it('沒填內容的旅遊資訊不顯示，清單照畫面上的分類', () => {
     const b = { ...osakaKyoto, infos: [{ title: '氣候', content: '' }, { title: '時差', content: '慢 1 小時' }] }
     const d = toSiteData(b, manifest, palette)
     expect(d.infos).toEqual([{ title: '時差', content: '慢 1 小時' }])
-    expect(d.checklist.map((c) => c.key)).toEqual(['證件', '衣物', '藥品', '其它'])
-    expect(d.checklist.find((c) => c.key === '藥品')!.items).toEqual(['腸胃藥'])
+    expect(d.checklist.map((c) => c.name)).toEqual(['重要必備證件資料', '衣物&用品', '常備藥品', '其它'])
+    expect(d.checklist.find((c) => c.name === '常備藥品')!.items).toEqual(['腸胃藥'])
   })
 })

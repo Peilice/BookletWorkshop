@@ -1,6 +1,7 @@
 // 工作台右邊的成品預覽、風格縮圖：用真正的網站範本畫出來，但字型直接連 Google Fonts，不像輸出時那樣內嵌
 
 import type { Booklet, PaletteColors, TemplateManifest } from '../model/booklet'
+import { isUntouchedChecklist, isUntouchedInfo } from '../model/defaults'
 import { osakaKyoto } from '../model/sample'
 import { renderSite, siteTemplate } from './build'
 import { toSiteData } from './siteData'
@@ -16,8 +17,8 @@ export function isBlankBooklet(b: Booklet): boolean {
     !b.days.length &&
     !b.hotels.length &&
     !b.foods.length &&
-    !b.checklist.length &&
-    b.infos.every((i) => !i.content.trim())
+    (!b.checklist.length || isUntouchedChecklist(b.checklist)) &&
+    b.infos.every(isUntouchedInfo)
   )
 }
 

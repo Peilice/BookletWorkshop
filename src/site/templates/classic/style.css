@@ -1,4 +1,4 @@
-/* 經典：白紙上的手寫感手冊。--a1…--a6 是範本的六個配色，用途和 Word 範本一致 */
+/* 經典：白紙上的手寫感手冊。--a1…--a6 是範本的六個配色，用途和原本的 Word 範本一致 */
 
 :root {
   --ink: #2b2723;
@@ -393,12 +393,7 @@ a {
   color: var(--ink-soft);
 }
 
-.info mark {
-  background: none;
-  color: var(--a5);
-}
-
-/* 檢查清單：強調色粗框的大表格 */
+/* 行前清單：強調色粗框的大表格 */
 .checktable {
   border: 3px solid var(--a5);
 }
@@ -620,4 +615,5 @@ a {
     min-height: 0;
     padding: 3px 8px;
   }
+
 }

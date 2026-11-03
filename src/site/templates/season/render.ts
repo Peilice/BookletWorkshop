@@ -194,13 +194,13 @@ function info(d: SiteData): string {
       .join('')}</div>`,
     )}
     ${when(
-      checklist(d).length,
+      d.checklist.length,
       () => `<h2 class="sec-title">${icon('check', 'ic sec-ic')}行前清單</h2>
     <div class="progress no-print" aria-live="polite"><div class="bar"><span data-progress-bar></span></div><p class="progress-text" data-progress-text></p></div>
-    <div class="checklist">${checklist(d)
+    <div class="checklist">${d.checklist
       .map(
         (g) => `<section class="check-group">
-      <h3 class="box-title">${esc(g.label)}</h3>
+      ${when(g.name, () => `<h3 class="box-title">${esc(g.name)}</h3>`)}
       <ul>${g.items.map((it) => `<li><label><input type="checkbox" data-check="${key++}"><span>${esc(it)}</span></label></li>`).join('')}</ul>
     </section>`,
       )
@@ -210,10 +210,7 @@ function info(d: SiteData): string {
 </section>`
 }
 
-/** 有填項目的清單分類 */
-const checklist = (d: SiteData) => d.checklist.filter((c) => c.items.length)
-
-const hasInfo = (d: SiteData) => d.infos.length > 0 || d.foods.length > 0 || checklist(d).length > 0
+const hasInfo = (d: SiteData) => d.infos.length > 0 || d.foods.length > 0 || d.checklist.length > 0
 
 /** 會用圓體顯示的文字：網站只內嵌這些字，檔案才不會太大 */
 export function displayText(d: SiteData): string {
@@ -227,7 +224,7 @@ export function displayText(d: SiteData): string {
     ...d.hotels.flatMap((h) => [h.name, h.city]),
     ...d.infos.map((i) => i.title),
     ...d.foods.flatMap((f) => [f.place, ...f.items.map((i) => i.name)]),
-    ...checklist(d).map((c) => c.label),
+    ...d.checklist.map((c) => c.name),
   ].join('')
 }
 
