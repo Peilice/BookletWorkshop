@@ -2,6 +2,7 @@
 
 import type { Booklet, FormField, PaletteColors, TemplateRules, TransportMode } from '../model/booklet'
 import { arrivesNextDay, durationText, onlyFlights, transportOf, travelMinutes } from '../model/transport'
+import { flightOffset } from '../model/places'
 import { autoOverview } from '../model/validate'
 import { flightLeg, shortDate, weekday } from '../model/dates'
 import { dayColors, type DayColor } from './colors'
@@ -153,8 +154,8 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       to: f.to.trim(),
       arriveTime: f.arriveTime,
       nextDay: arrivesNextDay(f),
-      // 飛機要知道兩地時差才算得準，先不算
-      duration: durationText(travelMinutes(f, f.mode === 'plane' ? null : 0)),
+      // 飛機的時間是兩地各自的當地時間，對得到內建的機場才算得出來
+      duration: durationText(travelMinutes(f, f.mode === 'plane' ? flightOffset(f) : 0)),
     })),
     days,
     hotels: b.hotels.map((h, i) => ({

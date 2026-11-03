@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { newFoodItem, newFoodPlace } from '../model/defaults'
+import { knownPlaces } from '../model/places'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
 import EmptyArt from './EmptyArt.vue'
@@ -7,6 +9,7 @@ import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
 
 const { booklet } = useBookletStore()
+const places = computed(() => knownPlaces(booklet.value))
 </script>
 
 <template>
@@ -20,7 +23,7 @@ const { booklet } = useBookletStore()
       <div v-for="(p, i) in booklet.foods" :key="keyOf(p)" class="row-item">
         <span class="seq" aria-hidden="true">{{ i + 1 }}</span>
         <div class="row-body">
-          <label class="field place"><span>地點</span><input v-model="p.place" class="title-input" placeholder="例：大阪" /></label>
+          <label class="field place"><span>地點</span><input v-model="p.place" class="title-input" placeholder="例：大阪" list="food-places" /></label>
 
           <TransitionGroup tag="div" name="row" class="subs">
             <div v-for="(f, j) in p.items" :key="keyOf(f)" class="sub-item">
@@ -41,6 +44,8 @@ const { booklet } = useBookletStore()
       </div>
     </TransitionGroup>
     <EmptyArt v-if="booklet.foods.length === 0" kind="food">還沒有美食特產。依地點記下想吃的和想帶回家的。</EmptyArt>
+
+    <datalist id="food-places"><option v-for="p in places" :key="p" :value="p" /></datalist>
 
     <div :class="{ 'rows-foot': booklet.foods.length }">
       <button type="button" class="add" @click="booklet.foods.push(newFoodPlace())"><Icon name="plus" />新增地點</button>

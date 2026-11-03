@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { nextHotel } from '../model/autofill'
+import { knownPlaces } from '../model/places'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
 import EmptyArt from './EmptyArt.vue'
@@ -8,6 +10,7 @@ import ItemActions from './ItemActions.vue'
 import UnusedMark from './UnusedMark.vue'
 
 const { booklet } = useBookletStore()
+const places = computed(() => knownPlaces(booklet.value))
 </script>
 
 <template>
@@ -24,7 +27,7 @@ const { booklet } = useBookletStore()
         <div class="row-body">
           <label class="field"><span>住宿名稱</span><input v-model="h.name" class="title-input" /></label>
           <div class="stay-row">
-            <label class="field"><span>城市<UnusedMark field="hotelCity" /></span><input v-model="h.city" placeholder="例：高山" /></label>
+            <label class="field"><span>城市<UnusedMark field="hotelCity" /></span><input v-model="h.city" placeholder="例：高山" list="hotel-places" /></label>
             <label class="field"><span>入住日期<UnusedMark field="hotelStay" /></span><input v-model="h.checkIn" type="date" /></label>
             <label class="field"><span>退房日期<UnusedMark field="hotelStay" /></span><input v-model="h.checkOut" type="date" /></label>
           </div>
@@ -38,6 +41,8 @@ const { booklet } = useBookletStore()
       </div>
     </TransitionGroup>
     <EmptyArt v-if="booklet.hotels.length === 0" kind="hotel">還沒有住宿。</EmptyArt>
+
+    <datalist id="hotel-places"><option v-for="p in places" :key="p" :value="p" /></datalist>
 
     <div :class="{ 'rows-foot': booklet.hotels.length }">
       <button type="button" class="add" @click="booklet.hotels.push(nextHotel(booklet))"><Icon name="plus" />新增住宿</button>

@@ -71,14 +71,15 @@ describe('toSiteData', () => {
     expect(d.days[1].route).toEqual(['京都一日遊'])
   })
 
-  it('旅程第一天、最後一天；交通時長和隔天抵達（飛機不知道時差，先不算）', () => {
+  it('旅程第一天、最後一天；交通時長和隔天抵達（飛機對不到機場時不算）', () => {
     const flights = [
       { mode: 'hsr' as const, date: '2026-12-01', airline: '', flightNo: '0603', from: '左營', departTime: '08:00', to: '台北', arriveTime: '09:45' },
       { mode: 'plane' as const, date: '2026-12-04', airline: '', flightNo: '', from: '大阪', departTime: '23:30', to: '高雄', arriveTime: '02:10' },
+      { mode: 'plane' as const, date: '2026-12-04', airline: '', flightNo: '', from: '某個小機場', departTime: '08:00', to: '高雄', arriveTime: '10:00' },
     ]
     const d = toSiteData({ ...osakaKyoto, flights }, manifest, palette)
     expect([d.start, d.end]).toEqual(['2026-12-01', '2026-12-04'])
-    expect(d.flights.map((f) => [f.duration, f.nextDay])).toEqual([['1 小時 45 分', false], ['', true]])
+    expect(d.flights.map((f) => [f.duration, f.nextDay])).toEqual([['1 小時 45 分', false], ['3 小時 40 分', true], ['', false]])
   })
 
   it('沒填內容的旅遊資訊不顯示，清單照畫面上的分類', () => {

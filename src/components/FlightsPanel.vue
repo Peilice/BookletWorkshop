@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import type { Flight, TransportMode } from '../model/booklet'
 import { nextFlight } from '../model/autofill'
+import { airlineOf, airportName, stopSuggestions } from '../model/places'
 import { TRANSPORTS, transportOf } from '../model/transport'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
@@ -9,6 +11,21 @@ import ItemActions from './ItemActions.vue'
 import UnusedMark from './UnusedMark.vue'
 
 const { booklet } = useBookletStore()
+
+// 起訖地的建議清單：飛機列機場，高鐵、台鐵列車站
+const STOP_MODES: TransportMode[] = ['plane', 'hsr', 'train']
+const stops = STOP_MODES.map((mode) => ({ id: `stops-${mode}`, mode, options: stopSuggestions(mode) }))
+const stopList = (mode: TransportMode) => (STOP_MODES.includes(mode) ? `stops-${mode}` : undefined)
+
+// 飛機打機場代碼時換成名稱（KIX → 大阪關西）
+function tidyStop(f: Flight, key: 'from' | 'to') {
+  if (f.mode === 'plane') f[key] = airportName(f[key])
+}
+
+// 航空公司還空著時，從班機代碼帶出來（CI152 → 中華航空）
+function fillAirline(f: Flight) {
+  if (f.mode === 'plane' && !f.airline.trim()) f.airline = airlineOf(f.flightNo)
+}
 </script>
 
 <template>
@@ -42,11 +59,11 @@ const { booklet } = useBookletStore()
             </label>
             <label v-if="transportOf(f.mode).number" class="field">
               <span>{{ transportOf(f.mode).number }}<UnusedMark field="flightNo" /></span>
-              <input v-model="f.flightNo" class="strong" :placeholder="transportOf(f.mode).numberHint" />
+              <input v-model="f.flightNo" class="strong" :placeholder="transportOf(f.mode).numberHint" @change="fillAirline(f)" />
             </label>
-            <label class="field"><span>{{ transportOf(f.mode).from }}</span><input v-model="f.from" /></label>
+            <label class="field"><span>{{ transportOf(f.mode).from }}</span><input v-model="f.from" :list="stopList(f.mode)" @change="tidyStop(f, 'from')" /></label>
             <label class="field"><span>{{ transportOf(f.mode).departTime }}</span><input v-model="f.departTime" type="time" /></label>
-            <label class="field"><span>{{ transportOf(f.mode).to }}</span><input v-model="f.to" /></label>
+            <label class="field"><span>{{ transportOf(f.mode).to }}</span><input v-model="f.to" :list="stopList(f.mode)" @change="tidyStop(f, 'to')" /></label>
             <label class="field"><span>{{ transportOf(f.mode).arriveTime }}</span><input v-model="f.arriveTime" type="time" /></label>
           </div>
         </div>
@@ -54,6 +71,10 @@ const { booklet } = useBookletStore()
       </div>
     </TransitionGroup>
     <EmptyArt v-if="booklet.flights.length === 0" kind="flight">還沒有交通。訂好機票、車票後，把班次和時間填進來；自己開車也可以記一筆。</EmptyArt>
+
+    <datalist v-for="s in stops" :id="s.id" :key="s.id">
+      <option v-for="o in s.options" :key="o.value" :value="o.value" :label="o.label" />
+    </datalist>
 
     <div :class="{ 'rows-foot': booklet.flights.length }">
       <button type="button" class="add" @click="booklet.flights.push(nextFlight(booklet))"><Icon name="plus" />新增交通</button>
