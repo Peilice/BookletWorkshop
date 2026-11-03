@@ -11,12 +11,27 @@ describe('validateBooklet', () => {
 
   it('完全沒有內容時提醒', () => {
     const issues = validateBooklet(emptyBooklet())
-    expect(issues.map((i) => i.text)).toContainEqual(expect.stringContaining('手冊還沒有航班'))
+    expect(issues.map((i) => i.text)).toContainEqual(expect.stringContaining('手冊還沒有交通'))
   })
 
-  it('列出航班空白的欄位', () => {
+  it('列出交通空白的欄位', () => {
     const b = { ...emptyBooklet(), flights: [{ ...newFlight(), airline: '中華航空', from: '高雄', to: '大阪' }] }
-    expect(validateBooklet(b)).toContainEqual({ tab: 'flights', text: '航班 1：沒有填日期、班機、起飛時間、抵達時間' })
+    expect(validateBooklet(b)).toContainEqual({ tab: 'flights', text: '交通 1：沒有填日期、班機、起飛時間、抵達時間' })
+  })
+
+  it('交通方式決定欄位名稱和要提醒的欄位：高鐵要車次不用業者，自駕連時間都不提醒', () => {
+    const b = {
+      ...emptyBooklet(),
+      flights: [
+        { ...newFlight(), mode: 'hsr' as const, date: '2026-12-01', from: '左營', to: '台北' },
+        { ...newFlight(), mode: 'car' as const, date: '2026-12-01', from: '台北' },
+        { ...newFlight(), mode: 'bus' as const, date: '2026-12-01', from: '台北', to: '宜蘭', departTime: '08:00', arriveTime: '09:10' },
+      ],
+    }
+    expect(validateBooklet(b).filter((i) => i.tab === 'flights').map((i) => i.text)).toEqual([
+      '交通 1：沒有填車次、出發時間、抵達時間',
+      '交通 2：沒有填目的地',
+    ])
   })
 
   it('行程：日期、景點名稱空白', () => {
@@ -80,7 +95,7 @@ describe('validateBooklet', () => {
 
     it('沒有內容時，提醒文字不提到範本沒有的部分', () => {
       expect(validateBooklet(emptyBooklet(), wafu).map((i) => i.text)).toEqual([
-        '手冊還沒有航班、行程或飯店，產生的手冊會是空白的。',
+        '手冊還沒有交通、行程或飯店，產生的手冊會是空白的。',
       ])
     })
 

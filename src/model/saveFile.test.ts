@@ -4,7 +4,7 @@ import { hiddenContent } from './hiddenContent'
 import { isBlankBooklet } from '../site/preview'
 import { bookletFileName } from './fileName'
 import { osakaKyoto } from './sample'
-import { createSaveFile, parseSaveFile, SAVE_VERSION, SaveFileError } from './saveFile'
+import { createSaveFile, parseSaveFile, SAVE_FORMAT, SAVE_VERSION, SaveFileError } from './saveFile'
 
 describe('存檔與讀檔', () => {
   it('存檔後讀回來，內容和設定完全恢復', () => {
@@ -81,6 +81,13 @@ describe('存檔與讀檔', () => {
     const { booklet } = parseSaveFile(text)
     expect(booklet.hotels.map((h) => h.note)).toEqual(['牙刷自備', '牙刷自備'])
     expect('hotelNote' in booklet).toBe(false)
+  })
+})
+
+describe('交通方式', () => {
+  it('舊存檔的航班沒有交通方式，讀進來當成飛機；不認得的交通方式也當成飛機', () => {
+    const old = { format: SAVE_FORMAT, version: 3, booklet: { flights: [{ date: '2026-12-01' }, { mode: 'rocket' }, { mode: 'hsr' }] } }
+    expect(parseSaveFile(JSON.stringify(old)).booklet.flights.map((f) => f.mode)).toEqual(['plane', 'plane', 'hsr'])
   })
 })
 

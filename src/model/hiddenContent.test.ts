@@ -26,8 +26,8 @@ describe('換範本後不會顯示的內容', () => {
       { name: '其它', items: [{ text: ' ' }] },
     ]
     expect(hiddenContent(b, wafu)).toEqual([
-      { label: '航班的航空公司', count: 2 },
-      { label: '航班的班機', count: 1 },
+      { label: '交通的航空公司、業者', count: 2 },
+      { label: '交通的班機、車次', count: 1 },
       { label: '飯店的電話', count: 1 },
       { label: '美食特產', count: 1 },
       { label: '旅遊資訊', count: 1 },

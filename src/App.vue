@@ -45,7 +45,7 @@ const nextStep = computed(() => steps[steps.findIndex((s) => s.id === step.value
 // ---------- 內容區塊：不論哪個風格都可以填，目前風格不顯示的區塊變淡 ----------
 
 const sections: { id: SectionId; label: string; component: Component; count: () => number; field?: FormField }[] = [
-  { id: 'flights', label: '航班', component: FlightsPanel, count: () => booklet.value.flights.length },
+  { id: 'flights', label: '交通', component: FlightsPanel, count: () => booklet.value.flights.length },
   { id: 'days', label: '每日行程', component: DaysPanel, count: () => booklet.value.days.length },
   { id: 'foods', label: '美食特產', component: FoodsPanel, count: () => booklet.value.foods.length, field: 'foods' },
   { id: 'hotels', label: '飯店', component: HotelsPanel, count: () => booklet.value.hotels.length },
@@ -100,7 +100,7 @@ function onDiscardAutosave() {
   tripChoice.value = 'start'
 }
 
-/** 照選的類型開一本新手冊；一日遊通常沒有航班，直接從每日行程開始 */
+/** 照選的類型開一本新手冊；一日遊通常不用記交通，直接從每日行程開始 */
 function startTrip(type: TripType) {
   tripChoice.value = null
   store.newBooklet(type)

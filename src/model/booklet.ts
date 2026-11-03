@@ -1,9 +1,14 @@
 // 存檔（.json）的資料結構：使用者在表單上填的內容
 
+// 交通方式（各自的欄位名稱見 transport.ts）
+export type TransportMode = 'plane' | 'hsr' | 'train' | 'bus' | 'ship' | 'car' | 'other'
+
+// 一筆交通。一開始只有航班，所以沿用 Flight、flights 的名稱
 export interface Flight {
+  mode: TransportMode
   date: string // YYYY-MM-DD
-  airline: string
-  flightNo: string
+  airline: string // 航空公司；其他交通方式是業者、車種
+  flightNo: string // 班機；其他交通方式是車次、班次
   from: string
   departTime: string // HH:mm
   to: string
@@ -90,8 +95,8 @@ export interface TemplateManifest {
 // 不是每份範本都有的欄位。分頁（美食特產、旅遊資訊、行前清單）也算在內，範本沒用到就整頁隱藏
 export type FormField =
   | 'title' // 手冊名稱
-  | 'airline' // 航班：航空公司
-  | 'flightNo' // 航班：班機
+  | 'airline' // 交通：航空公司、業者
+  | 'flightNo' // 交通：班機、車次
   | 'dayTheme' // 每日行程：主題
   | 'departTime' // 每日行程：出門時間
   | 'hotelPhone' // 飯店：電話

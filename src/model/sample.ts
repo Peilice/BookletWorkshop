@@ -9,8 +9,8 @@ const lorem = (name: string) =>
 export const osakaKyoto: Booklet = {
   title: '大阪・京都 四日遊',
   flights: [
-    { date: '2026-12-01', airline: '中華航空', flightNo: 'CI152', from: '高雄', departTime: '08:00', to: '大阪關西', arriveTime: '11:45' },
-    { date: '2026-12-04', airline: '中華航空', flightNo: 'CI153', from: '大阪關西', departTime: '12:45', to: '高雄', arriveTime: '14:50' },
+    { mode: 'plane', date: '2026-12-01', airline: '中華航空', flightNo: 'CI152', from: '高雄', departTime: '08:00', to: '大阪關西', arriveTime: '11:45' },
+    { mode: 'plane', date: '2026-12-04', airline: '中華航空', flightNo: 'CI153', from: '大阪關西', departTime: '12:45', to: '高雄', arriveTime: '14:50' },
   ],
   days: [
     {
@@ -107,8 +107,8 @@ export const sparse: Booklet = {
 export const kanazawa: Booklet = {
   title: '金澤・高山 八日遊',
   flights: [
-    { date: '2026-11-26', airline: '', flightNo: '', from: '高雄', departTime: '08:05', to: '小松', arriveTime: '12:05' },
-    { date: '2026-12-03', airline: '', flightNo: '', from: '小松', departTime: '12:55', to: '高雄', arriveTime: '15:55' },
+    { mode: 'plane', date: '2026-11-26', airline: '', flightNo: '', from: '高雄', departTime: '08:05', to: '小松', arriveTime: '12:05' },
+    { mode: 'plane', date: '2026-12-03', airline: '', flightNo: '', from: '小松', departTime: '12:55', to: '高雄', arriveTime: '15:55' },
   ],
   days: [
     {

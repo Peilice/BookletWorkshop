@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { newFlight } from '../model/defaults'
+import { TRANSPORTS, transportOf } from '../model/transport'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
 import EmptyArt from './EmptyArt.vue'
@@ -13,53 +14,65 @@ const { booklet } = useBookletStore()
 <template>
   <section>
     <div class="panel-intro">
-      <h2>航班</h2>
-      <p class="hint">沒有填任何航班時，手冊裡不會出現「航班資訊」。日期在手冊上會縮成「12/1」。</p>
+      <h2>交通</h2>
+      <p class="hint">飛機、高鐵、客運、自駕都填在這裡；全部都是飛機時，手冊上叫「航班」。沒有填任何交通時，手冊裡不會出現這一段。日期在手冊上會縮成「12/1」。</p>
     </div>
 
     <TransitionGroup tag="div" name="row" class="rows">
-      <!-- 一筆航班像一張登機證：上方是航線，右邊撕線後是操作按鈕 -->
+      <!-- 一筆交通像一張票：上方是路線，右邊撕線後是操作按鈕；欄位名稱跟著交通方式變 -->
       <div v-for="(f, i) in booklet.flights" :key="keyOf(f)" class="row-item pass">
         <span class="seq" aria-hidden="true">{{ i + 1 }}</span>
         <div class="row-body">
           <p class="route" aria-hidden="true">
-            <span>{{ f.from || '起飛地' }}</span>
+            <span>{{ f.from || transportOf(f.mode).from }}</span>
             <Icon name="route" />
-            <span>{{ f.to || '抵達地' }}</span>
-            <b v-if="f.flightNo" class="flight-no">{{ f.flightNo }}</b>
+            <span>{{ f.to || transportOf(f.mode).to }}</span>
+            <b v-if="f.flightNo && transportOf(f.mode).number" class="flight-no">{{ f.flightNo }}</b>
           </p>
           <div class="flight-grid">
+            <label class="field">
+              <span>交通方式</span>
+              <select v-model="f.mode">
+                <option v-for="t in TRANSPORTS" :key="t.id" :value="t.id">{{ t.label }}</option>
+              </select>
+            </label>
             <label class="field"><span>日期</span><input v-model="f.date" type="date" /></label>
-            <label class="field wide"><span>航空公司<UnusedMark field="airline" /></span><input v-model="f.airline" /></label>
-            <label class="field"><span>班機<UnusedMark field="flightNo" /></span><input v-model="f.flightNo" class="strong" placeholder="例：CI152" /></label>
-            <label class="field"><span>起飛地</span><input v-model="f.from" /></label>
-            <label class="field"><span>起飛時間</span><input v-model="f.departTime" type="time" /></label>
-            <label class="field"><span>抵達地</span><input v-model="f.to" /></label>
-            <label class="field"><span>抵達時間</span><input v-model="f.arriveTime" type="time" /></label>
+            <label v-if="transportOf(f.mode).carrier" class="field">
+              <span>{{ transportOf(f.mode).carrier }}<UnusedMark field="airline" /></span><input v-model="f.airline" />
+            </label>
+            <label v-if="transportOf(f.mode).number" class="field">
+              <span>{{ transportOf(f.mode).number }}<UnusedMark field="flightNo" /></span>
+              <input v-model="f.flightNo" class="strong" :placeholder="transportOf(f.mode).numberHint" />
+            </label>
+            <label class="field"><span>{{ transportOf(f.mode).from }}</span><input v-model="f.from" /></label>
+            <label class="field"><span>{{ transportOf(f.mode).departTime }}</span><input v-model="f.departTime" type="time" /></label>
+            <label class="field"><span>{{ transportOf(f.mode).to }}</span><input v-model="f.to" /></label>
+            <label class="field"><span>{{ transportOf(f.mode).arriveTime }}</span><input v-model="f.arriveTime" type="time" /></label>
           </div>
         </div>
-        <ItemActions :list="booklet.flights" :index="i" :label="`航班 ${i + 1}`" />
+        <ItemActions :list="booklet.flights" :index="i" :label="`交通 ${i + 1}`" />
       </div>
     </TransitionGroup>
-    <EmptyArt v-if="booklet.flights.length === 0" kind="flight">還沒有航班。訂好機票後，把班機和時間填進來。</EmptyArt>
+    <EmptyArt v-if="booklet.flights.length === 0" kind="flight">還沒有交通。訂好機票、車票後，把班次和時間填進來；自己開車也可以記一筆。</EmptyArt>
 
     <div :class="{ 'rows-foot': booklet.flights.length }">
-      <button type="button" class="add" @click="booklet.flights.push(newFlight())"><Icon name="plus" />新增航班</button>
+      <button type="button" class="add" @click="booklet.flights.push(newFlight())"><Icon name="plus" />新增交通</button>
     </div>
   </section>
 </template>
 
 <style scoped>
-/* 兩行：日期、航空公司、班機；起飛地、起飛時間、抵達地、抵達時間 */
+/* 兩行：交通方式、日期、業者、班次；出發地、出發時間、抵達地、抵達時間（自駕沒有業者、班次） */
 .flight-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 112px minmax(0, 1fr) 112px;
+  grid-template-columns: minmax(0, 1fr) 140px minmax(0, 1fr) 112px;
   gap: 14px 16px;
   align-items: end;
 }
 
-.flight-grid .wide {
-  grid-column: span 2;
+/* 出發地一律從第二行開頭排起 */
+.flight-grid > :nth-last-child(4) {
+  grid-column: 1;
 }
 
 .strong {

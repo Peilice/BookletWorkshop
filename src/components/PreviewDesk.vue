@@ -20,7 +20,7 @@ const blank = computed(() => isBlankBooklet(booklet.value))
 // 只有部分風格會顯示的區塊
 const SECTION_FIELD: Partial<Record<SectionId, FormField>> = { foods: 'foods', infos: 'infos', checklist: 'checklist' }
 const SECTION_LABEL: Record<SectionId, string> = {
-  flights: '航班',
+  flights: '交通',
   days: '每日行程',
   foods: '美食特產',
   hotels: '飯店',

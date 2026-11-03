@@ -13,19 +13,22 @@ const title = (id: string, text: string) => `<h2 class="sec-title" id="h-${id}">
 
 function flights(d: SiteData): string {
   type Col = [string, (f: SiteFlight) => string]
+  // 全部都是飛機時照航班的叫法；混了其他交通方式時多一欄交通方式，表頭改成通用的說法
+  const air = d.onlyFlights
   const cols: Col[] = [
     ['日期', (f) => f.date],
-    ['航空公司', (f) => f.airline],
-    ['班機', (f) => f.flightNo],
-    ['起飛', (f) => f.from],
-    ['起飛時間', (f) => f.departTime],
+    ...(air ? [] : [['交通', (f: SiteFlight) => f.modeLabel] as Col]),
+    [air ? '航空公司' : '業者', (f) => f.airline],
+    [air ? '班機' : '班次', (f) => f.flightNo],
+    [air ? '起飛' : '出發', (f) => f.from],
+    [air ? '起飛時間' : '出發時間', (f) => f.departTime],
     ['抵達', (f) => f.to],
     ['抵達時間', (f) => f.arriveTime],
   ]
   // 範本沒用到、或每班都沒填的欄位不顯示
   const shown = cols.filter(([, get]) => d.flights.some((f) => get(f)))
   return `<section class="sec" id="flights" aria-labelledby="h-flights">
-  ${title('flights', '航班資訊')}
+  ${title('flights', air ? '航班資訊' : '交通資訊')}
   <table class="flights">
     <thead><tr>${shown.map(([h]) => `<th scope="col">${h}</th>`).join('')}</tr></thead>
     <tbody>${d.flights
@@ -126,13 +129,13 @@ export function boxText(d: SiteData): string {
 }
 
 export function bodyText(d: SiteData): string {
-  return allText(d, `航班資訊行程規劃當地美食特產飯店旅遊資訊萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期`)
+  return allText(d, `航班資訊行程規劃當地美食特產飯店旅遊資訊萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期交通業者班次出發`)
 }
 
 export function render(d: SiteData, opts: RenderOptions): string {
   const p = d.palette
   const nav = [
-    { id: 'flights', label: '航班', show: d.flights.length > 0 },
+    { id: 'flights', label: d.onlyFlights ? '航班' : '交通', show: d.flights.length > 0 },
     { id: 'days', label: '行程', show: d.days.length > 0 },
     { id: 'foods', label: '美食', show: d.foods.length > 0 },
     { id: 'hotels', label: '飯店', show: d.hotels.length > 0 },

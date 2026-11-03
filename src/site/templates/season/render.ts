@@ -13,11 +13,12 @@ const colorVars = (c: DayColor) => `--day:${c.deep};--day-chip:${c.chip};--day-s
 
 const dateLine = (date: string, weekday: string) => [date, weekday].filter(Boolean).join(' ')
 
-// ---------- 航班 ----------
+// ---------- 交通（全部都是飛機時叫航班） ----------
 
 function flights(d: SiteData): string {
   const cards = d.flights.map((f) => {
-    const carrier = [f.airline, f.flightNo].filter(Boolean).join(' ')
+    // 混了其他交通方式時，每張卡片標出是飛機、高鐵還是自駕
+    const carrier = [d.onlyFlights ? '' : f.modeLabel, f.airline, f.flightNo].filter(Boolean).join(' ')
     return `<article class="flight">
   <header class="flight-head">
     ${when(f.leg, () => `<span class="pill">${esc(f.leg)}</span>`)}
@@ -26,14 +27,14 @@ function flights(d: SiteData): string {
   </header>
   <div class="flight-route">
     <div class="pt"><b class="time">${esc(f.departTime || '--:--')}</b><span>${esc(f.from)}</span></div>
-    <div class="flight-line">${icon('plane')}</div>
+    <div class="flight-line">${icon(f.icon)}</div>
     <div class="pt pt-end"><b class="time">${esc(f.arriveTime || '--:--')}</b><span>${esc(f.to)}</span></div>
   </div>
 </article>`
   })
   return `<section class="panel" id="flights" aria-labelledby="h-flights">
   <div class="wrap">
-    <h2 class="sec-title" id="h-flights">航班</h2>
+    <h2 class="sec-title" id="h-flights">${d.onlyFlights ? '航班' : '交通'}</h2>
     <div class="flights">${cards.join('')}</div>
   </div>
 </section>`
@@ -217,9 +218,9 @@ export function displayText(d: SiteData): string {
   return [
     d.title,
     d.dateRange,
-    '行程航班住宿資訊旅遊吃什麼行前清單今天今晚入住退房晚地圖撥打電話出門到總覽天數日期離線中列印存成全部準備好了未命名的',
+    '行程航班交通住宿資訊旅遊吃什麼行前清單今天今晚入住退房晚地圖撥打電話出門到總覽天數日期離線中列印存成全部準備好了未命名的',
     'DayABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:/→·（）',
-    ...d.flights.flatMap((f) => [f.leg, f.date, f.weekday, f.airline, f.flightNo, f.from, f.to]),
+    ...d.flights.flatMap((f) => [f.leg, f.modeLabel, f.date, f.weekday, f.airline, f.flightNo, f.from, f.to]),
     ...d.days.flatMap((x) => [...x.route, x.date, x.weekday, x.theme, ...x.spots.map((s) => s.name)]),
     ...d.hotels.flatMap((h) => [h.name, h.city]),
     ...d.infos.map((i) => i.title),
@@ -231,7 +232,7 @@ export function displayText(d: SiteData): string {
 export function render(d: SiteData, opts: RenderOptions): string {
   const tabs = [
     { id: 'trip', label: '行程', icon: 'route', show: true },
-    { id: 'flights', label: '航班', icon: 'plane', show: d.flights.length > 0 },
+    { id: 'flights', label: d.onlyFlights ? '航班' : '交通', icon: d.onlyFlights ? 'plane' : 'route', show: d.flights.length > 0 },
     { id: 'stay', label: '住宿', icon: 'bed', show: d.hotels.length > 0 },
     { id: 'info', label: '資訊', icon: 'book', show: hasInfo(d) },
   ].filter((t) => t.show)

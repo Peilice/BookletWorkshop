@@ -2,6 +2,7 @@
 
 import type { Booklet, FormField, TemplateRules } from './booklet'
 import { FALLBACK_RULES } from './defaults'
+import { transportOf } from './transport'
 
 export type TabId = 'flights' | 'days' | 'foods' | 'hotels' | 'infos' | 'checklist' | 'style'
 
@@ -36,22 +37,23 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
   const has = (f: FormField) => rules.formFields.includes(f)
 
   if (!b.flights.length && !b.days.length && !(has('foods') && b.foods.length) && !b.hotels.length) {
-    const parts = has('foods') ? '航班、行程、美食或飯店' : '航班、行程或飯店'
+    const parts = has('foods') ? '交通、行程、美食或飯店' : '交通、行程或飯店'
     const rest = has('infos') || has('checklist') ? '只會有旅遊資訊和行前清單' : '會是空白的'
     add('days', `手冊還沒有${parts}，產生的手冊${rest}。`)
   }
 
   b.flights.forEach((f, i) => {
+    const t = transportOf(f.mode)
     const m = missing([
       ['日期', f.date],
-      ['航空公司', f.airline, has('airline')],
-      ['班機', f.flightNo, has('flightNo')],
-      ['起飛地', f.from],
-      ['起飛時間', f.departTime],
-      ['抵達地', f.to],
-      ['抵達時間', f.arriveTime],
+      [t.carrier, f.airline, has('airline') && t.required.carrier],
+      [t.number, f.flightNo, has('flightNo') && t.required.number],
+      [t.from, f.from],
+      [t.departTime, f.departTime, t.required.times],
+      [t.to, f.to],
+      [t.arriveTime, f.arriveTime, t.required.times],
     ])
-    if (m) add('flights', `航班 ${i + 1}：沒有填${m}`)
+    if (m) add('flights', `交通 ${i + 1}：沒有填${m}`)
   })
 
   b.days.forEach((d, i) => {

@@ -2,9 +2,10 @@
 
 import type { AccentSlot, Booklet, PaletteColors, Settings } from './booklet'
 import { defaultSettings } from './defaults'
+import { isTransportMode } from './transport'
 
 export const SAVE_FORMAT = 'booklet-workshop'
-export const SAVE_VERSION = 3
+export const SAVE_VERSION = 4
 
 export interface SaveFile {
   format: typeof SAVE_FORMAT
@@ -34,6 +35,7 @@ function normalizeBooklet(b: Obj): Booklet {
   return {
     title: str(b.title),
     flights: list(b.flights, (f) => ({
+      mode: isTransportMode(f.mode) ? f.mode : 'plane',
       date: str(f.date),
       airline: str(f.airline),
       flightNo: str(f.flightNo),
@@ -110,6 +112,7 @@ function migrate(data: Obj, version: number): Obj {
     const hotels = data.booklet.hotels.map((h) => (isObj(h) ? { ...h, note } : h))
     data = { ...data, booklet: { ...data.booklet, hotels } }
   }
+  // 第 4 版：航班改成交通，每筆多了交通方式；舊存檔沒有這個欄位，讀檔時一律當成飛機（normalizeBooklet）
   return data
 }
 

@@ -13,10 +13,11 @@ import css from './style.css?raw'
 const dateW = (date: string, w: string) => (date ? `${date}${w ? `（${w}）` : ''}` : '')
 
 function travel(d: SiteData): string {
+  const move = d.onlyFlights ? '班機' : '交通'
   const flights = d.flights.map((f) => {
-    const carrier = [f.airline, f.flightNo].filter(Boolean).join(' ')
+    const carrier = [d.onlyFlights ? '' : f.modeLabel, f.airline, f.flightNo].filter(Boolean).join(' ')
     const leg = f.leg ? `<span class="leg">${esc(f.leg)}：</span>` : ''
-    const from = [f.from, f.departTime && `${f.departTime} 起飛`].filter(Boolean).join(' ')
+    const from = [f.from, f.departTime && `${f.departTime} ${f.departWord}`].filter(Boolean).join(' ')
     const to = [f.to, f.arriveTime && `${f.arriveTime} 抵達`].filter(Boolean).join(' ')
     return `<li>${leg}<span class="num">${esc(dateW(f.date, f.weekdayShort))}</span>${when(carrier, () => `<span class="carrier">${esc(carrier)}</span>`)}<span>${esc(from)} → ${esc(to)}</span></li>`
   })
@@ -35,8 +36,8 @@ function travel(d: SiteData): string {
     </article>`
   })
   return `<section class="sec" id="travel" aria-labelledby="h-travel">
-  <h2 class="sec-title" id="h-travel">${d.flights.length && d.hotels.length ? '班機與住宿' : d.flights.length ? '班機' : '住宿'}</h2>
-  ${when(flights.length, () => `<h3 class="sub">【班機】</h3><ul class="flights">${flights.join('')}</ul>`)}
+  <h2 class="sec-title" id="h-travel">${d.flights.length && d.hotels.length ? `${move}與住宿` : d.flights.length ? move : '住宿'}</h2>
+  ${when(flights.length, () => `<h3 class="sub">【${move}】</h3><ul class="flights">${flights.join('')}</ul>`)}
   ${when(hotels.length, () => `<h3 class="sub">【住宿】</h3><div class="hotels">${hotels.join('')}</div>`)}
 </section>`
 }
@@ -80,7 +81,7 @@ const hasSpots = (d: SiteData) => d.days.some((x) => x.spots.some((s) => s.conte
 export function render(d: SiteData, opts: RenderOptions): string {
   const accent = d.palette.accent1
   const nav = [
-    { id: 'travel', label: '班機住宿', show: d.flights.length > 0 || d.hotels.length > 0 },
+    { id: 'travel', label: d.onlyFlights ? '班機住宿' : '交通住宿', show: d.flights.length > 0 || d.hotels.length > 0 },
     { id: 'overview', label: '行程總覽', show: d.days.length > 0 },
     { id: 'spots', label: '景點介紹', show: hasSpots(d) },
   ].filter((n) => n.show)

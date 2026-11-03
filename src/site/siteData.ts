@@ -1,11 +1,17 @@
 // 表單資料 → 網站範本要顯示的內容。所有顯示邏輯都在這裡，網站範本只負責排版。
 
-import type { Booklet, FormField, PaletteColors, TemplateRules } from '../model/booklet'
+import type { Booklet, FormField, PaletteColors, TemplateRules, TransportMode } from '../model/booklet'
+import { onlyFlights, transportOf } from '../model/transport'
 import { autoOverview } from '../model/validate'
 import { flightLeg, shortDate, weekday } from '../model/dates'
 import { dayColors, type DayColor } from './colors'
 
+// 一筆交通（沿用航班的名稱，見 Flight）
 export interface SiteFlight {
+  mode: TransportMode
+  modeLabel: string // 飛機、高鐵⋯
+  icon: string
+  departWord: string // 起飛、出發
   leg: string // 去程、回程或空白
   date: string
   weekday: string // 星期四
@@ -54,6 +60,7 @@ export interface SiteData {
   dateRange: string
   tripKey: string // 網站存勾選清單時用，不同手冊不會互相覆蓋
   palette: PaletteColors // 範本配色，各範本自己決定每個顏色用在哪
+  onlyFlights: boolean // 交通全部都是飛機：標題沿用「航班」，不然叫「交通」
   colors: DayColor[] // 依天數內插的日色
   flights: SiteFlight[]
   days: SiteDay[]
@@ -119,8 +126,13 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
     dateRange: range,
     tripKey: hash(`${title}|${range}`),
     palette,
+    onlyFlights: onlyFlights(b.flights),
     colors,
     flights: b.flights.map((f, i) => ({
+      mode: f.mode,
+      modeLabel: transportOf(f.mode).label,
+      icon: transportOf(f.mode).icon,
+      departWord: transportOf(f.mode).departWord,
       leg: flightLeg(i, b.flights.length),
       date: shortDate(f.date),
       weekday: weekday(f.date),

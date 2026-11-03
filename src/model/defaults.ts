@@ -52,6 +52,7 @@ export function addDays(iso: string, n: number): string {
 }
 
 export const newFlight = (): Flight => ({
+  mode: 'plane',
   date: '',
   airline: '',
   flightNo: '',

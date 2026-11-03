@@ -77,6 +77,38 @@ describe('renderSite（經典、和風直排）', () => {
   })
 })
 
+describe('交通方式', () => {
+  const m = (id: string): TemplateManifest =>
+    JSON.parse(readFileSync(new URL(`../../public/templates/${id}.json`, import.meta.url), 'utf8'))
+  const mixed = {
+    ...osakaKyoto,
+    flights: [
+      osakaKyoto.flights[0],
+      { mode: 'hsr' as const, date: '2026-12-02', airline: '', flightNo: '0603', from: '新大阪', departTime: '09:00', to: '京都', arriveTime: '09:15' },
+    ],
+  }
+  const site = (id: string, b = osakaKyoto) => renderSite(id, toSiteData(b, m(id), m(id).presets[0].colors))
+
+  it('全部都是飛機時沿用「航班」', () => {
+    expect(site('classic')).toContain('航班資訊')
+    expect(site('season')).toContain('id="h-flights">航班<')
+    expect(site('wafu')).toContain('【班機】')
+  })
+
+  it('混了其他交通方式時改叫「交通」，標出每一筆的交通方式和圖示', () => {
+    const classic = site('classic', mixed)
+    expect(classic).toContain('交通資訊')
+    expect(classic).toContain('>高鐵<')
+    const season = site('season', mixed)
+    expect(season).toContain('id="h-flights">交通<')
+    expect(season).toContain('高鐵 0603')
+    expect(season).toContain('href="#i-train"')
+    const wafu = site('wafu', mixed)
+    expect(wafu).toContain('【交通】')
+    expect(wafu).toContain('09:00 出發')
+  })
+})
+
 describe('buildSiteZip', () => {
   it('包含網頁、manifest、Service Worker 與圖示', () => {
     const zip = new PizZip(buildSiteZip('season', data(), {}, icons, 'v1'))
