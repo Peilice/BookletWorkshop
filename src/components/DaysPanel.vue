@@ -44,7 +44,9 @@ const overviewText = computed(() => (activeDay.value ? activeDay.value.overview 
 
 function addDay() {
   const days = booklet.value.days
-  days.push(newDay(days.at(-1)))
+  // 第一天先帶入交通裡最早的日期（YYYY-MM-DD 可以直接比字串）
+  const firstDate = booklet.value.flights.reduce((min, f) => (f.date && (!min || f.date < min) ? f.date : min), '')
+  days.push(days.length ? newDay(days.at(-1)) : { ...newDay(), date: firstDate })
   activeDay.value = days.at(-1)
 }
 
@@ -71,7 +73,7 @@ function posterDate(iso: string): string {
     </div>
 
     <template v-if="booklet.days.length === 0">
-      <EmptyArt kind="spot" class="empty">還沒有行程。新增第一天後，日期會自動接著往後排。</EmptyArt>
+      <EmptyArt kind="spot" class="empty">還沒有行程。第一天會先帶入交通的日期，之後的日期自動接著往後排。</EmptyArt>
       <button type="button" class="add" @click="addDay"><Icon name="plus" />新增一天</button>
     </template>
 
@@ -123,16 +125,10 @@ function posterDate(iso: string): string {
         :aria-labelledby="`day-tab-${activeIndex}`"
         class="day-form"
       >
-        <div class="theme-row">
-          <label class="field">
-            <span>主題<UnusedMark field="dayTheme" /></span>
-            <input v-model="activeDay.theme" placeholder="例：高山老街、飛驒古川" />
-          </label>
-          <label class="field">
-            <span>出門時間（選填）<UnusedMark field="departTime" /></span>
-            <input v-model="activeDay.departTime" type="time" />
-          </label>
-        </div>
+        <label class="field depart">
+          <span>出門時間（選填）<UnusedMark field="departTime" /></span>
+          <input v-model="activeDay.departTime" type="time" />
+        </label>
 
         <label class="field">
           <span class="overview-label">
@@ -293,10 +289,8 @@ function posterDate(iso: string): string {
   gap: 6px;
 }
 
-.theme-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px;
-  gap: 16px;
+.depart {
+  max-width: 240px;
 }
 
 .overview-label {

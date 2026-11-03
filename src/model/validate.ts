@@ -59,7 +59,6 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
   b.days.forEach((d, i) => {
     const day = `Day ${i + 1}`
     if (blank(d.date)) add('days', `${day}：沒有填日期`)
-    if (has('dayTheme') && !rules.optionalFields?.includes('dayTheme') && blank(d.theme)) add('days', `${day}：沒有填主題`)
     if (!d.spots.length) add('days', `${day}：沒有景點`)
     d.spots.forEach((s, j) => {
       if (blank(s.name)) add('days', `${day} 景點 ${j + 1}：沒有填景點名稱`)

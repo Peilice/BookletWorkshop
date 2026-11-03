@@ -27,7 +27,6 @@ export interface Spot {
 export interface Day {
   date: string
   overview: string // 選填，空白時自動用景點串起來
-  theme: string // 只有部分範本用到（見 FormField）
   departTime: string // HH:mm，只有部分範本用到
   spots: Spot[]
 }
@@ -89,8 +88,6 @@ export interface TemplateManifest {
   contrastChecks: { slot: AccentSlot; where: string }[]
   // 這份範本用到的選填欄位；表單只顯示這些，其他欄位一律顯示
   formFields: FormField[]
-  // 有顯示但可以不填的欄位：產生前不提醒
-  optionalFields?: FormField[]
   // 每日行程總覽、景點內容的字數上限，超過時產生前提醒；沒有設定就不檢查
   overviewLimit?: number
   spotContentLimit?: number
@@ -102,7 +99,6 @@ export type FormField =
   | 'title' // 手冊名稱
   | 'airline' // 交通：航空公司、業者
   | 'flightNo' // 交通：班機、車次
-  | 'dayTheme' // 每日行程：主題
   | 'departTime' // 每日行程：出門時間
   | 'hotelPhone' // 住宿：電話
   | 'hotelCity' // 住宿：城市
@@ -113,7 +109,7 @@ export type FormField =
   | 'checklist'
 
 // 表單和產生前檢查會用到的範本設定
-export type TemplateRules = Pick<TemplateManifest, 'formFields' | 'optionalFields' | 'overviewLimit' | 'spotContentLimit'>
+export type TemplateRules = Pick<TemplateManifest, 'formFields' | 'overviewLimit' | 'spotContentLimit'>
 
 export type AccentSlot = 'accent1' | 'accent2' | 'accent3' | 'accent4' | 'accent5' | 'accent6'
 

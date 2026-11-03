@@ -52,7 +52,6 @@ function normalizeBooklet(b: Obj): Booklet {
     days: list(b.days, (d) => ({
       date: str(d.date),
       overview: str(d.overview),
-      theme: str(d.theme),
       departTime: str(d.departTime),
       spots: list(d.spots, (s) => ({ time: str(s.time), name: str(s.name), content: str(s.content) })),
     })),

@@ -58,7 +58,7 @@ describe('存檔與讀檔', () => {
     expect(settings).toEqual(defaultSettings())
   })
 
-  it('舊存檔沒有主題、城市、入住退房、備註時補上空白', () => {
+  it('舊存檔沒有出門時間、城市、入住退房、備註時補上空白', () => {
     const text = JSON.stringify({
       format: 'booklet-workshop',
       version: 1,
@@ -68,7 +68,7 @@ describe('存檔與讀檔', () => {
       },
     })
     const { booklet } = parseSaveFile(text)
-    expect(booklet.days[0]).toMatchObject({ theme: '', departTime: '' })
+    expect(booklet.days[0]).toMatchObject({ departTime: '' })
     expect(booklet.hotels[0]).toMatchObject({ city: '', checkIn: '', checkOut: '', note: '' })
   })
 

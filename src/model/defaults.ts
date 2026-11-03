@@ -68,7 +68,6 @@ export const newSpot = (): Spot => ({ time: '', name: '', content: '' })
 export const newDay = (previous?: Day): Day => ({
   date: previous ? addDays(previous.date, 1) : '',
   overview: '',
-  theme: '',
   departTime: '',
   spots: [newSpot()],
 })

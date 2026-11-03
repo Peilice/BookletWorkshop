@@ -47,7 +47,6 @@ function overview(d: SiteData): string {
     const head = [dateW(day.date, day.weekdayShort) || `Day ${day.n}`, day.departTime && `${day.departTime} 出門`].filter(Boolean)
     return `<article class="ov">
       <h3 class="num">${head.map(esc).join('<span class="gap"></span>')}</h3>
-      ${when(day.theme, () => `<p>主題：${esc(day.theme)}</p>`)}
       ${when(day.route.length, () => `<p>行程：${esc(day.route.join(' → '))}</p>`)}
       ${when(
         // 有填景點時間時，橫排列出時間軸（直排卡片裡的數字不好讀）

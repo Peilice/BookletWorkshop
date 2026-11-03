@@ -14,7 +14,6 @@ const COUNTERS: { field: FormField; label: string; count: (b: Booklet) => number
   { field: 'title', label: '手冊名稱', count: (b) => (filled(b.title) ? 1 : 0) },
   { field: 'airline', label: '交通的航空公司、業者', count: (b) => b.flights.filter((f) => filled(f.airline)).length },
   { field: 'flightNo', label: '交通的班機、車次', count: (b) => b.flights.filter((f) => filled(f.flightNo)).length },
-  { field: 'dayTheme', label: '每日行程的主題', count: (b) => b.days.filter((d) => filled(d.theme)).length },
   { field: 'departTime', label: '每日行程的出門時間', count: (b) => b.days.filter((d) => filled(d.departTime)).length },
   { field: 'hotelPhone', label: '住宿的電話', count: (b) => b.hotels.filter((h) => filled(h.phone)).length },
   { field: 'hotelCity', label: '住宿的城市', count: (b) => b.hotels.filter((h) => filled(h.city)).length },

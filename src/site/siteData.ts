@@ -37,7 +37,6 @@ export interface SiteDay {
   weekday: string // 星期二
   weekdayShort: string // 二
   route: string[] // 當日大標，箭頭分開的各段
-  theme: string
   departTime: string
   spots: SiteSpot[]
   color: DayColor
@@ -112,7 +111,6 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       weekday: weekday(d.date),
       weekdayShort: short(d.date),
       route: overview ? overview.split(/\s*→\s*/).filter(Boolean) : [],
-      theme: shown('dayTheme', d.theme),
       departTime: shown('departTime', d.departTime),
       spots: d.spots.filter((s) => filled(s.name) || filled(s.content)).map((s) => ({ time: s.time, name: s.name.trim(), content: s.content.trim() })),
       color: colors[i],

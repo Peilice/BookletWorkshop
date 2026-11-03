@@ -17,7 +17,6 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-01',
       overview: '',
-      theme: '',
       departTime: '',
       spots: [
         { time: '', name: '大阪城公園', content: lorem('大阪城公園') },
@@ -27,7 +26,6 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-02',
       overview: '京都一日遊',
-      theme: '',
       departTime: '',
       spots: [
         { time: '', name: '伏見稻荷大社', content: lorem('伏見稻荷大社') },
@@ -38,7 +36,6 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-03',
       overview: '',
-      theme: '',
       departTime: '',
       spots: [
         { time: '', name: '黑門市場', content: lorem('黑門市場') + '\n第二行：測試換行。\n第三行：再測一次。' },
@@ -48,7 +45,6 @@ export const osakaKyoto: Booklet = {
     {
       date: '2026-12-04',
       overview: '臨空城 Outlet 購物後前往機場',
-      theme: '',
       departTime: '',
       spots: [{ time: '', name: '臨空城 Outlet', content: lorem('臨空城 Outlet') }],
     },
@@ -117,7 +113,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-11-26',
       overview: '小松機場 → 高山 Mine House',
-      theme: '抵達高山',
       departTime: '',
       spots: [
       ],
@@ -125,7 +120,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-11-27',
       overview: '',
-      theme: '高山老街、飛驒古川',
       departTime: '09:00',
       spots: [
         { time: '', name: '宮川朝市', content: '沿著高山市區的宮川河岸，每天早上都會擺出一整排白色帳篷，這就是有名的宮川朝市，被稱為日本三大朝市之一。早市源自江戶時代，攤主多半是附近的農家，賣的是自家種的蔬菜水果、醃漬物、味噌、花卉和手工民藝品。冬季（十二月起）大約早上八點開到中午，一邊散步一邊吃飛驒牛串、御手洗糰子，聽老闆用飛驒方言招呼客人，很有在地生活的味道。' },
@@ -138,7 +132,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-11-28',
       overview: '',
-      theme: '新穗高纜車、平湯溫泉',
       departTime: '07:10',
       spots: [
         { time: '', name: '新穗高纜車', content: '新穗高纜車由兩段組成，第二段是日本少見的「雙層纜車車廂」，一次可載百餘人，窗外是北阿爾卑斯的群山。終點西穗高口站海拔約二一五六公尺，頂樓展望台可以三百六十度眺望槍岳、穗高連峰、笠岳等三千公尺級高山，天氣晴朗時非常壯觀。山頂比平地低十11幾度，月底很可能已經積雪結冰，請穿防風外套、手套和止滑的鞋子。站內有咖啡廳與廁所，可以在室內休息看風景。' },
@@ -150,7 +143,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-11-29',
       overview: '',
-      theme: '白川鄉、五箇山、前往金澤',
       departTime: '08:30',
       spots: [
         { time: '', name: '白川鄉合掌村', content: '白川鄉荻町是一九九五年登錄的世界文化遺產，村裡還保存一百多棟「合掌造」民家。屋頂用茅草鋪成陡峭的三角形，像雙手合十，是為了承受厚重積雪而設計。從城山展望台往下看，整片聚落被群山環繞，是最經典的照片角度。進村要走過吊橋「出合橋」，村內有和田家等可入內參觀的老屋，可以看到一樓的地爐和二樓養蠶的空間。初冬天冷路滑，走路請多留意。' },
@@ -161,7 +153,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-11-30',
       overview: '',
-      theme: '富山灣海岸、東茶屋街',
       departTime: '09:00',
       spots: [
         { time: '', name: '新湊內川', content: '內川是富山縣射水市新湊地區一條約三點四公里長的運河，兩岸停滿漁船，房屋緊鄰水邊，被稱作「日本的威尼斯」。河上架著十多座造型各異的橋，像是有屋頂的「東橋」和以船帆為意象的「中新湊橋」，每座都很適合拍照。這一帶是漁師町，保留了昭和時代的生活氣息，也是電影與日劇的拍攝地。沿河散步平坦輕鬆，偶爾能看到漁夫整理漁具的日常畫面。' },
@@ -174,7 +165,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-12-01',
       overview: '',
-      theme: '近江町市場、兼六園、金澤城（全天步行）',
       departTime: '09:00',
       spots: [
         { time: '', name: '近江町市場', content: '近江町市場有約三百年歷史，被稱為「金澤市民的廚房」。有屋頂的市場裡聚集約一百七十家店，賣鮮魚、螃蟹、蔬果、乾貨和熟食，叫賣聲此起彼落。十一月起是北陸的螃蟹季，可以看到「香箱蟹」（母松葉蟹）和加能蟹，還有甜蝦、白蝦、喉黑魚等。市場內有很多海鮮丼和壽司店，熱門店家中午前就會排隊，建議早一點去。市場內地面偶爾濕滑，請注意腳步。' },
@@ -186,7 +176,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-12-02',
       overview: '',
-      theme: '金澤購物休息日',
       departTime: '10:00',
       spots: [
         { time: '', name: 'MEGA 唐吉訶德', content: '' },
@@ -197,7 +186,6 @@ export const kanazawa: Booklet = {
     {
       date: '2026-12-03',
       overview: '小松機場 → 高雄',
-      theme: '回家',
       departTime: '08:30',
       spots: [
       ],
@@ -224,7 +212,6 @@ export const dayTrip: Booklet = {
     {
       date: '2026-12-05',
       overview: '',
-      theme: '老街與湖光',
       departTime: '08:00',
       spots: [
         { time: '09:00', name: '大溪老街', content: lorem('大溪老街') },

@@ -112,7 +112,6 @@ function stops(day: SiteDay, open: boolean): string {
 function day(day: SiteDay, d: SiteData, open: boolean): string {
   const hotel = day.hotel !== null ? d.hotels[day.hotel] : null
   const chips = [
-    day.theme && `<span class="pill">${esc(day.theme)}</span>`,
     day.departTime && `<span class="pill">${icon('clock')}出門 <span class="num">${esc(day.departTime)}</span></span>`,
     // 列印時不放整張住宿卡（常被擠到下一頁），只標出今晚住哪
     hotel?.name && `<span class="pill print-pill">${icon('bed')}住 ${esc(hotel.name)}</span>`,
@@ -230,7 +229,7 @@ export function displayText(d: SiteData): string {
     '行程航班交通住宿資訊當日旅遊吃什麼行前清單今天今晚入住退房晚地圖撥打電話出門到總覽天數日期離線中列印存成全部準備好了未命名的',
     'DayABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:/→·（）',
     ...d.flights.flatMap((f) => [f.leg, f.modeLabel, f.date, f.weekday, f.airline, f.flightNo, f.from, f.to]),
-    ...d.days.flatMap((x) => [...x.route, x.date, x.weekday, x.theme, ...x.spots.map((s) => s.name)]),
+    ...d.days.flatMap((x) => [...x.route, x.date, x.weekday, ...x.spots.map((s) => s.name)]),
     ...d.hotels.flatMap((h) => [h.name, h.city]),
     ...d.infos.map((i) => i.title),
     ...d.foods.flatMap((f) => [f.place, ...f.items.map((i) => i.name)]),

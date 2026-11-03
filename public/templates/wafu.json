@@ -7,7 +7,7 @@
     { "label": "主色", "slots": ["accent1", "accent2"] }
   ],
   "contrastChecks": [],
-  "formFields": ["title", "dayTheme", "departTime", "hotelCity", "hotelStay", "hotelNote"],
+  "formFields": ["title", "departTime", "hotelCity", "hotelStay", "hotelNote"],
   "spotContentLimit": 160,
   "presets": [
     {

@@ -60,16 +60,15 @@ describe('validateBooklet', () => {
   })
 
   describe('依範本設定檢查', () => {
-    // 第二種範本：沒有航空公司、班機、飯店電話、美食、旅遊資訊、檢查清單；多了主題、城市、入住退房
+    // 第二種範本：沒有航空公司、班機、飯店電話、美食、旅遊資訊、檢查清單；多了出門時間、城市、入住退房
     const wafu: TemplateRules = {
-      formFields: ['dayTheme', 'departTime', 'hotelCity', 'hotelStay', 'hotelNote'],
+      formFields: ['departTime', 'hotelCity', 'hotelStay', 'hotelNote'],
       spotContentLimit: 160,
     }
 
     it('範本沒用到的欄位和分頁不檢查', () => {
       const b = {
         ...osakaKyoto,
-        days: osakaKyoto.days.map((d) => ({ ...d, theme: '主題' })),
         flights: [{ ...osakaKyoto.flights[0], airline: '', flightNo: '' }],
         foods: [newFoodPlace()],
         hotels: [{ ...newHotel(), name: '飯店', address: '地址', city: '高山', checkIn: '2026-11-26', checkOut: '2026-11-29' }],
@@ -79,16 +78,9 @@ describe('validateBooklet', () => {
       expect(validateBooklet(b, wafu)).toEqual([])
     })
 
-    it('選填的欄位空白時不提醒', () => {
-      const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ time: '', name: '景點', content: '' }] }] }
-      const rules = { ...wafu, optionalFields: ['dayTheme' as const] }
-      expect(validateBooklet(b, rules).map((i) => i.text)).not.toContain('Day 1：沒有填主題')
-    })
-
     it('範本用到的新欄位空白時提醒', () => {
       const b = { ...emptyBooklet(), days: [{ ...newDay(), date: '2026-11-26', spots: [{ time: '', name: '景點', content: '' }] }], hotels: [newHotel()] }
       expect(validateBooklet(b, wafu).map((i) => i.text)).toEqual([
-        'Day 1：沒有填主題',
         '住宿 1：沒有填住宿名稱、城市、地址、入住日期、退房日期',
       ])
     })
@@ -100,7 +92,7 @@ describe('validateBooklet', () => {
     })
 
     it('景點內容超過字數上限時提醒（不算頭尾空白和換行）', () => {
-      const day = (spots: { time: '', name: string; content: string }[]) => ({ ...newDay(), date: '2026-11-27', theme: '主題', spots })
+      const day = (spots: { time: '', name: string; content: string }[]) => ({ ...newDay(), date: '2026-11-27', spots })
       const b = {
         ...emptyBooklet(),
         days: [

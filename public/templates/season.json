@@ -23,7 +23,6 @@
     "title",
     "airline",
     "flightNo",
-    "dayTheme",
     "departTime",
     "hotelPhone",
     "hotelCity",
@@ -33,7 +32,6 @@
     "infos",
     "checklist"
   ],
-  "optionalFields": ["dayTheme"],
   "presets": [
     {
       "name": "和風沉穩",
