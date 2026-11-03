@@ -4,6 +4,8 @@ import { newFoodItem, newFoodPlace } from '../model/defaults'
 import { knownPlaces } from '../model/places'
 import { useBookletStore } from '../store/booklet'
 import { keyOf } from '../utils/motion'
+import AiIntro from './AiIntro.vue'
+import AiKeySetting from './AiKeySetting.vue'
 import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
@@ -31,6 +33,7 @@ const places = computed(() => knownPlaces(booklet.value))
               <div class="sub-body">
                 <label class="field"><span>名稱</span><input v-model="f.name" class="strong" /></label>
                 <label class="field"><span>說明</span><textarea v-model="f.description" rows="2" /></label>
+                <AiIntro v-model="f.description" :request="{ kind: 'food', name: f.name, place: p.place, title: booklet.title }" />
               </div>
               <ItemActions :list="p.items" :index="j" :label="`${f.name || `項目 ${j + 1}`}`" />
             </div>
@@ -50,6 +53,8 @@ const places = computed(() => knownPlaces(booklet.value))
     <div :class="{ 'rows-foot': booklet.foods.length }">
       <button type="button" class="add" @click="booklet.foods.push(newFoodPlace())"><Icon name="plus" />新增地點</button>
     </div>
+
+    <AiKeySetting v-if="booklet.foods.length" />
   </section>
 </template>
 

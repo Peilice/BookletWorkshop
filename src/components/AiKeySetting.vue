@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 進階：填自己的 Anthropic API key，景點就能一鍵產生介紹
+// 進階：填自己的 Anthropic API key，景點、美食特產就能一鍵產生介紹
 import { nextTick, ref, watch } from 'vue'
 import { useAiKey } from '../store/aiKey'
 
@@ -25,7 +25,7 @@ function save() {
     <summary>AI 寫介紹的設定（{{ apiKey ? '已設定 API key' : '還沒設定' }}）</summary>
     <p class="hint">
       沒有 API key 也可以按「複製提示詞」，貼到自己慣用的 AI。有 Anthropic API key 的話填在這裡，就能直接產生，費用算在你的帳號。
-      key 只存在這台電腦的瀏覽器，不會寫進手冊存檔；產生時只會把景點名稱、地點和手冊名稱送給 Anthropic。
+      key 只存在這台電腦的瀏覽器，不會寫進手冊存檔；產生時只會把名稱、地點和手冊名稱送給 Anthropic。
     </p>
     <div v-if="apiKey" class="row">
       <span class="hint">已設定（…{{ apiKey.slice(-4) }}）</span>

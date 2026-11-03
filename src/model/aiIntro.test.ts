@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dayPlace, spotPrompt } from './spotIntro'
+import { dayPlace, introPrompt } from './aiIntro'
 import { newFlight, newHotel } from './defaults'
 
 const flights = [
@@ -28,9 +28,9 @@ describe('dayPlace', () => {
   })
 })
 
-describe('spotPrompt', () => {
-  it('帶入景點、地點、手冊名稱和字數上限', () => {
-    const p = spotPrompt({ name: ' 伏見稻荷大社 ', place: '京都', title: '大阪・京都 四日遊', limit: 80 })
+describe('introPrompt', () => {
+  it('景點：帶入名稱、地點、手冊名稱和字數上限', () => {
+    const p = introPrompt({ kind: 'spot', name: ' 伏見稻荷大社 ', place: '京都', title: '大阪・京都 四日遊', limit: 80 })
     expect(p).toContain('景點：伏見稻荷大社\n')
     expect(p).toContain('地點：京都')
     expect(p).toContain('這趟旅行：大阪・京都 四日遊')
@@ -38,9 +38,17 @@ describe('spotPrompt', () => {
   })
 
   it('沒有地點、名稱、上限時省略那幾行，字數改成大約 100 字', () => {
-    const p = spotPrompt({ name: '清水寺', place: '', title: '' })
+    const p = introPrompt({ kind: 'spot', name: '清水寺', place: '', title: '' })
     expect(p).not.toContain('地點')
     expect(p).not.toContain('這趟旅行')
     expect(p).toContain('100 字左右')
+  })
+
+  it('美食特產：換成美食的說法，字數大約 60 字', () => {
+    const p = introPrompt({ kind: 'food', name: '章魚燒', place: '大阪', title: '' })
+    expect(p).toContain('美食或特產：章魚燒\n')
+    expect(p).toContain('地點：大阪')
+    expect(p).toContain('經典的吃法')
+    expect(p).toContain('60 字左右')
   })
 })

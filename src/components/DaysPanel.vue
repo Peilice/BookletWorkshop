@@ -7,13 +7,14 @@ import { useBookletStore } from '../store/booklet'
 import { useFocus } from '../store/focus'
 import { useFormFields } from '../store/templates'
 import { autoOverview, contentLength } from '../model/validate'
+import { dayPlace } from '../model/aiIntro'
 import { shortDate as monthDay, weekday } from '../model/dates'
 import { keyOf, useSlider } from '../utils/motion'
+import AiIntro from './AiIntro.vue'
 import AiKeySetting from './AiKeySetting.vue'
 import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
-import SpotIntro from './SpotIntro.vue'
 import UnusedMark from './UnusedMark.vue'
 
 const { booklet } = useBookletStore()
@@ -172,7 +173,10 @@ function posterDate(iso: string): string {
               <p v-if="spotLimit && contentLength(s.content) > spotLimit" class="hint warn">
                 內容有 {{ contentLength(s.content) }} 個字，超過 {{ spotLimit }} 字會接到下一頁。
               </p>
-              <SpotIntro :spot="s" :day="activeDay" />
+              <AiIntro
+                v-model="s.content"
+                :request="{ kind: 'spot', name: s.name, place: dayPlace(booklet, activeDay), title: booklet.title, limit: spotLimit }"
+              />
             </div>
             <ItemActions :list="activeDay.spots" :index="j" :label="`景點 ${j + 1}`" />
           </div>
