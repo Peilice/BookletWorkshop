@@ -42,7 +42,7 @@ describe('validateBooklet', () => {
 
   it('行程總覽太長', () => {
     const day = { ...newDay(), date: '2026-12-01', overview: '很'.repeat(41), spots: [{ time: '', name: '景點', content: '' }] }
-    const issues = validateBooklet({ ...osakaKyoto, days: [day] })
+    const issues = validateBooklet({ ...osakaKyoto, flights: [], days: [day] })
     expect(issues).toEqual([{ tab: 'days', text: expect.stringContaining('41 個字') }])
   })
 
@@ -71,7 +71,7 @@ describe('validateBooklet', () => {
         ...osakaKyoto,
         flights: [{ ...osakaKyoto.flights[0], airline: '', flightNo: '' }],
         foods: [newFoodPlace()],
-        hotels: [{ ...newHotel(), name: '飯店', address: '地址', city: '高山', checkIn: '2026-11-26', checkOut: '2026-11-29' }],
+        hotels: [{ ...newHotel(), name: '飯店', address: '地址', city: '大阪', checkIn: '2026-12-01', checkOut: '2026-12-04' }],
         infos: emptyBooklet().infos,
         checklist: [{ name: '常備藥品', items: [{ text: '' }] }],
       }
@@ -92,15 +92,15 @@ describe('validateBooklet', () => {
     })
 
     it('景點內容超過字數上限時提醒（不算頭尾空白和換行）', () => {
-      const day = (spots: { time: '', name: string; content: string }[]) => ({ ...newDay(), date: '2026-11-27', spots })
+      const day = (date: string, spots: { time: '', name: string; content: string }[]) => ({ ...newDay(), date, spots })
       const b = {
         ...emptyBooklet(),
         days: [
-          day([
+          day('2026-11-27', [
             { time: '', name: '宮川朝市', content: '很'.repeat(160) },
             { time: '', name: '高山三町老街', content: `${'很'.repeat(80)}\n${'很'.repeat(80)}\n` },
           ]),
-          day([{ time: '', name: '新穗高纜車', content: '很'.repeat(161) }]),
+          day('2026-11-28', [{ time: '', name: '新穗高纜車', content: '很'.repeat(161) }]),
         ],
       }
       expect(validateBooklet(b, wafu)).toEqual([{ tab: 'days', text: '新穗高纜車：內容有 161 個字，超過 160 字會接到下一頁' }])
@@ -108,7 +108,57 @@ describe('validateBooklet', () => {
 
     it('範本沒有字數上限時不檢查', () => {
       const day = { ...osakaKyoto.days[0], overview: '很'.repeat(41), spots: [{ time: '', name: '景點', content: '很'.repeat(500) }] }
-      expect(validateBooklet({ ...osakaKyoto, days: [day] }, { formFields: [] })).toEqual([])
+      expect(validateBooklet({ ...osakaKyoto, flights: [], days: [day] }, { formFields: [] })).toEqual([])
+    })
+  })
+
+  describe('前後矛盾', () => {
+    const plane = (date: string, departTime: string, arriveTime: string) =>
+      ({ ...newFlight(), date, airline: '中華航空', flightNo: 'CI152', from: '高雄', to: '大阪', departTime, arriveTime })
+    const day = (date: string, times: string[] = []) =>
+      ({ ...newDay(), date, spots: times.length ? times.map((time, i) => ({ time, name: `景點${i + 1}`, content: '' })) : [{ time: '', name: '景點', content: '' }] })
+    const texts = (b: Partial<typeof osakaKyoto>, rules?: TemplateRules) => validateBooklet({ ...osakaKyoto, ...b }, rules).map((i) => i.text)
+
+    it('交通：日期順序、抵達比出發早、日期不在行程裡', () => {
+      expect(texts({ flights: [plane('2026-12-04', '23:30', '04:10'), plane('2026-12-01', '08:00', '11:45'), plane('2026-12-08', '08:00', '11:45')] })).toEqual([
+        '交通 1：抵達時間比起飛時間早，手冊會當成隔天抵達（+1）',
+        '交通 2：日期比交通 1 早，順序可能排錯了',
+        '交通 3：日期 12/8 不在每日行程的日期裡（12/1–12/4）',
+      ])
+    })
+
+    it('每日行程：日期重複、倒退、沒接上，景點時間倒退', () => {
+      const days = [day('2026-12-01', ['09:00', '', '08:30']), day('2026-12-01'), day('2026-11-30'), day('2026-12-03')]
+      expect(texts({ flights: [], days })).toEqual([
+        '景點3：時間 08:30 比前一個景點（09:00）早',
+        'Day 2：日期和 Day 1 重複',
+        'Day 3：日期比前一天早，順序可能排錯了',
+        'Day 4：日期和前一天沒有接上，中間少了 12/1',
+      ])
+    })
+
+    it('去程抵達前、回程出發後還排了景點', () => {
+      const days = [day('2026-12-01', ['10:00', '13:00']), day('2026-12-02', ['10:00', '13:00'])]
+      const flights = [plane('2026-12-01', '08:00', '11:45'), plane('2026-12-02', '12:45', '14:50')]
+      expect(texts({ flights, days })).toEqual([
+        'Day 1：第一個景點「景點1」（10:00）比去程抵達（11:45）還早',
+        'Day 2：最後一個景點「景點2」（13:00）比回程出發（12:45）還晚',
+      ])
+      // 隔天才抵達的去程不比
+      expect(texts({ flights: [plane('2026-12-01', '23:00', '03:00')], days })).not.toContainEqual(expect.stringContaining('去程'))
+    })
+
+    it('住宿：退房不晚於入住、日期重疊、有幾晚沒有住宿', () => {
+      const rules: TemplateRules = { formFields: ['hotelStay'] }
+      const hotel = (checkIn: string, checkOut: string) => ({ ...newHotel(), name: '飯店', address: '地址', checkIn, checkOut })
+      expect(texts({ hotels: [hotel('2026-12-01', '2026-12-01')] }, rules)).toEqual([
+        '住宿 1：退房日期要比入住日期晚',
+        '12/1、12/2、12/3 晚上還沒有住宿',
+      ])
+      expect(texts({ hotels: [hotel('2026-12-01', '2026-12-03'), hotel('2026-12-02', '2026-12-04')] }, rules)).toEqual(['住宿 2：住宿日期和住宿 1 重疊'])
+      expect(texts({ hotels: [hotel('2026-12-01', '2026-12-02'), hotel('2026-12-03', '2026-12-04')] }, rules)).toEqual(['12/2 晚上還沒有住宿'])
+      // 範本沒有住宿日期時不檢查
+      expect(texts({ hotels: [hotel('2026-12-01', '2026-12-01')] }, { formFields: [] })).toEqual([])
     })
   })
 
