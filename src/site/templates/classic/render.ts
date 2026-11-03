@@ -4,7 +4,7 @@ import { mix } from '../../colors'
 import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteFlight } from '../../siteData'
 import { icon } from '../common/icons'
-import { page } from '../common/page'
+import { CLIENT_TEXT, countdown, page, todayTag } from '../common/page'
 import { allText } from '../common/text'
 import type { RenderOptions } from '../types'
 import css from './style.css?raw'
@@ -23,7 +23,8 @@ function flights(d: SiteData): string {
     [air ? '起飛' : '出發', (f) => f.from],
     [air ? '起飛時間' : '出發時間', (f) => f.departTime],
     ['抵達', (f) => f.to],
-    ['抵達時間', (f) => f.arriveTime],
+    ['抵達時間', (f) => (f.nextDay ? `${f.arriveTime} +1` : f.arriveTime)],
+    [air ? '飛行時間' : '所需時間', (f) => f.duration],
   ]
   // 範本沒用到、或每班都沒填的欄位不顯示
   const shown = cols.filter(([, get]) => d.flights.some((f) => get(f)))
@@ -43,8 +44,9 @@ function days(d: SiteData): string {
   ${title('days', '行程規劃')}
   ${d.days
     .map(
-      (day) => `<article class="day" id="day-${day.n}">
+      (day) => `<article class="day" id="day-${day.n}"${when(day.iso, () => ` data-day-date="${esc(day.iso)}"`)}>
     <div class="daybox">
+      ${todayTag}
       ${
         // 一日遊不標 Day 1，圓框裡直接放日期
         d.singleDay && day.date
@@ -134,7 +136,7 @@ export function boxText(d: SiteData): string {
 }
 
 export function bodyText(d: SiteData): string {
-  return allText(d, `航班資訊行程規劃當地美食特產住宿旅遊資訊萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期交通業者班次出發`)
+  return allText(d, `航班資訊行程規劃當地美食特產住宿旅遊資訊萬全的準備是愉快旅程的開始地址電話撥打地圖列印存成全部準備好了已離線中跳到主要內容以旅遊手冊工坊製作航空公司班機起飛時間抵達日期交通業者班次出發飛行所需+${CLIENT_TEXT}`)
 }
 
 export function render(d: SiteData, opts: RenderOptions): string {
@@ -164,6 +166,7 @@ export function render(d: SiteData, opts: RenderOptions): string {
   <div class="wrap top-in">
     <h1>${esc(d.title)}</h1>
     ${when(d.dateRange, () => `<p class="dates num">${esc(d.dateRange)}</p>`)}
+    ${countdown(d)}
     <span class="offline" data-offline hidden>離線中</span>
   </div>
   <nav class="toc" aria-label="手冊內容"><div class="wrap">${nav.map((n) => `<a href="#${n.id}">${n.label}</a>`).join('')}</div></nav>

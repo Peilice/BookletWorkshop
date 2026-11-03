@@ -1,7 +1,7 @@
 // 表單資料 → 網站範本要顯示的內容。所有顯示邏輯都在這裡，網站範本只負責排版。
 
 import type { Booklet, FormField, PaletteColors, TemplateRules, TransportMode } from '../model/booklet'
-import { onlyFlights, transportOf } from '../model/transport'
+import { arrivesNextDay, durationText, onlyFlights, transportOf, travelMinutes } from '../model/transport'
 import { autoOverview } from '../model/validate'
 import { flightLeg, shortDate, weekday } from '../model/dates'
 import { dayColors, type DayColor } from './colors'
@@ -22,6 +22,8 @@ export interface SiteFlight {
   departTime: string
   to: string
   arriveTime: string
+  nextDay: boolean // 隔天才抵達，時間後面標 +1
+  duration: string // 1 小時 45 分；算不出來時空白
 }
 
 export interface SiteSpot {
@@ -58,6 +60,8 @@ export interface SiteHotel {
 export interface SiteData {
   title: string
   dateRange: string
+  start: string // 旅程第一天、最後一天（YYYY-MM-DD），網站用來倒數；沒有日期時空白
+  end: string
   tripKey: string // 網站存勾選清單時用，不同手冊不會互相覆蓋
   palette: PaletteColors // 範本配色，各範本自己決定每個顏色用在哪
   onlyFlights: boolean // 交通全部都是飛機：標題沿用「航班」，不然叫「交通」
@@ -119,11 +123,15 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
   })
 
   const title = shown('title', b.title) || DEFAULT_TITLE
-  const range = dateRange([...b.flights.map((f) => f.date), ...b.days.map((d) => d.date)])
+  const tripDates = [...b.flights.map((f) => f.date), ...b.days.map((d) => d.date)]
+  const range = dateRange(tripDates)
+  const sorted = tripDates.filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort()
 
   return {
     title,
     dateRange: range,
+    start: sorted[0] ?? '',
+    end: sorted[sorted.length - 1] ?? '',
     tripKey: hash(`${title}|${range}`),
     palette,
     onlyFlights: onlyFlights(b.flights),
@@ -144,6 +152,9 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       departTime: f.departTime,
       to: f.to.trim(),
       arriveTime: f.arriveTime,
+      nextDay: arrivesNextDay(f),
+      // 飛機要知道兩地時差才算得準，先不算
+      duration: durationText(travelMinutes(f, f.mode === 'plane' ? null : 0)),
     })),
     days,
     hotels: b.hotels.map((h, i) => ({

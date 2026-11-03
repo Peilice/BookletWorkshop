@@ -50,3 +50,33 @@ export const isTransportMode = (v: unknown): v is TransportMode => TRANSPORTS.so
 
 /** 全部都是飛機（或還沒有交通）：手冊沿用「航班」的叫法 */
 export const onlyFlights = (flights: Pick<Flight, 'mode'>[]): boolean => flights.every((f) => f.mode === 'plane')
+
+const minutesOf = (hhmm: string): number | null => {
+  const m = /^(\d{2}):(\d{2})$/.exec(hhmm)
+  return m ? Number(m[1]) * 60 + Number(m[2]) : null
+}
+
+/** 抵達時間比出發時間早：當成隔天抵達 */
+export const arrivesNextDay = (f: Pick<Flight, 'departTime' | 'arriveTime'>): boolean =>
+  !!f.departTime && !!f.arriveTime && f.arriveTime < f.departTime
+
+/**
+ * 交通花多久（分鐘）；時間沒填齊時是 null。
+ * 飛機的時間是兩地各自的當地時間，要知道兩地差幾小時才算得準：offsetMinutes 是抵達地比出發地快幾分鐘，不知道時傳 null
+ */
+export function travelMinutes(f: Pick<Flight, 'mode' | 'departTime' | 'arriveTime'>, offsetMinutes: number | null = 0): number | null {
+  const depart = minutesOf(f.departTime)
+  const arrive = minutesOf(f.arriveTime)
+  if (depart === null || arrive === null || offsetMinutes === null) return null
+  let span = arrive - depart - offsetMinutes
+  if (arrivesNextDay(f)) span += 24 * 60
+  return span > 0 ? span : null
+}
+
+/** 1 小時 45 分、45 分、2 小時 */
+export function durationText(minutes: number | null): string {
+  if (!minutes) return ''
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  return [h && `${h} 小時`, m && `${m} 分`].filter(Boolean).join(' ')
+}

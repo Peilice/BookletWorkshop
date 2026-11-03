@@ -4,7 +4,7 @@ import type { DayColor } from '../../colors'
 import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteDay, SiteHotel } from '../../siteData'
 import { icon } from '../common/icons'
-import { page } from '../common/page'
+import { CLIENT_TEXT, countdown, page } from '../common/page'
 import type { RenderOptions } from '../types'
 import script from './app.js?raw'
 import css from './style.css?raw'
@@ -27,8 +27,8 @@ function flights(d: SiteData): string {
   </header>
   <div class="flight-route">
     <div class="pt"><b class="time">${esc(f.departTime || '--:--')}</b><span>${esc(f.from)}</span></div>
-    <div class="flight-line">${icon(f.icon)}</div>
-    <div class="pt pt-end"><b class="time">${esc(f.arriveTime || '--:--')}</b><span>${esc(f.to)}</span></div>
+    <div class="flight-line">${icon(f.icon)}${when(f.duration, () => `<span class="dur">${esc(f.duration)}</span>`)}</div>
+    <div class="pt pt-end"><b class="time">${esc(f.arriveTime || '--:--')}${when(f.nextDay, () => '<sup class="plus">+1</sup>')}</b><span>${esc(f.to)}</span></div>
   </div>
 </article>`
   })
@@ -116,7 +116,7 @@ function day(day: SiteDay, d: SiteData, open: boolean): string {
     // 列印時不放整張住宿卡（常被擠到下一頁），只標出今晚住哪
     hotel?.name && `<span class="pill print-pill">${icon('bed')}住 ${esc(hotel.name)}</span>`,
   ].filter(Boolean)
-  return `<article class="day" id="day-${day.n}" role="tabpanel" aria-labelledby="tab-day-${day.n}" data-date="${esc(day.iso)}" data-deep="${day.color.deep}" data-chip="${day.color.chip}" data-soft="${day.color.soft}" style="${colorVars(day.color)}">
+  return `<article class="day" id="day-${day.n}" role="tabpanel" aria-labelledby="tab-day-${day.n}" data-date="${esc(day.iso)}" data-day-date="${esc(day.iso)}" data-deep="${day.color.deep}" data-chip="${day.color.chip}" data-soft="${day.color.soft}" style="${colorVars(day.color)}">
   <header class="day-head">
     <div class="wrap">
       <h3 class="route">${route(day, d.singleDay)}</h3>
@@ -227,7 +227,8 @@ export function displayText(d: SiteData): string {
     d.title,
     d.dateRange,
     '行程航班交通住宿資訊當日旅遊吃什麼行前清單今天今晚入住退房晚地圖撥打電話出門到總覽天數日期離線中列印存成全部準備好了未命名的',
-    'DayABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:/→·（）',
+    'DayABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:/→·（）+',
+    CLIENT_TEXT,
     ...d.flights.flatMap((f) => [f.leg, f.modeLabel, f.date, f.weekday, f.airline, f.flightNo, f.from, f.to]),
     ...d.days.flatMap((x) => [...x.route, x.date, x.weekday, ...x.spots.map((s) => s.name)]),
     ...d.hotels.flatMap((h) => [h.name, h.city]),
@@ -251,6 +252,7 @@ export function render(d: SiteData, opts: RenderOptions): string {
     <div class="mast-title">
       <h1>${esc(d.title)}</h1>
       ${when(d.dateRange, () => `<p class="mast-dates num">${esc(d.dateRange)}</p>`)}
+      ${countdown(d)}
     </div>
     <span class="offline" data-offline hidden>離線中</span>
     ${when(

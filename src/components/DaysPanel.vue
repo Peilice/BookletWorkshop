@@ -7,7 +7,7 @@ import { useBookletStore } from '../store/booklet'
 import { useFocus } from '../store/focus'
 import { useFormFields } from '../store/templates'
 import { autoOverview, contentLength } from '../model/validate'
-import { weekday } from '../model/dates'
+import { shortDate as monthDay, weekday } from '../model/dates'
 import { keyOf, useSlider } from '../utils/motion'
 import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
@@ -84,7 +84,7 @@ function posterDate(iso: string): string {
       <EmptyArt kind="spot" class="empty">還沒有行程。第一天會先帶入交通的日期，之後的日期自動接著往後排。</EmptyArt>
       <div class="empty-actions">
         <button v-if="tripDays.length > 1" type="button" class="add" @click="addTripDays">
-          <Icon name="plus" />依交通、住宿的日期建立 {{ tripDays.length }} 天（{{ shortDate(tripDays[0].date) }}–{{ shortDate(tripDays.at(-1)!.date) }}）
+          <Icon name="plus" />依交通、住宿的日期建立 {{ tripDays.length }} 天（{{ monthDay(tripDays[0].date) }}–{{ monthDay(tripDays.at(-1)!.date) }}）
         </button>
         <button type="button" class="add" @click="addDay"><Icon name="plus" />新增一天</button>
       </div>

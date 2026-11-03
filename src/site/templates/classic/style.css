@@ -118,6 +118,16 @@ a {
   color: var(--ink-soft);
 }
 
+.countdown {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--a1);
+}
+
+.countdown a {
+  color: inherit;
+}
+
 .offline {
   position: absolute;
   right: var(--gutter);
@@ -261,6 +271,19 @@ a {
   border-radius: 22px;
   break-inside: avoid;
   break-after: avoid;
+}
+
+/* 今天的那一天，Day 框右上角掛一個標籤 */
+.today-tag:not([hidden]) {
+  position: absolute;
+  top: -14px;
+  right: 16px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--a1);
+  color: #fff;
+  font-size: 14px;
+  line-height: 24px;
 }
 
 .daycircle {

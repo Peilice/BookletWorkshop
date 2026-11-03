@@ -5,7 +5,7 @@ import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteDay } from '../../siteData'
 import { chineseDay } from '../../../model/dates'
 import { icon } from '../common/icons'
-import { page } from '../common/page'
+import { countdown, page, todayTag } from '../common/page'
 import type { RenderOptions } from '../types'
 import css from './style.css?raw'
 
@@ -18,8 +18,8 @@ function travel(d: SiteData): string {
     const carrier = [d.onlyFlights ? '' : f.modeLabel, f.airline, f.flightNo].filter(Boolean).join(' ')
     const leg = f.leg ? `<span class="leg">${esc(f.leg)}：</span>` : ''
     const from = [f.from, f.departTime && `${f.departTime} ${f.departWord}`].filter(Boolean).join(' ')
-    const to = [f.to, f.arriveTime && `${f.arriveTime} 抵達`].filter(Boolean).join(' ')
-    return `<li>${leg}<span class="num">${esc(dateW(f.date, f.weekdayShort))}</span>${when(carrier, () => `<span class="carrier">${esc(carrier)}</span>`)}<span>${esc(from)} → ${esc(to)}</span></li>`
+    const to = [f.to, f.arriveTime && `${f.arriveTime}${f.nextDay ? '（隔天）' : ''} 抵達`].filter(Boolean).join(' ')
+    return `<li>${leg}<span class="num">${esc(dateW(f.date, f.weekdayShort))}</span>${when(carrier, () => `<span class="carrier">${esc(carrier)}</span>`)}<span>${esc(from)} → ${esc(to)}</span>${when(f.duration, () => `<span class="dur">（${esc(f.duration)}）</span>`)}</li>`
   })
   const hotels = d.hotels.map((h) => {
     const stay = [h.checkIn && `${h.checkIn} 入住`, h.checkOut && `${h.checkOut} 退房`].filter(Boolean).join(' - ')
@@ -45,8 +45,8 @@ function travel(d: SiteData): string {
 function overview(d: SiteData): string {
   const days = d.days.map((day) => {
     const head = [dateW(day.date, day.weekdayShort) || `Day ${day.n}`, day.departTime && `${day.departTime} 出門`].filter(Boolean)
-    return `<article class="ov">
-      <h3 class="num">${head.map(esc).join('<span class="gap"></span>')}</h3>
+    return `<article class="ov" id="ov-${day.n}"${when(day.iso, () => ` data-day-date="${esc(day.iso)}"`)}>
+      <h3 class="num">${head.map(esc).join('<span class="gap"></span>')}${todayTag}</h3>
       ${when(day.route.length, () => `<p>行程：${esc(day.route.join(' → '))}</p>`)}
       ${when(
         // 有填景點時間時，橫排列出時間軸（直排卡片裡的數字不好讀）
@@ -96,6 +96,7 @@ export function render(d: SiteData, opts: RenderOptions): string {
     <div>
       <h1>${esc(d.title)}</h1>
       ${when(d.dateRange, () => `<p class="dates num">${esc(d.dateRange)}</p>`)}
+      ${countdown(d)}
     </div>
     <span class="offline" data-offline hidden>離線中</span>
   </div>

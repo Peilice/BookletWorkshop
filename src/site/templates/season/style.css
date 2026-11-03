@@ -178,6 +178,18 @@ a {
   letter-spacing: 0.04em;
 }
 
+.countdown {
+  margin: 2px 0 0;
+  font-family: var(--f-round);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+}
+
+.countdown a {
+  color: inherit;
+}
+
 .offline {
   flex: none;
   font-family: var(--f-round);
@@ -833,6 +845,29 @@ details[open] .chev {
   flex: 1;
   height: 0;
   border-top: 2px dotted var(--g-400);
+}
+
+/* 交通時長放在虛線下方，不擠到兩端的時間 */
+.flight-line {
+  position: relative;
+}
+
+.flight-line .dur {
+  position: absolute;
+  top: calc(50% + 12px);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--g-800);
+  white-space: nowrap;
+}
+
+.pt .plus {
+  margin-left: 2px;
+  font-size: 13px;
+  vertical-align: super;
+  line-height: 0;
 }
 
 .flight-line .ic {

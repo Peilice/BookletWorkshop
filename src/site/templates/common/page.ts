@@ -15,6 +15,16 @@ export interface PageParts {
   bodyClass?: string
 }
 
+/** 頁首的出發倒數，網站打開時才算（client.js）；沒有日期時不放 */
+export const countdown = (d: SiteData): string =>
+  when(d.start, () => `<p class="countdown no-print" data-countdown data-start="${esc(d.start)}" data-end="${esc(d.end)}" hidden></p>`)
+
+/** 每天的「今天」標籤，日期是今天時才顯示（client.js） */
+export const todayTag = '<span class="today-tag" data-today-tag hidden>今天</span>'
+
+/** client.js 會顯示的字，用網路字型的範本要放進字型子集 */
+export const CLIENT_TEXT = '距離出發還有天今天是旅程第出發日'
+
 export function page(d: SiteData, opts: RenderOptions, p: PageParts): string {
   return `<!doctype html>
 <html lang="zh-Hant-TW" data-trip="${esc(d.tripKey)}"${opts.pwa ? ' data-pwa="1"' : ''}${p.htmlStyle ? ` style="${p.htmlStyle}"` : ''}>

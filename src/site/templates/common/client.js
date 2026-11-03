@@ -64,6 +64,42 @@
     })
   })
 
+  // ---------- 出發倒數、今天 ----------
+
+  function pad(v) {
+    return (v < 10 ? '0' : '') + v
+  }
+  var now = new Date()
+  var today = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
+  // 每天的區塊用 data-day-date 標日期
+  var todayBlock = document.querySelector('[data-day-date="' + today + '"]')
+  if (todayBlock) {
+    $$('[data-day-date="' + today + '"] [data-today-tag]').forEach(function (t) {
+      t.hidden = false
+    })
+  }
+
+  var countdown = document.querySelector('[data-countdown]')
+  if (countdown) {
+    var start = countdown.dataset.start
+    var end = countdown.dataset.end
+    var between = function (a, b) {
+      return Math.round((Date.parse(b) - Date.parse(a)) / 864e5)
+    }
+    var words = ''
+    if (today < start) words = '距離出發還有 ' + between(today, start) + ' 天'
+    else if (today <= end) words = start === end ? '今天出發' : '今天是旅程第 ' + (between(start, today) + 1) + ' 天'
+    if (words) {
+      countdown.textContent = ''
+      var target = today >= start && todayBlock && todayBlock.id
+      var el = document.createElement(target ? 'a' : 'span')
+      if (target) el.href = '#' + todayBlock.id
+      el.textContent = words
+      countdown.appendChild(el)
+      countdown.hidden = false
+    }
+  }
+
   // ---------- 離線 ----------
 
   var offline = document.querySelector('[data-offline]')

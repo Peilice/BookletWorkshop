@@ -120,6 +120,16 @@ a {
   letter-spacing: 0.04em;
 }
 
+.countdown {
+  margin: 2px 0 0;
+  font-size: 13.5px;
+  color: var(--accent);
+}
+
+.countdown a {
+  color: inherit;
+}
+
 .offline {
   flex: none;
   font-size: 12px;
@@ -189,7 +199,8 @@ a {
   margin-right: -10px;
 }
 
-.carrier {
+.carrier,
+.dur {
   color: var(--ink-soft);
 }
 
@@ -274,6 +285,16 @@ a {
   font-size: 16.5px;
   color: var(--accent);
   margin-bottom: 2px;
+}
+
+.today-tag:not([hidden]) {
+  margin-left: 0.6em;
+  padding: 0 0.5em;
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  vertical-align: 0.1em;
 }
 
 .gap {
