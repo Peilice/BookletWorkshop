@@ -148,7 +148,18 @@ watch(anchor, () => jump(false))
   height: calc(100vh - var(--bar-h));
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  background: var(--desk);
+  /* 切割墊：20px 細格，每 5 格一條粗線 */
+  background-color: var(--desk);
+  background-image:
+    linear-gradient(rgb(207 202 189 / 14%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(207 202 189 / 14%) 1px, transparent 1px),
+    linear-gradient(rgb(207 202 189 / 6%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(207 202 189 / 6%) 1px, transparent 1px);
+  background-size:
+    100px 100px,
+    100px 100px,
+    20px 20px,
+    20px 20px;
   color: var(--desk-ink);
 }
 

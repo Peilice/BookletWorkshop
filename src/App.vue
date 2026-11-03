@@ -499,7 +499,7 @@ onBeforeUnmount(() => {
   gap: 8px;
   height: var(--bar-h);
   padding: 0 var(--gutter);
-  background: var(--paper);
+  background: var(--paper-texture) fixed, var(--paper);
   border-bottom: 2px solid var(--ink);
 }
 

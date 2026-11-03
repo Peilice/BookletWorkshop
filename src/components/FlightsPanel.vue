@@ -109,7 +109,7 @@ const { booklet } = useBookletStore()
   height: 12px;
   border: 1.5px solid var(--field-line);
   border-radius: 50%;
-  background: var(--paper);
+  background: var(--paper-texture) fixed, var(--paper);
 }
 
 .pass > .item-actions::before {
