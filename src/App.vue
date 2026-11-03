@@ -15,7 +15,7 @@ import { lowContrastSpots, readableOr } from './model/contrast'
 import { bookletFileName } from './model/fileName'
 import { SaveFileError } from './model/saveFile'
 import type { FormField, TemplateManifest } from './model/booklet'
-import { FALLBACK_RULES } from './model/defaults'
+import { FALLBACK_RULES, TRIP_TYPES, tripSummary, type TripType } from './model/defaults'
 import { validateBooklet, type Issue, type TabId } from './model/validate'
 import { useBookletStore } from './store/booklet'
 import { useFocus, type SectionId, type Step } from './store/focus'
@@ -87,11 +87,25 @@ async function confirmDiscard(action: string): Promise<boolean> {
 
 // ---------- 新增、讀檔、存檔 ----------
 
+// 新增手冊先問旅行類型；剛打開網站、沒有暫存可以恢復時也先問（start：取消就照出國的預設）
+const tripChoice = ref<'new' | 'start' | null>(pendingRestore.value ? null : 'start')
+
 async function onNew() {
   if (!(await confirmDiscard('新增手冊'))) return
-  store.newBooklet()
+  tripChoice.value = 'new'
+}
+
+function onDiscardAutosave() {
+  store.discardAutosave()
+  tripChoice.value = 'start'
+}
+
+/** 照選的類型開一本新手冊；一日遊通常沒有航班，直接從每日行程開始 */
+function startTrip(type: TripType) {
+  tripChoice.value = null
+  store.newBooklet(type)
   step.value = 'content'
-  section.value = 'flights'
+  section.value = type === 'dayTrip' ? 'days' : 'flights'
   message.value = null
 }
 
@@ -350,7 +364,7 @@ onBeforeUnmount(() => {
         <span>找到上次編輯到一半的內容（{{ restoreTime }}），要恢復嗎？</span>
         <span class="spacer" />
         <button type="button" class="primary" @click="store.restoreAutosave()">恢復</button>
-        <button type="button" @click="store.discardAutosave()">捨棄</button>
+        <button type="button" @click="onDiscardAutosave">捨棄</button>
       </div>
 
       <div v-if="message" class="banner" :class="message.kind" :role="message.kind === 'error' ? 'alert' : 'status'">
@@ -439,6 +453,27 @@ onBeforeUnmount(() => {
       </div>
       <div class="dialog-actions">
         <button type="button" @click="siteChoice = false">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="tripChoice" class="overlay">
+    <div class="dialog trip-dialog" role="dialog" aria-modal="true" aria-labelledby="trip-title">
+      <h2 id="trip-title">這次是什麼樣的旅行？</h2>
+      <p class="hint">會先放好對應的旅遊資訊和行前清單，之後都可以增刪。</p>
+      <div class="trip-options">
+        <button v-for="t in TRIP_TYPES" :key="t.id" type="button" class="site-option trip-option" @click="startTrip(t.id)">
+          <strong>{{ t.label }}</strong>
+          <span class="hint">{{ t.note }}</span>
+          <span class="trip-label">旅遊資訊</span>
+          <span class="hint">{{ tripSummary(t.id).infos.join('、') }}</span>
+          <span class="trip-label">行前清單 {{ tripSummary(t.id).count }} 項</span>
+          <span class="hint">{{ tripSummary(t.id).sample.join('、') }}⋯</span>
+        </button>
+      </div>
+      <div class="dialog-actions">
+        <button v-if="tripChoice === 'start'" type="button" @click="tripChoice = null">先用出國的預設</button>
+        <button v-else type="button" @click="tripChoice = null">取消</button>
       </div>
     </div>
   </div>
@@ -808,6 +843,46 @@ onBeforeUnmount(() => {
 
 .site-option strong {
   font-size: 16px;
+}
+
+.trip-dialog {
+  max-width: 820px;
+  width: 100%;
+}
+
+.trip-dialog h2 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.trip-dialog > .hint {
+  margin: 0 0 16px;
+}
+
+.trip-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.trip-option {
+  gap: 2px;
+  font-weight: 400;
+}
+
+.trip-option strong {
+  font-size: 18px;
+}
+
+.trip-option .trip-label {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trip-option:hover .hint {
+  color: inherit;
 }
 
 .check-dialog {

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, defaultSettings, emptyBooklet, newDay } from './defaults'
+import { addDays, defaultSettings, emptyBooklet, newDay, TRIP_TYPES } from './defaults'
+import { hiddenContent } from './hiddenContent'
+import { isBlankBooklet } from '../site/preview'
 import { bookletFileName } from './fileName'
 import { osakaKyoto } from './sample'
 import { createSaveFile, parseSaveFile, SAVE_VERSION, SaveFileError } from './saveFile'
@@ -85,6 +87,18 @@ describe('存檔與讀檔', () => {
 describe('預設值', () => {
   it('新手冊的旅遊資訊預設有氣候、時差、飲水、行李規定', () => {
     expect(emptyBooklet().infos.map((i) => i.title)).toEqual(['氣候', '時差', '飲水', '行李規定'])
+  })
+
+  it('國內、一日遊的新手冊換成各自的旅遊資訊和行前清單，沒動過都不算使用者填的內容', () => {
+    const domestic = emptyBooklet('domestic')
+    expect(domestic.infos.map((i) => i.title)).toEqual(['天氣', '交通', '緊急聯絡'])
+    expect(domestic.checklist[0].items.map((i) => i.text)).toContain('身分證')
+    expect(domestic.checklist.flatMap((g) => g.items).some((i) => i.text === '護照')).toBe(false)
+    expect(emptyBooklet('dayTrip').checklist.map((g) => g.name)).toEqual(['隨身', '用品'])
+    for (const t of TRIP_TYPES) {
+      expect(isBlankBooklet(emptyBooklet(t.id))).toBe(true)
+      expect(hiddenContent(emptyBooklet(t.id), { formFields: [] })).toEqual([])
+    }
   })
 
   it('新增的一天日期接在前一天後面（跨月）', () => {

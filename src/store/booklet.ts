@@ -2,7 +2,7 @@
 
 import { computed, ref, watch } from 'vue'
 import type { Booklet, Settings } from '../model/booklet'
-import { defaultSettings, emptyBooklet } from '../model/defaults'
+import { defaultSettings, emptyBooklet, TRIP_TYPES, type TripType } from '../model/defaults'
 import { createSaveFile, parseSaveFile, type SaveFile } from '../model/saveFile'
 
 const AUTOSAVE_KEY = 'booklet-workshop:autosave'
@@ -13,9 +13,9 @@ const settings = ref<Settings>(defaultSettings())
 
 const snapshot = () => JSON.stringify({ booklet: booklet.value, settings: settings.value })
 const emptySnapshot = JSON.stringify({ booklet: emptyBooklet(), settings: defaultSettings() })
-// 剛選好範本、還沒填任何東西：不論哪個範本都不需要暫存
+// 剛選好範本、還沒填任何東西：不論哪個範本、哪種旅行類型都不需要暫存
 const isBlank = () =>
-  JSON.stringify(booklet.value) === JSON.stringify(emptyBooklet()) &&
+  TRIP_TYPES.some((t) => JSON.stringify(booklet.value) === JSON.stringify(emptyBooklet(t.id))) &&
   !settings.value.palette
 
 // 最後一次「存檔／讀取存檔／新增手冊」時的內容；和目前內容不同就代表有變更還沒存成檔案
@@ -82,9 +82,9 @@ function discardAutosave() {
 
 // ---------- 新增、讀檔、存檔 ----------
 
-function newBooklet() {
+function newBooklet(type: TripType) {
   pendingRestore.value = null
-  apply(emptyBooklet(), defaultSettings())
+  apply(emptyBooklet(type), defaultSettings())
   fileSnapshot.value = snapshot()
 }
 
