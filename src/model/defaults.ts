@@ -1,9 +1,8 @@
 // 新增手冊、新增一筆資料時的預設值
 
-import type { Booklet, ChecklistGroup, ChecklistItem, Day, FoodItem, FoodPlace, Flight, Hotel, InfoItem, Settings, Spot, TemplateRules } from './booklet'
+import type { Booklet, ChecklistGroup, ChecklistItem, Day, FoodItem, FoodPlace, Flight, Hotel, InfoItem, Settings, Spot, TemplateRules, TripType } from './booklet'
 
-// 旅行類型：只決定新手冊一開始放哪些旅遊資訊和行前清單，之後都可以增刪，不記在存檔裡
-export type TripType = 'abroad' | 'domestic' | 'dayTrip'
+export type { TripType }
 
 export const TRIP_TYPES: { id: TripType; label: string; note: string }[] = [
   { id: 'abroad', label: '出國', note: '搭飛機出國，要帶護照、注意時差和行李規定' },
@@ -22,6 +21,7 @@ const TRIP_INFOS: Record<TripType, () => InfoItem[]> = {
 
 export function emptyBooklet(type: TripType = 'abroad'): Booklet {
   return {
+    tripType: type,
     title: '',
     flights: [],
     days: [],

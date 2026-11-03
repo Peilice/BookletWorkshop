@@ -1,5 +1,8 @@
 // 存檔（.json）的資料結構：使用者在表單上填的內容
 
+// 旅行類型：決定新手冊一開始放哪些旅遊資訊和行前清單（之後都可以增刪）；一日遊的編輯畫面不顯示住宿頁
+export type TripType = 'abroad' | 'domestic' | 'dayTrip'
+
 // 交通方式（各自的欄位名稱見 transport.ts）
 export type TransportMode = 'plane' | 'hsr' | 'train' | 'bus' | 'ship' | 'car' | 'other'
 
@@ -65,6 +68,7 @@ export interface ChecklistGroup {
 }
 
 export interface Booklet {
+  tripType: TripType
   title: string // 手冊名稱，只有網站範本用到（見 FormField）
   flights: Flight[]
   days: Day[]

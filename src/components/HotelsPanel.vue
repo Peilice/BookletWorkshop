@@ -37,7 +37,7 @@ const { booklet } = useBookletStore()
         <ItemActions :list="booklet.hotels" :index="i" :label="`住宿 ${i + 1}`" />
       </div>
     </TransitionGroup>
-    <EmptyArt v-if="booklet.hotels.length === 0" kind="hotel">還沒有住宿。訂好飯店或民宿後填進來，手冊裡會附上地址和電話；一日遊不用填。</EmptyArt>
+    <EmptyArt v-if="booklet.hotels.length === 0" kind="hotel">還沒有住宿。</EmptyArt>
 
     <div :class="{ 'rows-foot': booklet.hotels.length }">
       <button type="button" class="add" @click="booklet.hotels.push(newHotel())"><Icon name="plus" />新增住宿</button>

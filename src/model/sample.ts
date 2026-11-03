@@ -7,6 +7,7 @@ const lorem = (name: string) =>
   `（測試內容）${name}的介紹文字，約兩到三行，用來確認段落格式、字型和換行是否正確。這裡再多寫一些字讓它換行。`
 
 export const osakaKyoto: Booklet = {
+  tripType: 'abroad',
   title: '大阪・京都 四日遊',
   flights: [
     { mode: 'plane', date: '2026-12-01', airline: '中華航空', flightNo: 'CI152', from: '高雄', departTime: '08:00', to: '大阪關西', arriveTime: '11:45' },
@@ -91,6 +92,7 @@ export const osakaKyoto: Booklet = {
 
 // 只有行程和旅遊資訊：航班、美食、飯店要整段隱藏；檢查清單項目比較多
 export const sparse: Booklet = {
+  tripType: 'abroad',
   title: '',
   flights: [],
   days: osakaKyoto.days.slice(0, 2),
@@ -105,6 +107,7 @@ export const sparse: Booklet = {
 
 // 金澤高山 8 天（內容取自 金澤高山自由行_A5.pdf），用於和風直排範本的測試
 export const kanazawa: Booklet = {
+  tripType: 'abroad',
   title: '金澤・高山 八日遊',
   flights: [
     { mode: 'plane', date: '2026-11-26', airline: '', flightNo: '', from: '高雄', departTime: '08:05', to: '小松', arriveTime: '12:05' },
@@ -211,6 +214,7 @@ export const kanazawa: Booklet = {
 
 // 國內一日遊：開車來回、景點有時間、沒有住宿；空白的一日遊手冊預覽、縮圖用這份
 export const dayTrip: Booklet = {
+  tripType: 'dayTrip',
   title: '大溪・石門 一日遊',
   flights: [
     { mode: 'car', date: '2026-12-05', airline: '', flightNo: '', from: '台北', departTime: '08:00', to: '大溪老街', arriveTime: '09:00' },

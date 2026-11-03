@@ -98,6 +98,20 @@ describe('景點時間', () => {
   })
 })
 
+describe('旅行類型', () => {
+  it('新手冊記下選的類型，存檔後讀回來不變', () => {
+    const b = emptyBooklet('dayTrip')
+    b.checklist = []
+    expect(parseSaveFile(JSON.stringify(createSaveFile(b, defaultSettings()))).booklet.tripType).toBe('dayTrip')
+  })
+
+  it('舊存檔沒有類型：行前清單是某個類型的預設就當成那個類型，否則當成出國', () => {
+    const old = (checklist: unknown) => JSON.stringify({ format: SAVE_FORMAT, version: 5, booklet: { checklist } })
+    expect(parseSaveFile(old(emptyBooklet('dayTrip').checklist)).booklet.tripType).toBe('dayTrip')
+    expect(parseSaveFile(old([])).booklet.tripType).toBe('abroad')
+  })
+})
+
 describe('預設值', () => {
   it('新手冊的旅遊資訊預設有氣候、時差、飲水、行李規定', () => {
     expect(emptyBooklet().infos.map((i) => i.title)).toEqual(['氣候', '時差', '飲水', '行李規定'])

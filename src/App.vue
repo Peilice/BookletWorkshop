@@ -52,6 +52,13 @@ const sections: { id: SectionId; label: string; component: Component; count: () 
   { id: 'infos', label: '旅遊資訊', component: InfosPanel, count: () => booklet.value.infos.length, field: 'infos' },
   { id: 'checklist', label: '行前清單', component: ChecklistPanel, count: () => booklet.value.checklist.reduce((n, g) => n + g.items.length, 0), field: 'checklist' },
 ]
+// 一日遊不用住宿：沒有填任何住宿時不顯示這一頁（舊資料裡已經有住宿的照樣顯示，才改得到）
+const hiddenSection = (s: (typeof sections)[number]) =>
+  s.id === 'hotels' && booklet.value.tripType === 'dayTrip' && !booklet.value.hotels.length
+const shownSections = computed(() => sections.filter((s) => !hiddenSection(s)))
+watch(shownSections, (list) => {
+  if (!list.some((s) => s.id === section.value)) section.value = 'days'
+})
 const { has } = useFormFields()
 const unusedSection = (s: (typeof sections)[number]) => !!s.field && !has(s.field)
 const currentSection = computed(() => sections.find((s) => s.id === section.value)!)
@@ -60,7 +67,7 @@ const currentSection = computed(() => sections.find((s) => s.id === section.valu
 const stepsBox = ref<HTMLElement>()
 const sectionsBox = ref<HTMLElement>()
 const stepBar = useSlider(stepsBox, () => [step.value])
-const sectionBar = useSlider(sectionsBox, () => [step.value, section.value, ...sections.map((s) => s.count())])
+const sectionBar = useSlider(sectionsBox, () => [step.value, section.value, ...shownSections.value.map((s) => s.count())])
 
 // ---------- 訊息 ----------
 
@@ -399,7 +406,7 @@ onBeforeUnmount(() => {
             <nav ref="sectionsBox" class="sections" role="tablist" aria-orientation="vertical" aria-label="內容區塊">
               <span class="slider" :style="sectionBar" aria-hidden="true" />
               <button
-                v-for="s in sections"
+                v-for="s in shownSections"
                 :id="`section-${s.id}`"
                 :key="s.id"
                 type="button"
@@ -413,7 +420,7 @@ onBeforeUnmount(() => {
                 <span class="count">{{ s.count() }}</span>
               </button>
             </nav>
-            <p v-if="sections.some(unusedSection)" class="hint sections-note">
+            <p v-if="shownSections.some(unusedSection)" class="hint sections-note">
               淡色的區塊「{{ currentTemplate?.name }}」不會顯示，資料仍會保留。
             </p>
           </div>

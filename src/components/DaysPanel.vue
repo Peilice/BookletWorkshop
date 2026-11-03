@@ -67,7 +67,7 @@ function posterDate(iso: string): string {
   <section>
     <div class="panel-intro">
       <h2>每日行程</h2>
-      <p class="hint">天數依排列順序自動編號，星期依日期自動計算。景點前面可以填時間（選填），手冊會排成時間軸；只有一天時，手冊不標 Day 1。</p>
+      <p class="hint">天數依排列順序自動編號，星期依日期自動計算。景點前面可以填時間（選填），手冊會排成時間軸。</p>
     </div>
 
     <template v-if="booklet.days.length === 0">

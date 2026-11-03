@@ -15,7 +15,7 @@ const { booklet } = useBookletStore()
   <section>
     <div class="panel-intro">
       <h2>交通</h2>
-      <p class="hint">飛機、高鐵、客運、自駕都填在這裡；全部都是飛機時，手冊上叫「航班」。沒有填任何交通時，手冊裡不會出現這一段。日期在手冊上會縮成「12/1」。</p>
+      <p class="hint">飛機、高鐵、客運、自駕都填在這裡。沒有填任何交通時，手冊裡不會出現這一段。</p>
     </div>
 
     <TransitionGroup tag="div" name="row" class="rows">

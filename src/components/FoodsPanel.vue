@@ -13,7 +13,7 @@ const { booklet } = useBookletStore()
   <section>
     <div class="panel-intro">
       <h2>美食特產</h2>
-      <p class="hint">美食和特產不分類，依地點列出。沒有填任何項目時，手冊裡不會出現這個區塊。</p>
+      <p class="hint">沒有填任何項目時，手冊裡不會出現這個區塊。</p>
     </div>
 
     <TransitionGroup tag="div" name="row" class="rows">

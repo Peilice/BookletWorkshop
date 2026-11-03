@@ -1,11 +1,11 @@
 // 存檔（.json）的格式、讀檔檢查與版本升級（規格書 4.2）
 
 import type { AccentSlot, Booklet, PaletteColors, Settings } from './booklet'
-import { defaultSettings } from './defaults'
+import { defaultSettings, presetTripType, TRIP_TYPES } from './defaults'
 import { isTransportMode } from './transport'
 
 export const SAVE_FORMAT = 'booklet-workshop'
-export const SAVE_VERSION = 5
+export const SAVE_VERSION = 6
 
 export interface SaveFile {
   format: typeof SAVE_FORMAT
@@ -32,7 +32,12 @@ const list = <T>(v: unknown, map: (o: Obj) => T): T[] => (Array.isArray(v) ? v.f
 const ACCENTS: AccentSlot[] = ['accent1', 'accent2', 'accent3', 'accent4', 'accent5', 'accent6']
 
 function normalizeBooklet(b: Obj): Booklet {
+  const checklist = list(b.checklist, (g) => ({
+    name: str(g.name),
+    items: list(g.items, (i) => ({ text: str(i.text) })),
+  }))
   return {
+    tripType: TRIP_TYPES.find((t) => t.id === b.tripType)?.id ?? presetTripType(checklist) ?? 'abroad',
     title: str(b.title),
     flights: list(b.flights, (f) => ({
       mode: isTransportMode(f.mode) ? f.mode : 'plane',
@@ -65,10 +70,7 @@ function normalizeBooklet(b: Obj): Booklet {
       note: str(h.note),
     })),
     infos: list(b.infos, (i) => ({ title: str(i.title), content: str(i.content) })),
-    checklist: list(b.checklist, (g) => ({
-      name: str(g.name),
-      items: list(g.items, (i) => ({ text: str(i.text) })),
-    })),
+    checklist,
   }
 }
 
@@ -114,6 +116,7 @@ function migrate(data: Obj, version: number): Obj {
   }
   // 第 4 版：航班改成交通，每筆多了交通方式；舊存檔沒有這個欄位，讀檔時一律當成飛機（normalizeBooklet）
   // 第 5 版：景點多了選填的時間；舊存檔沒有，讀檔時補成空白（normalizeBooklet）
+  // 第 6 版：記下旅行類型；舊存檔沒有，行前清單還是某個類型預設的樣子就當成那個類型，否則當成出國（normalizeBooklet）
   return data
 }
 
