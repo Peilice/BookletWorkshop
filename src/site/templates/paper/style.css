@@ -1,0 +1,44 @@
+/* 日本文青手帳 */
+:root { --ink: #4b3d2f; --soft: #6e5f51; --hair: #cdbb98; --paper: #efe4cc; --card: #f8f0dc; --f: 'Noto Serif TC', 'Songti TC', 'PMingLiU', 'Noto Sans TC', serif; --fs: Georgia, 'Times New Roman', serif; }
+body { background-color: var(--paper); background-image: radial-gradient(ellipse at 20% 10%, #fff6 0, transparent 40%), radial-gradient(ellipse at 90% 80%, #b8975a33 0, transparent 45%); letter-spacing: 0.03em; }
+.top { position: relative; padding-top: 48px; }
+.postmark { position: absolute; right: 20px; top: 24px; width: 86px; height: 86px; border: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); border-radius: 50%; display: grid; place-content: center; text-align: center; color: color-mix(in srgb, var(--accent) 75%, var(--paper)); transform: rotate(-14deg); font-family: var(--fs); outline: 1px dashed color-mix(in srgb, var(--accent) 40%, transparent); outline-offset: -8px; }
+.postmark b { font-size: 16px; letter-spacing: 0.1em; line-height: 1.1; }
+.postmark small { font-size: 13px; letter-spacing: 0.2em; }
+.top h1 { font-size: clamp(30px, 8.5vw, 42px); font-weight: 700; padding-right: 96px; }
+.dates { font-family: var(--fs); font-style: italic; }
+.toc { background: color-mix(in srgb, var(--paper) 90%, transparent); border-bottom: 1px dashed var(--soft); backdrop-filter: blur(3px); }
+.sec-title { border-top: 0; font-family: var(--fs); font-style: italic; font-weight: 400; font-size: 20px; letter-spacing: 0.12em; display: inline-block; padding: 0 4px 2px; border-bottom: 2px solid var(--accent); }
+.rows li { background: var(--card); border: 1px solid var(--hair); border-radius: 4px; margin: 10px 0; padding: 0; display: grid; grid-template-columns: 1fr 7em; position: relative; box-shadow: 1px 2px 5px #6b4b1f22; }
+.rows li::before, .rows li::after { content: ''; position: absolute; right: calc(7em - 6px); width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 1px solid var(--hair); }
+.rows li::before { top: -7px; }
+.rows li::after { bottom: -7px; }
+.tk-main { padding: 10px 14px; display: flex; flex-direction: column; border-right: 2px dashed var(--hair); }
+.tk-main small { font-family: var(--fs); letter-spacing: 0.2em; color: var(--accent); font-size: 13px; }
+.tk-main .code { font-family: var(--fs); font-size: 22px; letter-spacing: 0.08em; }
+.tk-main span { font-size: 14px; color: var(--soft); }
+.tk-stub { padding: 10px 8px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.tk-stub b { font-family: var(--fs); font-size: 22px; font-weight: 400; }
+.tk-stub small { font-size: 13px; color: var(--soft); }
+.day { border-bottom: 0; padding-top: 24px; }
+.day-n { font-family: var(--fs); font-style: italic; font-weight: 400; color: var(--ink); font-size: 42px; position: relative; }
+.day-n::after { content: ''; position: absolute; left: 0; right: -30px; bottom: -4px; height: 8px; border-bottom: 2px solid var(--accent); border-radius: 0 0 60% 40% / 0 0 100% 100%; }
+.day-head .date { font-family: var(--fs); font-style: italic; }
+.route-line { font-weight: 400; color: var(--soft); margin-top: 10px; }
+.spot { border-left: 0; padding: 0 8px 0 56px; margin-top: 0; position: relative; background: var(--card) repeating-linear-gradient(transparent 0 33px, #c9b88f 33px 34px); }
+.spot:first-of-type { margin-top: 14px; border-radius: 4px 4px 0 0; }
+.spot:last-child { border-radius: 0 0 4px 4px; padding-bottom: 12px; }
+.spot::before { content: ''; position: absolute; left: 28px; top: 0; bottom: 0; border-left: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.spot h3 { font-size: 17px; line-height: 34px; }
+.spot .time { color: var(--accent); font-family: var(--fs); }
+.spot p { font-size: 16px; line-height: 34px; }
+.hotel { background: var(--card); border: 1px solid var(--soft); outline: 1px solid var(--hair); outline-offset: -6px; padding: 16px 20px; margin: 14px 0; border-radius: 3px; }
+.hk { font-family: var(--fs); letter-spacing: 0.24em; color: var(--accent); font-size: 13px; }
+.food, .info, .check-group { border-bottom: 1px dashed var(--hair); }
+.print { border-style: dashed; border-radius: 3px; }
+.progress.done p { display: inline-block; font-family: var(--fs); font-style: italic; font-weight: 700; color: var(--accent); border: 2px solid var(--accent); border-radius: 4px; padding: 0 12px; transform: rotate(-3deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done p { animation: paper-stamp 0.4s cubic-bezier(0.2, 1.4, 0.4, 1); }
+  @keyframes paper-stamp { from { opacity: 0; transform: rotate(-3deg) scale(1.6); } }
+}
+@media print { .rows li, .hotel { box-shadow: none; } body { background-image: none; } }

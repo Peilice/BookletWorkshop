@@ -1,0 +1,41 @@
+/* 日式旅行圖鑑 */
+:root { --ink: #2f2a22; --soft: #62594b; --hair: #d9cfb8; --paper: #f6f1e4; --card: #fffdf6; }
+body { background: var(--paper); }
+.wrap { max-width: 860px; }
+.top { position: relative; padding-top: 28px; }
+.top .wrap { border: 1px solid var(--hair); background: var(--card); border-radius: 10px; padding: 16px 20px 18px; max-width: calc(860px - 32px); margin-top: 12px; }
+.compass { position: absolute; right: 32px; top: 44px; width: 56px; height: 56px; color: var(--accent); opacity: 0.85; }
+.top h1 { font-size: clamp(28px, 7.5vw, 38px); letter-spacing: 0.04em; padding-right: 64px; }
+.kinds { display: flex; flex-wrap: wrap; gap: 8px; max-width: 860px; margin: 14px auto 0; padding: 0 16px; }
+.kinds li { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; padding: 2px 12px 2px 8px; border-radius: 99px; color: #fff; }
+.k1 { background: var(--c1); }
+.k2 { background: var(--c2); }
+.k3 { background: var(--c3); }
+.toc { background: var(--paper); }
+.sec-title { border-top: 0; display: inline-block; color: #fff; background: var(--c3); padding: 2px 16px; border-radius: 6px; letter-spacing: 0.2em; font-size: 15px; margin-bottom: 12px; }
+#days .sec-title { background: var(--c1); }
+#foods .sec-title { background: var(--c2); }
+.day { background: var(--card); border: 1px solid var(--hair); border-top: 3px solid var(--c1); border-radius: 8px; padding: 12px 16px 18px; margin-bottom: 18px; display: grid; grid-template-columns: repeat(auto-fill, minmax(15em, 1fr)); gap: 10px; counter-reset: sp; }
+.day > .day-head, .day > .route-line { grid-column: 1 / -1; }
+.day-n { background: var(--c1); color: #fff; font-size: 16px; padding: 0 12px; border-radius: 99px; letter-spacing: 0.1em; }
+.route-line { font-size: 14px; color: var(--soft); border-bottom: 1px dashed var(--hair); padding-bottom: 8px; margin: 0; }
+.spot { border: 1px solid var(--hair); border-radius: 8px; padding: 10px 12px; margin: 0; background: #fff; counter-increment: sp; }
+.spot h3 { font-size: 16px; display: flex; flex-wrap: wrap; gap: 0 6px; align-items: baseline; }
+.spot h3::before { content: counter(sp); order: -2; width: 1.5em; height: 1.5em; flex: none; border-radius: 50%; background: var(--c1); color: #fff; font-size: 13px; display: inline-grid; place-items: center; align-self: center; }
+.spot .time { order: -1; min-width: 0; font-size: 13px; color: var(--soft); }
+.spot p { font-size: 15px; color: var(--soft); line-height: 1.7; flex-basis: 100%; }
+.food, .hotel, .info { background: var(--card); border: 1px solid var(--hair); border-radius: 8px; margin-bottom: 10px; padding: 12px 16px; }
+.food { border-top: 3px solid var(--c2); }
+.hotel, .info { border-top: 3px solid var(--c3); }
+.food li { padding: 3px 0; border-bottom: 1px dotted var(--hair); }
+.rows li { background: var(--card); border: 1px solid var(--hair); border-radius: 6px; margin-bottom: 6px; padding: 8px 12px; }
+.check-group { background: var(--card); border: 1px solid var(--hair); border-radius: 8px; margin-bottom: 10px; padding: 10px 16px; }
+.bar { background: var(--hair); border-radius: 99px; height: 8px; }
+.bar span { border-radius: 99px; }
+.print { border-radius: 99px; }
+.progress.done p { color: var(--c1); font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done .bar span { animation: zk-pulse 0.6s ease-out; }
+  @keyframes zk-pulse { 50% { filter: brightness(1.3); } }
+}
+@media print { .day { display: block; } .spot { margin-top: 8px; } }

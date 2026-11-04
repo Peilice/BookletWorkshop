@@ -1,17 +1,23 @@
 // 網站範本清單；範本設定檔（public/templates/*.json）的 site 欄位對應這裡的 id
 
+import * as catalog from './catalog/render'
 import * as classic from './classic/render'
 import * as diary from './diary/render'
+import * as editorial from './editorial/render'
+import * as jpmag from './jpmag/render'
 import * as mono from './mono/render'
 import * as night from './night/render'
 import * as outdoor from './outdoor/render'
+import * as paper from './paper/render'
 import * as poster from './poster/render'
 import * as route from './route/render'
 import * as season from './season/render'
+import * as showa from './showa/render'
 import * as ticket from './ticket/render'
 import * as timeline from './timeline/render'
 import type { SiteTemplate } from './types'
 import * as wafu from './wafu/render'
+import * as zukan from './zukan/render'
 
 export const SITE_TEMPLATES: Record<string, SiteTemplate> = {
   season: {
@@ -37,4 +43,11 @@ export const SITE_TEMPLATES: Record<string, SiteTemplate> = {
   route: { render: route.render, fonts: [] },
   night: { render: night.render, fonts: [] },
   outdoor: { render: outdoor.render, fonts: [] },
+  // 依參考圖做的 6 份風格範本，全部用系統字型
+  jpmag: { render: jpmag.render, fonts: [] },
+  paper: { render: paper.render, fonts: [] },
+  editorial: { render: editorial.render, fonts: [] },
+  zukan: { render: zukan.render, fonts: [] },
+  showa: { render: showa.render, fonts: [] },
+  catalog: { render: catalog.render, fonts: [] },
 }

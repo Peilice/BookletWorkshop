@@ -1,0 +1,78 @@
+{
+  "id": "paper",
+  "name": "日本文青手帳",
+  "site": "paper",
+  "description": "做舊紙張、橫格筆記頁、機票票根與郵戳；交通像機票，住宿像住宿券，Day 帶一道手寫弧線。",
+  "colorRoles": [
+    {
+      "label": "強調色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "郵戳、票根標籤與時間文字（紙色底）"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "舊紙褐",
+      "colors": {
+        "accent1": "#8A5A33",
+        "accent2": "#8A5A33",
+        "accent3": "#8A5A33",
+        "accent4": "#8A5A33",
+        "accent5": "#8A5A33",
+        "accent6": "#8A5A33"
+      }
+    },
+    {
+      "name": "郵戳紅",
+      "colors": {
+        "accent1": "#A33A2C",
+        "accent2": "#A33A2C",
+        "accent3": "#A33A2C",
+        "accent4": "#A33A2C",
+        "accent5": "#A33A2C",
+        "accent6": "#A33A2C"
+      }
+    },
+    {
+      "name": "藍墨水",
+      "colors": {
+        "accent1": "#2F4F7A",
+        "accent2": "#2F4F7A",
+        "accent3": "#2F4F7A",
+        "accent4": "#2F4F7A",
+        "accent5": "#2F4F7A",
+        "accent6": "#2F4F7A"
+      }
+    },
+    {
+      "name": "苔綠",
+      "colors": {
+        "accent1": "#4F6B3F",
+        "accent2": "#4F6B3F",
+        "accent3": "#4F6B3F",
+        "accent4": "#4F6B3F",
+        "accent5": "#4F6B3F",
+        "accent6": "#4F6B3F"
+      }
+    }
+  ]
+}

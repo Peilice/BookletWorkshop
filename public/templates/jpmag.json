@@ -1,0 +1,78 @@
+{
+  "id": "jpmag",
+  "name": "日系旅遊雜誌",
+  "site": "jpmag",
+  "description": "米白底、大量留白與細線的雜誌排版：細字大標 Day、細線串起的路線、靠右的小字資訊。",
+  "colorRoles": [
+    {
+      "label": "強調色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "Day 的日期與時間文字（白底）"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "茶褐",
+      "colors": {
+        "accent1": "#8A5A3C",
+        "accent2": "#8A5A3C",
+        "accent3": "#8A5A3C",
+        "accent4": "#8A5A3C",
+        "accent5": "#8A5A3C",
+        "accent6": "#8A5A3C"
+      }
+    },
+    {
+      "name": "墨黑",
+      "colors": {
+        "accent1": "#2B2723",
+        "accent2": "#2B2723",
+        "accent3": "#2B2723",
+        "accent4": "#2B2723",
+        "accent5": "#2B2723",
+        "accent6": "#2B2723"
+      }
+    },
+    {
+      "name": "藍灰",
+      "colors": {
+        "accent1": "#4A6275",
+        "accent2": "#4A6275",
+        "accent3": "#4A6275",
+        "accent4": "#4A6275",
+        "accent5": "#4A6275",
+        "accent6": "#4A6275"
+      }
+    },
+    {
+      "name": "抹茶",
+      "colors": {
+        "accent1": "#5E6B45",
+        "accent2": "#5E6B45",
+        "accent3": "#5E6B45",
+        "accent4": "#5E6B45",
+        "accent5": "#5E6B45",
+        "accent6": "#5E6B45"
+      }
+    }
+  ]
+}

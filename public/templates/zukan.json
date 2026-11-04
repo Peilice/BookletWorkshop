@@ -1,0 +1,87 @@
+{
+  "id": "zukan",
+  "name": "日式旅行圖鑑",
+  "site": "zukan",
+  "description": "分類標籤與圖示列、羅盤、卡片格：景點、美食、住宿與資訊各一個分類色，像旅行圖鑑。",
+  "colorRoles": [
+    {
+      "label": "景點（分類色一）",
+      "slots": [
+        "accent1"
+      ]
+    },
+    {
+      "label": "美食（分類色二）",
+      "slots": [
+        "accent2"
+      ]
+    },
+    {
+      "label": "住宿與資訊（分類色三）",
+      "slots": [
+        "accent3"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "分類標籤的白字（景點、美食、住宿與資訊）"
+    },
+    {
+      "slot": "accent2",
+      "where": "分類標籤的白字（景點、美食、住宿與資訊）"
+    },
+    {
+      "slot": "accent3",
+      "where": "分類標籤的白字（景點、美食、住宿與資訊）"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "自然綠",
+      "colors": {
+        "accent1": "#2F6B3E",
+        "accent2": "#B0522A",
+        "accent3": "#2F5A8A",
+        "accent4": "#2F6B3E",
+        "accent5": "#B0522A",
+        "accent6": "#2F5A8A"
+      }
+    },
+    {
+      "name": "古藍",
+      "colors": {
+        "accent1": "#2B5C8A",
+        "accent2": "#A5492E",
+        "accent3": "#5B5F2B",
+        "accent4": "#2B5C8A",
+        "accent5": "#A5492E",
+        "accent6": "#5B5F2B"
+      }
+    },
+    {
+      "name": "茜紅",
+      "colors": {
+        "accent1": "#9A3B3B",
+        "accent2": "#2F6B3E",
+        "accent3": "#3C5A7A",
+        "accent4": "#9A3B3B",
+        "accent5": "#2F6B3E",
+        "accent6": "#3C5A7A"
+      }
+    }
+  ]
+}

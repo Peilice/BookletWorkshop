@@ -1,0 +1,78 @@
+{
+  "id": "showa",
+  "name": "復古昭和旅行誌",
+  "site": "showa",
+  "description": "牛皮紙底、紅色粗黑體大標、印章與報紙式分欄；清單全部勾完會蓋一個章。",
+  "colorRoles": [
+    {
+      "label": "強調色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "大標、Day 方塊與印章（紙色底）"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "昭和紅",
+      "colors": {
+        "accent1": "#B3261E",
+        "accent2": "#B3261E",
+        "accent3": "#B3261E",
+        "accent4": "#B3261E",
+        "accent5": "#B3261E",
+        "accent6": "#B3261E"
+      }
+    },
+    {
+      "name": "藍黑",
+      "colors": {
+        "accent1": "#1F3A5F",
+        "accent2": "#1F3A5F",
+        "accent3": "#1F3A5F",
+        "accent4": "#1F3A5F",
+        "accent5": "#1F3A5F",
+        "accent6": "#1F3A5F"
+      }
+    },
+    {
+      "name": "深綠",
+      "colors": {
+        "accent1": "#2F5D3A",
+        "accent2": "#2F5D3A",
+        "accent3": "#2F5D3A",
+        "accent4": "#2F5D3A",
+        "accent5": "#2F5D3A",
+        "accent6": "#2F5D3A"
+      }
+    },
+    {
+      "name": "焦茶",
+      "colors": {
+        "accent1": "#7A3E1D",
+        "accent2": "#7A3E1D",
+        "accent3": "#7A3E1D",
+        "accent4": "#7A3E1D",
+        "accent5": "#7A3E1D",
+        "accent6": "#7A3E1D"
+      }
+    }
+  ]
+}

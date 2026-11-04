@@ -1,0 +1,36 @@
+/* 復古日本旅行誌（昭和） */
+:root { --ink: #2a211b; --soft: #5f5244; --hair: #b9a67f; --paper: #e9dcbb; --card: #f1e7cb; }
+body { background-color: var(--paper); background-image: radial-gradient(#8a6d3b22 1px, transparent 1.4px), radial-gradient(ellipse at 50% 0, #fff5 0, transparent 60%); background-size: 6px 6px, auto; }
+.top { position: relative; padding-top: 36px; border-bottom: 4px double var(--ink); padding-bottom: 14px; }
+.issue { position: absolute; right: 16px; top: 28px; width: 56px; border: 2px solid var(--ink); background: var(--card); text-align: center; line-height: 1.2; padding: 4px 0; font-weight: 900; }
+.issue b { display: block; font-size: 30px; }
+.issue span { display: block; font-size: 13px; letter-spacing: 0.1em; writing-mode: vertical-rl; margin: 0 auto; }
+.top h1 { color: var(--accent); font-weight: 900; font-size: clamp(44px, 14vw, 72px); line-height: 1.05; letter-spacing: -0.02em; padding-right: 72px; text-shadow: 1px 1px 0 #fff6; }
+.dates { color: var(--ink); font-weight: 700; border-top: 2px solid var(--ink); display: inline-block; padding-top: 4px; letter-spacing: 0.2em; }
+.toc { background: var(--paper); border-bottom: 2px solid var(--ink); }
+.sec-title { border-top: 0; display: inline-block; background: var(--accent); color: #fff; padding: 4px 14px; font-size: 18px; letter-spacing: 0.3em; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.sec { padding-top: 44px; }
+.rows li { border-bottom: 1px dotted var(--ink); }
+.day { border-bottom: 4px double var(--ink); padding: 22px 0; }
+.day-head { align-items: center; gap: 6px 14px; }
+.day-n { background: var(--accent); color: #fff; font-size: 40px; font-weight: 900; line-height: 1; padding: 6px 14px 8px; border: 3px double #fff; outline: 2px solid var(--accent); }
+.day-n small { font-size: 16px; font-weight: 700; margin: 0 2px; }
+.stampdate { border: 2px solid var(--accent); color: var(--accent); font-weight: 700; padding: 0 10px; transform: rotate(-3deg); border-radius: 4px; }
+.route-line { font-size: 22px; font-weight: 900; margin-top: 12px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 4px 0; }
+.spot { border-left: 0; padding-left: 0; margin-top: 14px; border-bottom: 1px dotted var(--hair); padding-bottom: 12px; }
+.spot h3 { font-size: 19px; font-weight: 900; }
+.spot h3::before { content: '■'; color: var(--accent); font-size: 12px; margin-right: 6px; vertical-align: 2px; }
+.spot .time { color: var(--accent); font-weight: 700; }
+.spot p { text-align: justify; }
+@media (min-width: 900px) { .wrap { max-width: 920px; } .spot p { column-count: 2; column-gap: 28px; column-rule: 1px dotted var(--hair); } }
+.food, .hotel, .info, .check-group { border-bottom: 1px dotted var(--ink); }
+.hotel { border: 2px solid var(--ink); background: var(--card); padding: 12px 16px; margin: 12px 0; outline: 1px solid var(--ink); outline-offset: 3px; }
+.food h3, .hotel h3, .info h3, .check-group h3 { font-weight: 900; }
+.print { border: 2px solid var(--ink); border-radius: 0; box-shadow: 3px 3px 0 var(--ink); }
+.print:hover { background: var(--accent); }
+.progress.done p { display: inline-block; font-weight: 900; font-size: 22px; letter-spacing: 0.2em; color: var(--accent); border: 3px double var(--accent); padding: 0 14px; transform: rotate(-4deg); margin-top: 8px; }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done p { animation: showa-stamp 0.4s cubic-bezier(0.2, 1.4, 0.4, 1); }
+  @keyframes showa-stamp { from { opacity: 0; transform: rotate(-4deg) scale(1.8); } }
+}
+@media print { body { background-image: none; } }

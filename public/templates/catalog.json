@@ -1,0 +1,78 @@
+{
+  "id": "catalog",
+  "name": "極簡高級手冊",
+  "site": "catalog",
+  "description": "飯店型錄般的細字手冊：字距拉開的 DAY 小標、01、02 景點編號，大量留白。",
+  "colorRoles": [
+    {
+      "label": "強調色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "路線與時間文字（白底）"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "炭灰",
+      "colors": {
+        "accent1": "#3A3835",
+        "accent2": "#3A3835",
+        "accent3": "#3A3835",
+        "accent4": "#3A3835",
+        "accent5": "#3A3835",
+        "accent6": "#3A3835"
+      }
+    },
+    {
+      "name": "陶土",
+      "colors": {
+        "accent1": "#9A5B3E",
+        "accent2": "#9A5B3E",
+        "accent3": "#9A5B3E",
+        "accent4": "#9A5B3E",
+        "accent5": "#9A5B3E",
+        "accent6": "#9A5B3E"
+      }
+    },
+    {
+      "name": "灰藍",
+      "colors": {
+        "accent1": "#4E6678",
+        "accent2": "#4E6678",
+        "accent3": "#4E6678",
+        "accent4": "#4E6678",
+        "accent5": "#4E6678",
+        "accent6": "#4E6678"
+      }
+    },
+    {
+      "name": "鼠尾草",
+      "colors": {
+        "accent1": "#5C6B52",
+        "accent2": "#5C6B52",
+        "accent3": "#5C6B52",
+        "accent4": "#5C6B52",
+        "accent5": "#5C6B52",
+        "accent6": "#5C6B52"
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+/* 極簡高級手冊 */
+:root { --ink: #2a2825; --soft: #6d6a64; --hair: #e1ddd3; --paper: #f8f6f1; --card: #f1eee6; }
+body { font-weight: 300; letter-spacing: 0.06em; line-height: 2; }
+.wrap { max-width: 680px; padding: 0 24px; }
+.top { padding-top: 72px; padding-bottom: 8px; }
+.top h1 { font-weight: 300; font-size: clamp(26px, 6.5vw, 34px); letter-spacing: 0.18em; }
+.dates { font-size: 13px; letter-spacing: 0.3em; }
+.toc { border-bottom: 1px solid var(--hair); margin-top: 28px; }
+.toc a { font-weight: 400; font-size: 13px; letter-spacing: 0.24em; color: var(--soft); }
+.toc a:hover { color: var(--ink); }
+.sec { padding-top: 72px; }
+.sec-title { border-top: 0; font-weight: 400; font-size: 13px; letter-spacing: 0.4em; color: var(--soft); padding-top: 0; margin-bottom: 22px; }
+.day { border-bottom: 0; counter-reset: sp; padding: 12px 0 28px; }
+.day-head { justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
+.day-n { font-size: 15px; font-weight: 400; letter-spacing: 0.3em; color: var(--ink); }
+.day-head .date { font-size: 13px; color: var(--soft); letter-spacing: 0.2em; }
+.route-line { font-weight: 300; font-size: 14px; color: var(--accent); margin-top: 14px; letter-spacing: 0.14em; }
+.spot { border-left: 0; padding: 0; margin-top: 22px; display: grid; grid-template-columns: 2.6em 1fr; counter-increment: sp; }
+.spot::before { content: counter(sp, decimal-leading-zero); font-size: 13px; color: var(--soft); padding-top: 4px; font-variant-numeric: tabular-nums; }
+.spot > * { grid-column: 2; }
+.spot h3 { font-weight: 400; font-size: 18px; letter-spacing: 0.14em; }
+.spot .time { display: block; font-size: 13px; letter-spacing: 0.2em; color: var(--accent); }
+.spot p { font-size: 15px; color: var(--soft); }
+.rows li { border-bottom-color: var(--hair); }
+.rows .when { font-weight: 400; }
+.food, .hotel, .info, .check-group { border-bottom: 1px solid var(--hair); padding: 14px 0; }
+.food h3, .hotel h3, .info h3, .check-group h3 { font-weight: 400; letter-spacing: 0.14em; font-size: 16px; }
+.print { border-radius: 0; border-color: var(--hair); font-weight: 300; letter-spacing: 0.2em; }
+.progress.done p { color: var(--accent); letter-spacing: 0.3em; font-size: 14px; }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done p { animation: cat-in 0.9s ease-out; }
+  @keyframes cat-in { from { opacity: 0; letter-spacing: 0.7em; } }
+}

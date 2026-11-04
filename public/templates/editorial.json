@@ -1,0 +1,78 @@
+{
+  "id": "editorial",
+  "name": "Editorial 雜誌",
+  "site": "editorial",
+  "description": "非對稱的雜誌版面：Day 數字細瘦巨大、附直排小字，景點交錯縮排，頁首有直排標題。",
+  "colorRoles": [
+    {
+      "label": "強調色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "細線與時間文字（白底）"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "石墨",
+      "colors": {
+        "accent1": "#33312E",
+        "accent2": "#33312E",
+        "accent3": "#33312E",
+        "accent4": "#33312E",
+        "accent5": "#33312E",
+        "accent6": "#33312E"
+      }
+    },
+    {
+      "name": "酒紅",
+      "colors": {
+        "accent1": "#8C2F39",
+        "accent2": "#8C2F39",
+        "accent3": "#8C2F39",
+        "accent4": "#8C2F39",
+        "accent5": "#8C2F39",
+        "accent6": "#8C2F39"
+      }
+    },
+    {
+      "name": "深海",
+      "colors": {
+        "accent1": "#1F4E6B",
+        "accent2": "#1F4E6B",
+        "accent3": "#1F4E6B",
+        "accent4": "#1F4E6B",
+        "accent5": "#1F4E6B",
+        "accent6": "#1F4E6B"
+      }
+    },
+    {
+      "name": "橄欖",
+      "colors": {
+        "accent1": "#5B6130",
+        "accent2": "#5B6130",
+        "accent3": "#5B6130",
+        "accent4": "#5B6130",
+        "accent5": "#5B6130",
+        "accent6": "#5B6130"
+      }
+    }
+  ]
+}

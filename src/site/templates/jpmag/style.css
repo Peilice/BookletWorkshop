@@ -1,0 +1,38 @@
+/* 日系旅遊雜誌 */
+:root { --ink: #2b2723; --soft: #6e675e; --hair: #ddd5c6; --paper: #fbf8f1; --card: #f4efe3; }
+body { font-weight: 300; letter-spacing: 0.04em; line-height: 1.95; }
+.wrap { max-width: 760px; padding: 0 20px; }
+.top { padding-top: 56px; position: relative; }
+.mag-tag { position: absolute; right: 20px; top: 20px; font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 13px; color: var(--soft); transform: rotate(-4deg); }
+.top h1 { font-weight: 300; font-size: clamp(30px, 8vw, 44px); letter-spacing: 0.1em; }
+.dates { font-family: Georgia, serif; letter-spacing: 0.14em; }
+.toc { background: var(--paper); border-bottom: 1px solid var(--hair); }
+.toc a { font-weight: 400; letter-spacing: 0.14em; }
+.sec { padding-top: 56px; }
+.sec-title { border-top: 0; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 15px; letter-spacing: 0.3em; padding: 0 0 8px; border-bottom: 1px solid var(--ink); }
+.day { border-bottom: 0; padding-top: 28px; }
+.day-head { display: block; }
+.chap { display: block; font-family: Georgia, serif; color: var(--soft); letter-spacing: 0.16em; font-size: 14px; }
+.day-n { display: block; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: var(--ink); font-size: clamp(40px, 11vw, 56px); letter-spacing: 0.02em; line-height: 1.15; }
+.day-n i { font-style: normal; font-size: 0.5em; color: var(--accent); letter-spacing: 0.08em; }
+.dep { display: block; margin-top: 2px; }
+.thread { display: flex; flex-wrap: wrap; align-items: center; margin-top: 12px; font-size: 14px; color: var(--soft); }
+.thread li { display: flex; align-items: center; }
+.thread li + li::before { content: ''; width: clamp(20px, 6vw, 48px); height: 1px; background: var(--soft); margin: 0 8px; }
+.spot { border-left: 0; padding: 18px 0 0; margin-top: 18px; border-top: 1px solid var(--hair); display: grid; grid-template-columns: 1fr; }
+.spot h3 { font-weight: 400; font-size: 20px; letter-spacing: 0.1em; }
+.spot h3::after { content: ''; display: block; width: 28px; height: 1px; background: var(--accent); margin-top: 6px; }
+.spot .time { display: block; font-family: Georgia, serif; font-size: 13px; color: var(--accent); letter-spacing: 0.12em; }
+.spot p { color: var(--soft); font-size: 16px; }
+@media (min-width: 700px) {
+  .spot { grid-template-columns: 11em 1fr; gap: 0 28px; }
+  .spot p { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
+}
+.food, .hotel, .info, .check-group { border-bottom-color: var(--hair); }
+.food h3, .hotel h3, .info h3 { font-weight: 400; letter-spacing: 0.1em; }
+.print { border-color: var(--soft); border-radius: 0; letter-spacing: 0.1em; }
+.progress.done p { color: var(--accent); font-family: Georgia, serif; font-style: italic; letter-spacing: 0.1em; }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done p { animation: mag-fade 0.8s ease-out; }
+  @keyframes mag-fade { from { opacity: 0; letter-spacing: 0.3em; } }
+}
