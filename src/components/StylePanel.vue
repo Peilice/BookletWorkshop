@@ -62,7 +62,7 @@ const warnings = computed(() => (manifest.value && palette.value ? lowContrastSp
     <div v-if="manifest && palette" class="block">
       <div class="panel-intro">
         <h2>配色</h2>
-        <p v-if="manifest.site" class="hint">每天一個顏色，從第一天到最後一天沿著色階漸變。選一組預設配色，或選「自訂」自己挑色階。</p>
+        <p v-if="manifest.site" class="hint">選一組預設配色，或選「自訂」自己挑色階。</p>
         <p v-else class="hint">選一組預設配色，或選「自訂」自己挑{{ manifest.colorRoles.map((r) => r.label).join('、') }}。</p>
       </div>
 
