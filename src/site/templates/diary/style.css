@@ -10,7 +10,7 @@ body { background-image: radial-gradient(#d9cfae 1.2px, transparent 1.6px); back
 .spot, .rows li, .food, .hotel, .info, .check-group { background: var(--card); border: 0; border-radius: 3px; padding: 10px 14px; margin: 14px 4px 0; box-shadow: 1px 2px 6px #0002; position: relative; }
 .spot:nth-of-type(odd), .rows li:nth-child(odd), .hotel:nth-child(odd), .food:nth-child(odd) { transform: rotate(-0.8deg); }
 .spot:nth-of-type(even), .rows li:nth-child(even), .hotel:nth-child(even), .food:nth-child(even) { transform: rotate(0.9deg); background: color-mix(in srgb, #fff3a8 45%, #fff); }
-.spot::before, .hotel::before { content: ''; position: absolute; top: -8px; left: 24px; width: 54px; height: 16px; background: color-mix(in srgb, var(--accent) 40%, transparent); transform: rotate(-5deg); }
+.spot:nth-of-type(odd)::before, .hotel:nth-child(odd)::before { content: ''; position: absolute; top: -8px; left: 24px; width: 54px; height: 16px; background: color-mix(in srgb, var(--accent) 40%, transparent); transform: rotate(-5deg); }
 .spot h3, .food h3, .hotel h3, .info h3 { font-weight: 400; font-size: 17px; }
 .print { border-style: dashed; }
 @media print { .spot, .rows li, .food, .hotel, .info, .check-group { transform: none !important; box-shadow: none; border: 1px solid var(--hair); } }

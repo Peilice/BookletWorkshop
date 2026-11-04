@@ -1,2 +1,6 @@
 /* 極簡黑白：共用版面就是這個樣子，只有一個強調色（accent1）用在細線和 Day 標記 */
 .spot p { color: #333; }
+.top { border-top: 10px solid var(--accent); padding-top: 28px; }
+.top h1 { font-size: 42px; letter-spacing: -0.01em; }
+.day-head { border-bottom: 1px solid var(--ink); padding-bottom: 4px; }
+.day-n { font-size: 34px; }

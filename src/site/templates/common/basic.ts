@@ -97,7 +97,7 @@ export function renderBasic(d: SiteData, opts: RenderOptions, cfg: BasicConfig):
     ${when(day.route.length, () => route(day))}
     ${day.spots
       .map(
-        (s) => `<div class="spot">
+        (s) => `<div class="spot${s.time ? '' : ' no-time'}">
       <h3>${when(s.time, () => `<span class="num time">${esc(s.time)}</span>`)}${esc(s.name)}</h3>
       ${when(s.content, () => paragraphs(s.content))}
     </div>`,

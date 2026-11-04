@@ -12,3 +12,8 @@
 .sec-title { border-top: 0; border-left: 5px solid var(--accent); padding: 0 0 0 10px; font-size: 15px; letter-spacing: 0.2em; }
 .rows li { background: var(--card); border: 0; border-radius: 8px; margin-bottom: 8px; padding: 8px 12px; }
 .today-tag:not([hidden]) { background: var(--accent); }
+/* 沒填時間的景點：圓點裡放當天的第幾個，時間軸不會空空的 */
+.day { counter-reset: spot; }
+.spot { counter-increment: spot; }
+.spot.no-time::before { content: counter(spot); width: 22px; height: 22px; left: -27px; top: 8px; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; }
+.spot .time { color: var(--accent); font-weight: 700; }

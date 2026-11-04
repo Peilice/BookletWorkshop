@@ -15,3 +15,5 @@
 .rows li { border-bottom: 1px solid var(--ink); }
 .rows .when { font-family: var(--fa); font-size: 18px; font-weight: 400; letter-spacing: 0.04em; }
 .food h3, .hotel h3, .info h3 { font-size: 17px; }
+.spot p { font-size: 16px; }
+@media (min-width: 900px) { .wrap { max-width: 880px; } .spot p { font-size: 17px; } .route-line { font-size: 26px; } }

@@ -19,8 +19,8 @@ export const osakaKyoto: Booklet = {
       overview: '',
       departTime: '',
       spots: [
-        { time: '', name: '大阪城公園', content: lorem('大阪城公園') },
-        { time: '', name: '道頓堀', content: lorem('道頓堀') },
+        { time: '13:30', name: '大阪城公園', content: lorem('大阪城公園') },
+        { time: '18:00', name: '道頓堀', content: lorem('道頓堀') },
       ],
     },
     {
@@ -28,9 +28,9 @@ export const osakaKyoto: Booklet = {
       overview: '京都一日遊',
       departTime: '',
       spots: [
-        { time: '', name: '伏見稻荷大社', content: lorem('伏見稻荷大社') },
-        { time: '', name: '清水寺', content: lorem('清水寺') },
-        { time: '', name: '祇園花見小路', content: lorem('祇園花見小路') },
+        { time: '08:30', name: '伏見稻荷大社', content: lorem('伏見稻荷大社') },
+        { time: '13:00', name: '清水寺', content: lorem('清水寺') },
+        { time: '16:30', name: '祇園花見小路', content: lorem('祇園花見小路') },
       ],
     },
     {
@@ -38,15 +38,15 @@ export const osakaKyoto: Booklet = {
       overview: '',
       departTime: '',
       spots: [
-        { time: '', name: '黑門市場', content: lorem('黑門市場') + '\n第二行：測試換行。\n第三行：再測一次。' },
-        { time: '', name: '新世界通天閣', content: lorem('新世界通天閣') },
+        { time: '10:00', name: '黑門市場', content: lorem('黑門市場') + '\n第二行：測試換行。\n第三行：再測一次。' },
+        { time: '15:00', name: '新世界通天閣', content: lorem('新世界通天閣') },
       ],
     },
     {
       date: '2026-12-04',
       overview: '臨空城 Outlet 購物後前往機場',
       departTime: '',
-      spots: [{ time: '', name: '臨空城 Outlet', content: lorem('臨空城 Outlet') }],
+      spots: [{ time: '10:30', name: '臨空城 Outlet', content: lorem('臨空城 Outlet') }],
     },
   ],
   foods: [
