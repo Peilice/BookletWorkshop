@@ -5,6 +5,7 @@ import type { SiteData } from '../../siteData'
 import type { RenderOptions } from '../types'
 import client from './client.js?raw'
 import { sprite } from './icons'
+import { photoParts } from './photos'
 
 export interface PageParts {
   css: string
@@ -26,6 +27,10 @@ export const todayTag = '<span class="today-tag" data-today-tag hidden>今天</s
 export const CLIENT_TEXT = '距離出發還有天今天是旅程第出發日'
 
 export function page(d: SiteData, opts: RenderOptions, p: PageParts): string {
+  // 封面放在最前面，封底放在頁尾（列印按鈕那一塊）前面；各範本的頁尾都是 <footer class="foot ...">
+  const photos = photoParts(d)
+  const body = photos.cover + (photos.backCover ? withBackCover(p.body, photos.backCover) : p.body)
+  const bodyClass = [p.bodyClass, photos.bodyClass].filter(Boolean).join(' ')
   return `<!doctype html>
 <html lang="zh-Hant-TW" data-trip="${esc(d.tripKey)}"${opts.pwa ? ' data-pwa="1"' : ''}${p.htmlStyle ? ` style="${p.htmlStyle}"` : ''}>
 <head>
@@ -36,15 +41,20 @@ export function page(d: SiteData, opts: RenderOptions, p: PageParts): string {
 <meta name="generator" content="旅遊手冊工坊">
 ${when(opts.pwa, () => '<link rel="manifest" href="manifest.webmanifest">\n<link rel="apple-touch-icon" href="icon-180.png">\n<meta name="apple-mobile-web-app-capable" content="yes">')}
 <style>${opts.fontCss ?? ''}
-${p.css}</style>
+${p.css}${photos.css}</style>
 </head>
-<body${p.bodyClass ? ` class="${p.bodyClass}"` : ''}>
+<body${bodyClass ? ` class="${bodyClass}"` : ''}>
 ${sprite()}
 <a class="skip" href="#main">跳到主要內容</a>
-${p.body}
+${body}
 <script>${client}
 ${p.script ?? ''}</script>
 </body>
 </html>
 `
+}
+
+function withBackCover(body: string, backCover: string): string {
+  const i = body.indexOf('<footer class="foot')
+  return i < 0 ? body + backCover : body.slice(0, i) + backCover + body.slice(i)
 }

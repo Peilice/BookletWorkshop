@@ -6,6 +6,7 @@ import type { SiteData, SiteDay, SiteFlight, SiteHotel } from '../../siteData'
 import base from './basic.css?raw'
 import { icon } from './icons'
 import { CLIENT_TEXT, countdown, page, todayTag } from './page'
+import { spotPhoto } from './photos'
 import { allText } from './text'
 import type { RenderOptions } from '../types'
 
@@ -100,6 +101,7 @@ export function renderBasic(d: SiteData, opts: RenderOptions, cfg: BasicConfig):
         (s) => `<div class="spot${s.time ? '' : ' no-time'}">
       <h3>${when(s.time, () => `<span class="num time">${esc(s.time)}</span>`)}${esc(s.name)}</h3>
       ${when(s.content, () => paragraphs(s.content))}
+      ${spotPhoto(s)}
     </div>`,
       )
       .join('')}

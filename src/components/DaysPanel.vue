@@ -15,6 +15,7 @@ import AiKeySetting from './AiKeySetting.vue'
 import EmptyArt from './EmptyArt.vue'
 import Icon from './Icon.vue'
 import ItemActions from './ItemActions.vue'
+import PhotoField from './PhotoField.vue'
 import UnusedMark from './UnusedMark.vue'
 
 const { booklet } = useBookletStore()
@@ -183,6 +184,7 @@ function posterDate(iso: string): string {
               <p v-if="spotLimit && contentLength(s.content) > spotLimit" class="hint warn">
                 內容有 {{ contentLength(s.content) }} 個字，超過 {{ spotLimit }} 字會接到下一頁。
               </p>
+              <PhotoField :model-value="s.photo ?? ''" kind="spot" :label="`景點 ${j + 1} 照片`" empty="選填，每個景點一張" @update:model-value="s.photo = $event" />
               <AiIntro
                 v-model="s.content"
                 :request="{ kind: 'spot', name: s.name, place: dayPlace(booklet, activeDay), title: booklet.title, limit: spotLimit }"

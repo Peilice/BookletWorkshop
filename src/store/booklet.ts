@@ -8,6 +8,9 @@ import { createSaveFile, parseSaveFile, type SaveFile } from '../model/saveFile'
 const AUTOSAVE_KEY = 'booklet-workshop:autosave'
 const AUTOSAVE_DELAY = 500
 
+// 自動暫存寫不進去（多半是照片太多、超過瀏覽器的儲存空間）；畫面上要提醒使用者自己存檔
+const autosaveFailed = ref(false)
+
 const booklet = ref<Booklet>(emptyBooklet())
 const settings = ref<Settings>(defaultSettings())
 
@@ -41,8 +44,9 @@ function writeAutosave() {
   try {
     if (isBlank()) localStorage.removeItem(AUTOSAVE_KEY)
     else localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(createSaveFile(booklet.value, settings.value)))
+    autosaveFailed.value = false
   } catch {
-    // 忽略
+    autosaveFailed.value = true
   }
 }
 
@@ -119,6 +123,7 @@ export function useBookletStore() {
     booklet,
     settings,
     hasUnsavedChanges,
+    autosaveFailed,
     pendingRestore,
     restoreAutosave,
     discardAutosave,

@@ -6,6 +6,7 @@ import type { SiteData, SiteDay } from '../../siteData'
 import { chineseDay } from '../../../model/dates'
 import { icon } from '../common/icons'
 import { countdown, page, todayTag } from '../common/page'
+import { spotPhoto } from '../common/photos'
 import type { RenderOptions } from '../types'
 import css from './style.css?raw'
 
@@ -62,7 +63,7 @@ function overview(d: SiteData): string {
 }
 
 function spotGroup(day: SiteDay, single: boolean): string {
-  const spots = day.spots.filter((s) => s.content)
+  const spots = day.spots.filter((s) => s.content || s.photo)
   if (!spots.length) return ''
   // 一日遊不標第一天
   const n = single ? '' : chineseDay(day.n)
@@ -75,13 +76,14 @@ function spotGroup(day: SiteDay, single: boolean): string {
         <h4>${esc(s.name)}${when(n, () => `<small>（${esc(n)}）</small>`)}</h4>
         ${paragraphs(s.content)}
       </div>
+      ${spotPhoto(s)}
     </article>`,
       )
       .join('')}</div>
   </div>`
 }
 
-const hasSpots = (d: SiteData) => d.days.some((x) => x.spots.some((s) => s.content))
+const hasSpots = (d: SiteData) => d.days.some((x) => x.spots.some((s) => s.content || s.photo))
 
 export function render(d: SiteData, opts: RenderOptions): string {
   const accent = d.palette.accent1

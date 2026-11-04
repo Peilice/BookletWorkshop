@@ -2,7 +2,7 @@
 
 import type { SiteData } from '../../siteData'
 
-const SKIP = new Set(['tripKey', 'palette', 'colors', 'color', 'mapUrl', 'iso', 'mode', 'icon'])
+const SKIP = new Set(['tripKey', 'palette', 'colors', 'color', 'mapUrl', 'iso', 'mode', 'icon', 'photo', 'cover', 'backCover', 'background'])
 
 function collect(v: unknown, out: string[]) {
   if (typeof v === 'string') out.push(v)

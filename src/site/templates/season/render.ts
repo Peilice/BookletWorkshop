@@ -5,6 +5,7 @@ import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteDay, SiteHotel } from '../../siteData'
 import { icon } from '../common/icons'
 import { CLIENT_TEXT, countdown, page } from '../common/page'
+import { spotPhoto } from '../common/photos'
 import type { RenderOptions } from '../types'
 import script from './app.js?raw'
 import css from './style.css?raw'
@@ -103,8 +104,8 @@ function stops(day: SiteDay, open: boolean): string {
     const mark = `<span class="stop-mark">${icon('pin')}<span class="badge">${i + 1}</span></span>`
     const time = s.time ? `<b class="stop-time num">${esc(s.time)}</b>` : ''
     const name = `${time}<span class="stop-name">${esc(s.name || `景點 ${i + 1}`)}</span>`
-    if (!s.content) return `<li class="stop"><div class="stop-row">${mark}${name}</div></li>`
-    return `<li class="stop"><details${open ? ' open' : ''}><summary class="stop-row">${mark}${name}${icon('chevron', 'ic chev')}</summary><div class="stop-body">${paragraphs(s.content)}</div></details></li>`
+    if (!s.content && !s.photo) return `<li class="stop"><div class="stop-row">${mark}${name}</div></li>`
+    return `<li class="stop"><details${open ? ' open' : ''}><summary class="stop-row">${mark}${name}${icon('chevron', 'ic chev')}</summary><div class="stop-body">${paragraphs(s.content)}${spotPhoto(s)}</div></details></li>`
   })
   return `<ol class="stops">${items.join('')}</ol>`
 }

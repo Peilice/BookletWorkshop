@@ -25,7 +25,9 @@ export function isBlankBooklet(b: Booklet): boolean {
 /** 空白手冊用範例行程；選了一日遊的空白手冊用一日遊的範例 */
 export function previewBooklet(b: Booklet): Booklet {
   if (!isBlankBooklet(b)) return b
-  return presetTripType(b.checklist) === 'dayTrip' ? dayTrip : osakaKyoto
+  const sample = presetTripType(b.checklist) === 'dayTrip' ? dayTrip : osakaKyoto
+  // 只放了照片還沒填內容時，照片照樣放進預覽
+  return b.cover || b.backCover || b.background ? { ...sample, cover: b.cover, backCover: b.backCover, background: b.background } : sample
 }
 
 export function renderPreview(booklet: Booklet, manifest: TemplateManifest, colors: PaletteColors, print = false): string {

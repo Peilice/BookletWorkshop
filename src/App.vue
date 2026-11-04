@@ -24,7 +24,7 @@ import { downloadFile } from './utils/download'
 import { useSlider } from './utils/motion'
 
 const store = useBookletStore()
-const { booklet, settings, hasUnsavedChanges, pendingRestore } = store
+const { booklet, settings, hasUnsavedChanges, autosaveFailed, pendingRestore } = store
 const { templates, loadTemplates } = useTemplates()
 const { step, section } = useFocus()
 onMounted(loadTemplates)
@@ -330,7 +330,8 @@ onBeforeUnmount(() => {
     <h1>旅遊手冊工坊</h1>
     <input v-model="booklet.title" class="trip" aria-label="手冊名稱" placeholder="手冊名稱，例如：熊本・阿蘇 2026.11" />
     <span class="spacer" />
-    <span v-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
+    <span v-if="autosaveFailed" class="status warn" role="alert">照片太多，自動暫存已停用，請先存檔</span>
+    <span v-else-if="hasUnsavedChanges" class="status">有變更尚未存檔</span>
     <span v-else-if="justSaved" class="status saved">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M3 8.5l3.2 3L13 4.5" />

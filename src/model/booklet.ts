@@ -18,10 +18,14 @@ export interface Flight {
   arriveTime: string
 }
 
+// 照片：縮小壓縮後的 data URL（見 photo.ts），內嵌在存檔和手冊裡；空字串＝沒有照片，全部選填
+export type Photo = string
+
 export interface Spot {
   time: string // HH:mm，選填；有填時手冊排成時間軸
   name: string
   content: string
+  photo?: Photo // 選填，每個景點一張；沒有這個欄位（舊資料、範例）等於沒有照片
 }
 
 export interface Day {
@@ -69,6 +73,9 @@ export interface ChecklistGroup {
 export interface Booklet {
   tripType: TripType
   title: string // 手冊名稱，只有網站範本用到（見 FormField）
+  cover: Photo // 選填：封面，整頁大圖
+  backCover: Photo // 選填：封底，整頁大圖
+  background: Photo // 選填：整本手冊的底圖
   flights: Flight[]
   days: Day[]
   foods: FoodPlace[]

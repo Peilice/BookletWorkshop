@@ -2,6 +2,7 @@
 
 import type { Booklet, FormField, PaletteColors, TemplateRules, TransportMode } from '../model/booklet'
 import { arrivesNextDay, durationText, onlyFlights, transportOf, travelMinutes } from '../model/transport'
+import { safePhoto } from '../model/photo'
 import { flightOffset } from '../model/places'
 import { autoOverview } from '../model/validate'
 import { flightLeg, shortDate, weekday } from '../model/dates'
@@ -31,6 +32,7 @@ export interface SiteSpot {
   time: string // HH:mm 或空白
   name: string
   content: string
+  photo: string // data URL 或空白
 }
 
 export interface SiteDay {
@@ -60,6 +62,9 @@ export interface SiteHotel {
 
 export interface SiteData {
   title: string
+  cover: string // 封面、封底、整本底圖（data URL）；沒放照片時是空白
+  backCover: string
+  background: string
   dateRange: string
   start: string // 旅程第一天、最後一天（YYYY-MM-DD），網站用來倒數；沒有日期時空白
   end: string
@@ -117,7 +122,7 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
       weekdayShort: short(d.date),
       route: overview ? overview.split(/\s*→\s*/).filter(Boolean) : [],
       departTime: shown('departTime', d.departTime),
-      spots: d.spots.filter((s) => filled(s.name) || filled(s.content)).map((s) => ({ time: s.time, name: s.name.trim(), content: s.content.trim() })),
+      spots: d.spots.filter((s) => filled(s.name) || filled(s.content) || safePhoto(s.photo)).map((s) => ({ time: s.time, name: s.name.trim(), content: s.content.trim(), photo: safePhoto(s.photo) })),
       color: colors[i],
       hotel: hotel >= 0 ? hotel : null,
     }
@@ -130,6 +135,9 @@ export function toSiteData(b: Booklet, rules: TemplateRules, palette: PaletteCol
 
   return {
     title,
+    cover: safePhoto(b.cover),
+    backCover: safePhoto(b.backCover),
+    background: safePhoto(b.background),
     dateRange: range,
     start: sorted[0] ?? '',
     end: sorted[sorted.length - 1] ?? '',

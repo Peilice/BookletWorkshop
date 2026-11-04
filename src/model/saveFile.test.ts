@@ -94,7 +94,7 @@ describe('交通方式', () => {
 describe('景點時間', () => {
   it('舊存檔的景點沒有時間，讀進來補成空白', () => {
     const old = { format: SAVE_FORMAT, version: 4, booklet: { days: [{ spots: [{ name: '清水寺', content: '' }] }] } }
-    expect(parseSaveFile(JSON.stringify(old)).booklet.days[0].spots[0]).toEqual({ time: '', name: '清水寺', content: '' })
+    expect(parseSaveFile(JSON.stringify(old)).booklet.days[0].spots[0]).toEqual({ time: '', name: '清水寺', content: '', photo: '' })
   })
 })
 
@@ -144,5 +144,32 @@ describe('檔名', () => {
   it('沒有航班時用 Day 1 的日期，都沒有時不加日期', () => {
     expect(bookletFileName({ ...osakaKyoto, flights: [] }, 'json')).toBe('旅遊手冊_20261201.json')
     expect(bookletFileName(emptyBooklet(), 'json')).toBe('旅遊手冊.json')
+  })
+})
+
+describe('照片', () => {
+  const jpg = 'data:image/jpeg;base64,/9j/4AAQSkZJRg=='
+
+  it('封面、封底、底圖、景點照片存檔後讀得回來', () => {
+    const b = emptyBooklet()
+    b.cover = jpg
+    b.backCover = jpg
+    b.background = jpg
+    b.days.push(newDay())
+    b.days[0].spots[0].photo = jpg
+    const back = parseSaveFile(JSON.stringify(createSaveFile(b, defaultSettings()))).booklet
+    expect([back.cover, back.backCover, back.background, back.days[0].spots[0].photo]).toEqual([jpg, jpg, jpg, jpg])
+  })
+
+  it('舊存檔沒有照片，讀進來補成空白', () => {
+    const old = { format: SAVE_FORMAT, version: 6, booklet: { days: [{ spots: [{ name: '清水寺' }] }] } }
+    const b = parseSaveFile(JSON.stringify(old)).booklet
+    expect([b.cover, b.backCover, b.background, b.days[0].spots[0].photo]).toEqual(['', '', '', ''])
+  })
+
+  it('不是圖片的 data URL 或網址一律丟掉', () => {
+    const evil = { format: SAVE_FORMAT, version: 7, booklet: { cover: 'javascript:alert(1)', background: 'data:text/html;base64,PHNjcmlwdD4=', backCover: 'https://example.com/a.jpg' } }
+    const b = parseSaveFile(JSON.stringify(evil)).booklet
+    expect([b.cover, b.backCover, b.background]).toEqual(['', '', ''])
   })
 })

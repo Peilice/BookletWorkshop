@@ -2,10 +2,11 @@
 
 import type { AccentSlot, Booklet, PaletteColors, Settings } from './booklet'
 import { defaultSettings, presetTripType, TRIP_TYPES } from './defaults'
+import { safePhoto } from './photo'
 import { isTransportMode } from './transport'
 
 export const SAVE_FORMAT = 'booklet-workshop'
-export const SAVE_VERSION = 6
+export const SAVE_VERSION = 7
 
 export interface SaveFile {
   format: typeof SAVE_FORMAT
@@ -27,6 +28,7 @@ type Obj = Record<string, unknown>
 
 const isObj = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v)
 const str = (v: unknown): string => (typeof v === 'string' ? v : '')
+const photo = safePhoto
 const list = <T>(v: unknown, map: (o: Obj) => T): T[] => (Array.isArray(v) ? v.filter(isObj).map(map) : [])
 
 const ACCENTS: AccentSlot[] = ['accent1', 'accent2', 'accent3', 'accent4', 'accent5', 'accent6']
@@ -39,6 +41,9 @@ function normalizeBooklet(b: Obj): Booklet {
   return {
     tripType: TRIP_TYPES.find((t) => t.id === b.tripType)?.id ?? presetTripType(checklist) ?? 'abroad',
     title: str(b.title),
+    cover: photo(b.cover),
+    backCover: photo(b.backCover),
+    background: photo(b.background),
     flights: list(b.flights, (f) => ({
       mode: isTransportMode(f.mode) ? f.mode : 'plane',
       date: str(f.date),
@@ -53,7 +58,7 @@ function normalizeBooklet(b: Obj): Booklet {
       date: str(d.date),
       overview: str(d.overview),
       departTime: str(d.departTime),
-      spots: list(d.spots, (s) => ({ time: str(s.time), name: str(s.name), content: str(s.content) })),
+      spots: list(d.spots, (s) => ({ time: str(s.time), name: str(s.name), content: str(s.content), photo: photo(s.photo) })),
     })),
     foods: list(b.foods, (f) => ({
       place: str(f.place),
@@ -116,6 +121,7 @@ function migrate(data: Obj, version: number): Obj {
   // 第 4 版：航班改成交通，每筆多了交通方式；舊存檔沒有這個欄位，讀檔時一律當成飛機（normalizeBooklet）
   // 第 5 版：景點多了選填的時間；舊存檔沒有，讀檔時補成空白（normalizeBooklet）
   // 第 6 版：記下旅行類型；舊存檔沒有，行前清單還是某個類型預設的樣子就當成那個類型，否則當成出國（normalizeBooklet）
+  // 第 7 版：多了選填的照片（封面、封底、底圖、每個景點一張）；舊存檔沒有，讀檔時補成空白（normalizeBooklet）
   return data
 }
 

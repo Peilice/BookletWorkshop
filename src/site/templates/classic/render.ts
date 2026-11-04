@@ -5,6 +5,7 @@ import { esc, paragraphs, when } from '../../html'
 import type { SiteData, SiteFlight } from '../../siteData'
 import { icon } from '../common/icons'
 import { CLIENT_TEXT, countdown, page, todayTag } from '../common/page'
+import { spotPhoto } from '../common/photos'
 import { allText } from '../common/text'
 import type { RenderOptions } from '../types'
 import css from './style.css?raw'
@@ -60,6 +61,7 @@ function days(d: SiteData): string {
         (s) => `<div class="spot">
       <h3 class="spot-name">${when(s.time, () => `<span class="spot-time num">${esc(s.time)}</span>`)}【${esc(s.name)}】</h3>
       ${paragraphs(s.content)}
+      ${spotPhoto(s)}
     </div>`,
       )
       .join('')}

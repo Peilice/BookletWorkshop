@@ -6,8 +6,9 @@ import type { AccentSlot, PaletteColors, TemplateManifest } from '../model/bookl
 import { lowContrastSpots, MIN_CONTRAST } from '../model/contrast'
 import { useBookletStore } from '../store/booklet'
 import { useTemplates } from '../store/templates'
+import PhotoField from './PhotoField.vue'
 
-const { settings } = useBookletStore()
+const { booklet, settings } = useBookletStore()
 const { templates, loadError, loadTemplates } = useTemplates()
 onMounted(loadTemplates)
 
@@ -105,6 +106,18 @@ const warnings = computed(() => (manifest.value && palette.value ? lowContrastSp
       </ul>
     </div>
 
+    <!-- 照片：都是選填，沒放就照原本的版面 -->
+    <div class="block">
+      <div class="panel-intro">
+        <h2>照片</h2>
+        <p class="hint">全部選填。封面和封底會做成整頁大圖，底圖鋪在整本手冊的後面。景點的照片在「每日行程」每個景點下面放。</p>
+      </div>
+      <div class="photos">
+        <PhotoField v-model="booklet.cover" kind="cover" label="封面" empty="整頁大圖，標題疊在上面；直式照片最合適" />
+        <PhotoField v-model="booklet.backCover" kind="cover" label="封底" empty="手冊最後的整頁大圖" />
+        <PhotoField v-model="booklet.background" kind="background" label="底圖" empty="鋪在整本手冊後面，內容會蓋一層半透明底色" />
+      </div>
+    </div>
   </section>
 </template>
 
@@ -117,6 +130,12 @@ const warnings = computed(() => (manifest.value && palette.value ? lowContrastSp
 
 .block + .block {
   margin-top: 16px;
+}
+
+.photos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .swatches {

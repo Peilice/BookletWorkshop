@@ -23,6 +23,9 @@ export function emptyBooklet(type: TripType = 'abroad'): Booklet {
   return {
     tripType: type,
     title: '',
+    cover: '',
+    backCover: '',
+    background: '',
     flights: [],
     days: [],
     foods: [],
@@ -62,7 +65,7 @@ export const newFlight = (): Flight => ({
   arriveTime: '',
 })
 
-export const newSpot = (): Spot => ({ time: '', name: '', content: '' })
+export const newSpot = (): Spot => ({ time: '', name: '', content: '', photo: '' })
 
 /** 新的一天：日期接在前一天後面 */
 export const newDay = (previous?: Day): Day => ({

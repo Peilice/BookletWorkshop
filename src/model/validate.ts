@@ -3,6 +3,7 @@
 import type { Booklet, FormField, TemplateRules } from './booklet'
 import { shortDate } from './dates'
 import { FALLBACK_RULES, addDays } from './defaults'
+import { PHOTO_BUDGET, photoSize } from './photo'
 import { transportOf } from './transport'
 
 export type TabId = 'flights' | 'days' | 'foods' | 'hotels' | 'infos' | 'checklist' | 'style'
@@ -71,6 +72,12 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
     }
   })
 
+  // 照片全都內嵌在手冊裡：太多的話存檔、單一 HTML 和瀏覽器暫存都會很大
+  const photoMb = photoSize(b) / 1_000_000
+  if (photoSize(b) > PHOTO_BUDGET) {
+    add('style', `照片合計約 ${photoMb.toFixed(1)} MB，存檔和手冊檔案會很大，瀏覽器的自動暫存也可能存不下，建議減少幾張`)
+  }
+
   b.days.forEach((d, i) => {
     const day = `Day ${i + 1}`
     if (blank(d.date)) add('days', `${day}：沒有填日期`)
@@ -81,7 +88,7 @@ export function validateBooklet(b: Booklet, rules: TemplateRules = FALLBACK_RULE
     else if (prev && isDate(prev) && isDate(d.date) && d.date > addDays(prev, 1)) add('days', `${day}：日期和前一天沒有接上，中間少了 ${shortDate(addDays(prev, 1))}`)
     if (!d.spots.length) add('days', `${day}：沒有景點`)
     d.spots.forEach((s, j) => {
-      if (blank(s.name)) add('days', `${day} 景點 ${j + 1}：沒有填景點名稱`)
+      if (blank(s.name)) add('days', `${day} 景點 ${j + 1}：沒有填景點名稱${s.photo ? '，照片的說明文字會是空的' : ''}`)
       const earlier = d.spots.slice(0, j).filter((o) => o.time).at(-1)
       if (s.time && earlier && s.time < earlier.time) add('days', `${s.name.trim() || `${day} 景點 ${j + 1}`}：時間 ${s.time} 比前一個景點（${earlier.time}）早`)
       const length = contentLength(s.content)
