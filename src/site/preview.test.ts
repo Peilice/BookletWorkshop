@@ -26,7 +26,7 @@ describe('成品預覽', () => {
   })
 
   it('一日遊範例在每個範本都是單日版面，產生前檢查沒有問題', () => {
-    for (const id of ['classic', 'season', 'wafu']) {
+    for (const id of ['classic', 'season', 'wafu', 'mono', 'poster', 'timeline', 'ticket', 'diary', 'route', 'night', 'outdoor']) {
       const m = load(id)
       expect(renderPreview(dayTrip, m, m.presets[0].colors)).not.toContain('Day 1')
       expect(validateBooklet(dayTrip, m)).toEqual([])
@@ -34,7 +34,7 @@ describe('成品預覽', () => {
   })
 
   it('每個網站範本都畫得出來，字型連到 Google Fonts，也不會改到工作台的網址', () => {
-    for (const id of ['classic', 'season', 'wafu']) {
+    for (const id of ['classic', 'season', 'wafu', 'mono', 'poster', 'timeline', 'ticket', 'diary', 'route', 'night', 'outdoor']) {
       const m = load(id)
       const html = renderPreview(kanazawa, m, m.presets[0].colors)
       expect(html).toContain('history.replaceState = function () {}')

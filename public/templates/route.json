@@ -1,0 +1,78 @@
+{
+  "id": "route",
+  "name": "地圖導覽",
+  "site": "route",
+  "description": "每天頂端用一條路線串起當天的地點，景點依序編號，適合自駕與多景點移動。",
+  "colorRoles": [
+    {
+      "label": "路線與編號圓點",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "編號圓點的白字"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "紅",
+      "colors": {
+        "accent1": "#C2453C",
+        "accent2": "#C2453C",
+        "accent3": "#C2453C",
+        "accent4": "#C2453C",
+        "accent5": "#C2453C",
+        "accent6": "#C2453C"
+      }
+    },
+    {
+      "name": "海藍",
+      "colors": {
+        "accent1": "#2F5D7C",
+        "accent2": "#2F5D7C",
+        "accent3": "#2F5D7C",
+        "accent4": "#2F5D7C",
+        "accent5": "#2F5D7C",
+        "accent6": "#2F5D7C"
+      }
+    },
+    {
+      "name": "綠",
+      "colors": {
+        "accent1": "#3F7A4F",
+        "accent2": "#3F7A4F",
+        "accent3": "#3F7A4F",
+        "accent4": "#3F7A4F",
+        "accent5": "#3F7A4F",
+        "accent6": "#3F7A4F"
+      }
+    },
+    {
+      "name": "紫",
+      "colors": {
+        "accent1": "#6A4A8C",
+        "accent2": "#6A4A8C",
+        "accent3": "#6A4A8C",
+        "accent4": "#6A4A8C",
+        "accent5": "#6A4A8C",
+        "accent6": "#6A4A8C"
+      }
+    }
+  ]
+}

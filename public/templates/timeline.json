@@ -1,0 +1,73 @@
+{
+  "id": "timeline",
+  "name": "時間軸",
+  "site": "timeline",
+  "description": "每天一條垂直時間線，左邊是時間、右邊是景點卡片，一眼看出一天怎麼走。",
+  "colorRoles": [
+    {
+      "label": "線條與圓點",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "青",
+      "colors": {
+        "accent1": "#2F6B6B",
+        "accent2": "#2F6B6B",
+        "accent3": "#2F6B6B",
+        "accent4": "#2F6B6B",
+        "accent5": "#2F6B6B",
+        "accent6": "#2F6B6B"
+      }
+    },
+    {
+      "name": "海藍",
+      "colors": {
+        "accent1": "#2F5D7C",
+        "accent2": "#2F5D7C",
+        "accent3": "#2F5D7C",
+        "accent4": "#2F5D7C",
+        "accent5": "#2F5D7C",
+        "accent6": "#2F5D7C"
+      }
+    },
+    {
+      "name": "藤紫",
+      "colors": {
+        "accent1": "#5E4F86",
+        "accent2": "#5E4F86",
+        "accent3": "#5E4F86",
+        "accent4": "#5E4F86",
+        "accent5": "#5E4F86",
+        "accent6": "#5E4F86"
+      }
+    },
+    {
+      "name": "夕橘",
+      "colors": {
+        "accent1": "#B5503A",
+        "accent2": "#B5503A",
+        "accent3": "#B5503A",
+        "accent4": "#B5503A",
+        "accent5": "#B5503A",
+        "accent6": "#B5503A"
+      }
+    }
+  ]
+}

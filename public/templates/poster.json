@@ -1,0 +1,78 @@
+{
+  "id": "poster",
+  "name": "海報雜誌",
+  "site": "poster",
+  "description": "超大數字當每天的日期、粗黑標題與墨線分區，像旅行海報；列印成 A4 很有氣勢。",
+  "colorRoles": [
+    {
+      "label": "數字與強調色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "每天的大數字與時間"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "海報紅",
+      "colors": {
+        "accent1": "#BC003F",
+        "accent2": "#BC003F",
+        "accent3": "#BC003F",
+        "accent4": "#BC003F",
+        "accent5": "#BC003F",
+        "accent6": "#BC003F"
+      }
+    },
+    {
+      "name": "墨黑",
+      "colors": {
+        "accent1": "#1E1D1A",
+        "accent2": "#1E1D1A",
+        "accent3": "#1E1D1A",
+        "accent4": "#1E1D1A",
+        "accent5": "#1E1D1A",
+        "accent6": "#1E1D1A"
+      }
+    },
+    {
+      "name": "靛藍",
+      "colors": {
+        "accent1": "#1F4E8C",
+        "accent2": "#1F4E8C",
+        "accent3": "#1F4E8C",
+        "accent4": "#1F4E8C",
+        "accent5": "#1F4E8C",
+        "accent6": "#1F4E8C"
+      }
+    },
+    {
+      "name": "橘紅",
+      "colors": {
+        "accent1": "#C2501A",
+        "accent2": "#C2501A",
+        "accent3": "#C2501A",
+        "accent4": "#C2501A",
+        "accent5": "#C2501A",
+        "accent6": "#C2501A"
+      }
+    }
+  ]
+}

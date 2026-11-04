@@ -1,0 +1,79 @@
+{
+  "id": "night",
+  "name": "暗色夜間",
+  "site": "night",
+  "description": "深色底配霓虹點色，夜裡看手機不刺眼；列印時自動改回白底。",
+  "colorRoles": [
+    {
+      "label": "主霓虹色",
+      "slots": [
+        "accent1"
+      ]
+    },
+    {
+      "label": "次要點色",
+      "slots": [
+        "accent2"
+      ]
+    }
+  ],
+  "contrastChecks": [],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "粉與青",
+      "colors": {
+        "accent1": "#FF5CA8",
+        "accent2": "#38E1FF",
+        "accent3": "#FF5CA8",
+        "accent4": "#FF5CA8",
+        "accent5": "#FF5CA8",
+        "accent6": "#FF5CA8"
+      }
+    },
+    {
+      "name": "琥珀",
+      "colors": {
+        "accent1": "#FFB020",
+        "accent2": "#5CE1E6",
+        "accent3": "#FFB020",
+        "accent4": "#FFB020",
+        "accent5": "#FFB020",
+        "accent6": "#FFB020"
+      }
+    },
+    {
+      "name": "紫與薄荷",
+      "colors": {
+        "accent1": "#B58CFF",
+        "accent2": "#5CFFB0",
+        "accent3": "#B58CFF",
+        "accent4": "#B58CFF",
+        "accent5": "#B58CFF",
+        "accent6": "#B58CFF"
+      }
+    },
+    {
+      "name": "藍與橘",
+      "colors": {
+        "accent1": "#5CA8FF",
+        "accent2": "#FF8A5C",
+        "accent3": "#5CA8FF",
+        "accent4": "#5CA8FF",
+        "accent5": "#5CA8FF",
+        "accent6": "#5CA8FF"
+      }
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "id": "outdoor",
+  "name": "自然戶外",
+  "site": "outdoor",
+  "description": "大地色與山形，行前清單（裝備）放在最前面當主角，適合露營、登山與自駕。",
+  "colorRoles": [
+    {
+      "label": "主色（標題、勾選）",
+      "slots": [
+        "accent1"
+      ]
+    },
+    {
+      "label": "山的顏色",
+      "slots": [
+        "accent2"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "Day 標記的白字"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "森林",
+      "colors": {
+        "accent1": "#4F6B36",
+        "accent2": "#8FA66A",
+        "accent3": "#4F6B36",
+        "accent4": "#4F6B36",
+        "accent5": "#4F6B36",
+        "accent6": "#4F6B36"
+      }
+    },
+    {
+      "name": "岩藍",
+      "colors": {
+        "accent1": "#3F5A6B",
+        "accent2": "#8AA3B0",
+        "accent3": "#3F5A6B",
+        "accent4": "#3F5A6B",
+        "accent5": "#3F5A6B",
+        "accent6": "#3F5A6B"
+      }
+    },
+    {
+      "name": "土褐",
+      "colors": {
+        "accent1": "#7A5A3A",
+        "accent2": "#C09A6A",
+        "accent3": "#7A5A3A",
+        "accent4": "#7A5A3A",
+        "accent5": "#7A5A3A",
+        "accent6": "#7A5A3A"
+      }
+    },
+    {
+      "name": "夕陽",
+      "colors": {
+        "accent1": "#9A4A2A",
+        "accent2": "#D98A4A",
+        "accent3": "#9A4A2A",
+        "accent4": "#9A4A2A",
+        "accent5": "#9A4A2A",
+        "accent6": "#9A4A2A"
+      }
+    }
+  ]
+}

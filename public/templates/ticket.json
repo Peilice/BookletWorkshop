@@ -1,0 +1,78 @@
+{
+  "id": "ticket",
+  "name": "票券護照",
+  "site": "ticket",
+  "description": "交通做成登機證與車票、住宿做成住宿券，每天蓋一個章。",
+  "colorRoles": [
+    {
+      "label": "票根與印章色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "票上的大字與印章"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "深藍",
+      "colors": {
+        "accent1": "#24476B",
+        "accent2": "#24476B",
+        "accent3": "#24476B",
+        "accent4": "#24476B",
+        "accent5": "#24476B",
+        "accent6": "#24476B"
+      }
+    },
+    {
+      "name": "酒紅",
+      "colors": {
+        "accent1": "#8B2E3A",
+        "accent2": "#8B2E3A",
+        "accent3": "#8B2E3A",
+        "accent4": "#8B2E3A",
+        "accent5": "#8B2E3A",
+        "accent6": "#8B2E3A"
+      }
+    },
+    {
+      "name": "墨綠",
+      "colors": {
+        "accent1": "#2F5A45",
+        "accent2": "#2F5A45",
+        "accent3": "#2F5A45",
+        "accent4": "#2F5A45",
+        "accent5": "#2F5A45",
+        "accent6": "#2F5A45"
+      }
+    },
+    {
+      "name": "咖啡",
+      "colors": {
+        "accent1": "#6B4A2B",
+        "accent2": "#6B4A2B",
+        "accent3": "#6B4A2B",
+        "accent4": "#6B4A2B",
+        "accent5": "#6B4A2B",
+        "accent6": "#6B4A2B"
+      }
+    }
+  ]
+}

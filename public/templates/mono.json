@@ -1,0 +1,15 @@
+{
+  "id": "mono",
+  "name": "極簡黑白",
+  "site": "mono",
+  "description": "黑字白底、細線分區的單欄手冊，只用一個強調色；沒有裝飾，列印成 A4 最清楚。",
+  "colorRoles": [{ "label": "強調色（細線、Day 標記）", "slots": ["accent1"] }],
+  "contrastChecks": [{ "slot": "accent1", "where": "Day 標記的字（白底）" }],
+  "formFields": ["title", "airline", "flightNo", "departTime", "hotelCity", "hotelStay", "hotelNote", "foods", "infos", "checklist"],
+  "presets": [
+    { "name": "墨黑", "colors": { "accent1": "#1E1E1E", "accent2": "#1E1E1E", "accent3": "#1E1E1E", "accent4": "#1E1E1E", "accent5": "#1E1E1E", "accent6": "#1E1E1E" } },
+    { "name": "磚紅", "colors": { "accent1": "#8B3A2E", "accent2": "#8B3A2E", "accent3": "#8B3A2E", "accent4": "#8B3A2E", "accent5": "#8B3A2E", "accent6": "#8B3A2E" } },
+    { "name": "深藍", "colors": { "accent1": "#24476B", "accent2": "#24476B", "accent3": "#24476B", "accent4": "#24476B", "accent5": "#24476B", "accent6": "#24476B" } },
+    { "name": "森綠", "colors": { "accent1": "#3F5B3A", "accent2": "#3F5B3A", "accent3": "#3F5B3A", "accent4": "#3F5B3A", "accent5": "#3F5B3A", "accent6": "#3F5B3A" } }
+  ]
+}

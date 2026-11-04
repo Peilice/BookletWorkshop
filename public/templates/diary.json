@@ -1,0 +1,78 @@
+{
+  "id": "diary",
+  "name": "手帳拼貼",
+  "site": "diary",
+  "description": "點點方格紙、紙膠帶與便利貼，手寫感字型，像貼滿東西的旅行手帳。",
+  "colorRoles": [
+    {
+      "label": "膠帶與標題色",
+      "slots": [
+        "accent1"
+      ]
+    }
+  ],
+  "contrastChecks": [
+    {
+      "slot": "accent1",
+      "where": "每天的 Day 文字"
+    }
+  ],
+  "formFields": [
+    "title",
+    "airline",
+    "flightNo",
+    "departTime",
+    "hotelCity",
+    "hotelStay",
+    "hotelNote",
+    "foods",
+    "infos",
+    "checklist"
+  ],
+  "presets": [
+    {
+      "name": "莓粉",
+      "colors": {
+        "accent1": "#B8506B",
+        "accent2": "#B8506B",
+        "accent3": "#B8506B",
+        "accent4": "#B8506B",
+        "accent5": "#B8506B",
+        "accent6": "#B8506B"
+      }
+    },
+    {
+      "name": "薄荷",
+      "colors": {
+        "accent1": "#3F8F7A",
+        "accent2": "#3F8F7A",
+        "accent3": "#3F8F7A",
+        "accent4": "#3F8F7A",
+        "accent5": "#3F8F7A",
+        "accent6": "#3F8F7A"
+      }
+    },
+    {
+      "name": "天空",
+      "colors": {
+        "accent1": "#4A7FB0",
+        "accent2": "#4A7FB0",
+        "accent3": "#4A7FB0",
+        "accent4": "#4A7FB0",
+        "accent5": "#4A7FB0",
+        "accent6": "#4A7FB0"
+      }
+    },
+    {
+      "name": "杏橘",
+      "colors": {
+        "accent1": "#C4703A",
+        "accent2": "#C4703A",
+        "accent3": "#C4703A",
+        "accent4": "#C4703A",
+        "accent5": "#C4703A",
+        "accent6": "#C4703A"
+      }
+    }
+  ]
+}
