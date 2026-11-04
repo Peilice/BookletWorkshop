@@ -14,5 +14,9 @@ export const render = (d: SiteData, opts: RenderOptions) =>
     dayHead: (day, data) => `${when(!data.singleDay, () => `<b class="day-n num">Day ${day.n}</b>`)}
       <span class="num">${esc(dateW(day.date, day.weekdayShort))}</span>${todayTag}
       ${when(day.departTime, () => `<span class="num dep">${esc(day.departTime)} 出門</span>`)}`,
-    route: (day) => `<ol class="stops" aria-label="今天的路線">${day.route.map((r) => `<li>${esc(r)}</li>`).join('')}</ol>`,
+    // 路線是當天依序去的地點；還沒填景點時，退回用大標的各段
+    route: (day) => {
+      const names = day.spots.map((s) => s.name).filter(Boolean)
+      return `<ol class="stops" aria-label="今天的路線">${(names.length ? names : day.route).map((r) => `<li>${esc(r)}</li>`).join('')}</ol>`
+    },
   })

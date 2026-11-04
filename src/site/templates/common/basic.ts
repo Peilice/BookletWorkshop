@@ -168,8 +168,8 @@ export function renderBasic(d: SiteData, opts: RenderOptions, cfg: BasicConfig):
     ${countdown(d)}
     <span class="offline" data-offline hidden>離線中</span>
   </div>
-  <nav class="toc no-print" aria-label="手冊內容"><div class="wrap">${shown.map((s) => `<a href="#${s.id}">${s.label}</a>`).join('')}</div></nav>
 </header>
+<nav class="toc no-print" aria-label="手冊內容"><div class="wrap">${shown.map((s) => `<a href="#${s.id}">${s.label}</a>`).join('')}</div></nav>
 <main id="main" class="wrap">
 ${shown.map((s) => s.html()).join('\n')}
 </main>

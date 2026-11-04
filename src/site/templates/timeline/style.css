@@ -5,7 +5,7 @@
 .day-head { background: var(--ink); color: #fff; padding: 6px 12px; border-radius: 8px; }
 .day-n { color: #fff; font-size: 20px; }
 .dep { color: #cfd8d8; }
-.route-line { margin: 8px 0 0 0; font-size: 14px; color: var(--soft); }
+.route-line { display: none; } /* 下面的時間軸本身就是路線，不重複列一次 */
 .spot { position: relative; margin: 12px 0 0 78px; border: 0; padding: 8px 12px; background: var(--card); border-radius: 10px; }
 .spot::before { content: ''; position: absolute; left: -22px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--paper); }
 .spot .time { position: absolute; left: -78px; width: 44px; text-align: right; top: 8px; font-size: 14px; min-width: 0; }
