@@ -17,7 +17,7 @@ const places = computed(() => knownPlaces(booklet.value))
   <section>
     <div class="panel-intro">
       <h2>住宿</h2>
-      <p class="hint">房號一律留空，到當地再手寫。飯店、民宿、露營區都填在這裡。沒有填任何住宿時，手冊裡不會出現這一段。</p>
+      <p class="hint">房號一律留空，到當地再手寫。沒有填任何住宿時，手冊裡不會出現這一段。</p>
     </div>
 
     <TransitionGroup tag="div" name="row" class="rows">

@@ -54,6 +54,16 @@ function addDay() {
   activeDay.value = days.at(-1)
 }
 
+// 一日遊固定一天：自動建好那一天，不能新增或刪除（舊資料已經有好幾天時照樣顯示，才改得到）
+const fixedDay = computed(() => booklet.value.tripType === 'dayTrip' && booklet.value.days.length <= 1)
+watch(
+  () => [booklet.value.tripType, booklet.value.days.length],
+  () => {
+    if (booklet.value.tripType === 'dayTrip' && booklet.value.days.length === 0) addDay()
+  },
+  { immediate: true },
+)
+
 // 交通、住宿已經有日期時，可以一次排好每一天
 const tripDays = computed(() => daysFromTrip(booklet.value))
 function addTripDays() {
@@ -122,14 +132,14 @@ function posterDate(iso: string): string {
             {{ pad(i + 1) }}
           </button>
         </nav>
-        <button type="button" class="add" @click="addDay"><Icon name="plus" />新增一天</button>
+        <button v-if="!fixedDay" type="button" class="add" @click="addDay"><Icon name="plus" />新增一天</button>
 
         <div v-if="activeDay && activeIndex >= 0" class="day-meta">
           <label class="field date-field">
             <span>日期</span>
             <input v-model="activeDay.date" type="date" :aria-label="`Day ${activeIndex + 1} 日期`" />
           </label>
-          <ItemActions :list="booklet.days" :index="activeIndex" :label="`Day ${activeIndex + 1}`" />
+          <ItemActions v-if="!fixedDay" :list="booklet.days":index="activeIndex" :label="`Day ${activeIndex + 1}`" />
         </div>
       </div>
 
