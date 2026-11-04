@@ -21,3 +21,23 @@ body { line-height: 1.9; letter-spacing: 0.02em; }
   body, .toc { background: #fff; color: #111; }
   * { text-shadow: none !important; box-shadow: none !important; }
 }
+/* 清單全部勾完：進度條像霓虹管通電，亮一下再穩定下來 */
+.progress.done .bar span { box-shadow: 0 0 12px var(--accent); }
+.progress.done p { color: var(--accent2); text-shadow: 0 0 8px color-mix(in srgb, var(--accent2) 50%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done .bar span { animation: night-on 1.2s ease-out; }
+  @keyframes night-on { 0% { box-shadow: 0 0 0 var(--accent); } 25% { box-shadow: 0 0 28px 4px var(--accent); } 45% { box-shadow: 0 0 6px var(--accent); } 60% { box-shadow: 0 0 24px 3px var(--accent); } 100% { box-shadow: 0 0 12px var(--accent); } }
+}
+
+/* 更大膽：頁首上方一團霓虹光暈；標題與 Day 放大發光；景點卡片的邊線帶光、Day 標頭下拖一條漸隱霓虹線 */
+.top { background: radial-gradient(ellipse 80% 120% at 50% 0, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%); }
+.top h1 { font-size: clamp(38px, 11vw, 54px); line-height: 1.1; text-shadow: 0 0 22px color-mix(in srgb, var(--accent) 75%, transparent); }
+.sec { padding-top: 48px; }
+.sec-title { font-size: 18px; font-weight: 900; padding-bottom: 8px; border-bottom: 2px solid var(--accent); box-shadow: 0 6px 12px -8px var(--accent); }
+.day-head { padding-bottom: 8px; border-bottom: 2px solid transparent; border-image: linear-gradient(90deg, var(--accent), transparent) 1; }
+.day-n { font-size: 40px; text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 85%, transparent); }
+.spot { padding: 12px 14px; box-shadow: -4px 0 14px -6px var(--accent); border-left-width: 4px; }
+.spot h3 { font-size: 18px; }
+@media print { .top { background: none; } .day-head { border-image: none; border-bottom-color: #ccc; } }
+/* 進度條的光暈不要跟區塊標題的底線疊在一起 */
+.progress { margin-top: 16px; }

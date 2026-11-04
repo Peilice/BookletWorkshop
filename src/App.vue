@@ -71,9 +71,17 @@ const sectionBar = useSlider(sectionsBox, () => [step.value, section.value, ...s
 
 // ---------- 訊息 ----------
 
-const message = ref<{ kind: 'ok' | 'error'; text: string } | null>(null)
-function notify(kind: 'ok' | 'error', text: string) {
-  message.value = { kind, text }
+const message = ref<{ kind: 'ok' | 'error'; text: string; stamp?: string; n: number } | null>(null)
+let messageCount = 0
+/** stamp：輸出成功時的標題，有填的話橫幅前面會蓋一個印章（n 讓連續輸出時動畫重新播放） */
+function notify(kind: 'ok' | 'error', text: string, stamp?: string) {
+  message.value = { kind, text, stamp, n: ++messageCount }
+}
+/** 輸出成功的訊息：標題用手冊名稱；字型下載失敗時不蓋章，照舊顯示警告 */
+function notifyDone(fontError: boolean, okText: string, errText: string) {
+  const title = booklet.value.title.trim()
+  if (fontError) notify('error', errText)
+  else notify('ok', okText, title ? `「${title}」輸出完成` : '輸出完成')
 }
 
 // ---------- 確認對話框（取代瀏覽器內建的 confirm） ----------
@@ -255,14 +263,14 @@ async function generate(kind: OutputKind) {
     if (kind === 'html') {
       const { output, fontError } = await siteHtmlFromSettings(b, s)
       downloadFile(output, bookletFileName(b, 'html'), 'text/html')
-      notify(fontError ? 'error' : 'ok', fontError ? `已下載網站。${FONT_FALLBACK}` : '已下載網站。用瀏覽器打開這個 .html 檔就能看，也可以直接傳到手機。')
+      notifyDone(fontError, '已下載網站。用瀏覽器打開這個 .html 檔就能看，也可以直接傳到手機。', `已下載網站。${FONT_FALLBACK}`)
     } else if (kind === 'zip') {
       const { output, fontError } = await siteZipFromSettings(b, s)
       downloadFile(output as BlobPart, bookletFileName(b, 'zip'), 'application/zip')
-      notify(fontError ? 'error' : 'ok', fontError ? `已下載網站 zip。${FONT_FALLBACK}` : '已下載網站 zip。解壓縮後整個資料夾上傳到 GitHub Pages 或 Netlify，就能離線瀏覽、加到手機主畫面。')
+      notifyDone(fontError, '已下載網站 zip。解壓縮後整個資料夾上傳到 GitHub Pages 或 Netlify，就能離線瀏覽、加到手機主畫面。', `已下載網站 zip。${FONT_FALLBACK}`)
     } else {
       const { fontError } = await printPdfFromSettings(b, s)
-      notify(fontError ? 'error' : 'ok', fontError ? `已叫出列印視窗。${FONT_FALLBACK}` : '在列印視窗的「目的地」選「另存為 PDF」，紙張會是 A4；「邊界」選「預設」才會有頁碼，建議取消勾選「頁首和頁尾」。')
+      notifyDone(fontError, '在列印視窗的「目的地」選「另存為 PDF」，紙張會是 A4；「邊界」選「預設」才會有頁碼，建議取消勾選「頁首和頁尾」。', `已叫出列印視窗。${FONT_FALLBACK}`)
     }
   } catch (err) {
     notify('error', `${OUTPUT_LABEL[kind]}失敗：${err instanceof Error ? err.message : String(err)}`)
@@ -374,8 +382,14 @@ onBeforeUnmount(() => {
         <button type="button" @click="onDiscardAutosave">捨棄</button>
       </div>
 
-      <div v-if="message" class="banner" :class="message.kind" :role="message.kind === 'error' ? 'alert' : 'status'">
-        <span>{{ message.text }}</span>
+      <div v-if="message" :key="message.n" class="banner" :class="[message.kind, { stamped: message.stamp }]" :role="message.kind === 'error' ? 'alert' : 'status'">
+        <svg v-if="message.stamp" class="stamp" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="20" cy="20" r="17.5" />
+          <circle cx="20" cy="20" r="13.5" stroke-width="1" />
+          <path class="tick" d="M12.5 20.5l5 5 10-11" stroke-width="2.5" />
+        </svg>
+        <span v-if="message.stamp"><strong class="stamp-title">{{ message.stamp }}</strong><br />{{ message.text }}</span>
+        <span v-else>{{ message.text }}</span>
         <span class="spacer" />
         <button type="button" class="icon" aria-label="關閉訊息" @click="message = null">關閉</button>
       </div>
@@ -796,6 +810,49 @@ onBeforeUnmount(() => {
 
 .banner .icon {
   color: inherit;
+}
+
+/* 輸出完成：像登機證被蓋上章。重落一下、打勾一筆畫出來；一趟旅行才輸出幾次，所以可以慢一點 */
+.banner.stamped {
+  padding: 14px 16px;
+}
+
+.stamp-title {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.stamp {
+  flex: none;
+  transform: rotate(-8deg);
+  animation: stamp-down 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.stamp .tick {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: draw-long 0.4s 0.25s ease-out forwards;
+}
+
+@keyframes stamp-down {
+  from {
+    transform: rotate(-8deg) scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes draw-long {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp,
+  .stamp .tick {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }
 
 /* ---------- 對話框 ---------- */

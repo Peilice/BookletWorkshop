@@ -80,3 +80,7 @@ a { color: inherit; }
   .top { padding-top: 16mm; }
   .day, .spot, .hotel, .food { break-inside: avoid; }
 }
+
+/* 清單進度：勾選時進度條滑過去，不是跳過去 */
+.bar span { transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+@media (prefers-reduced-motion: reduce) { .bar span { transition: none; } }

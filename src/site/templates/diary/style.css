@@ -14,3 +14,20 @@ body { background-image: radial-gradient(#d9cfae 1.2px, transparent 1.6px); back
 .spot h3, .food h3, .hotel h3, .info h3 { font-weight: 400; font-size: 17px; }
 .print { border-style: dashed; }
 @media print { .spot, .rows li, .food, .hotel, .info, .check-group { transform: none !important; box-shadow: none; border: 1px solid var(--hair); } }
+/* 清單全部勾完：「全部準備好了」被螢光筆畫一道 */
+.progress.done p { width: fit-content; padding: 0 4px; background: linear-gradient(transparent 55%, color-mix(in srgb, var(--accent) 38%, #fff) 55%) no-repeat left / 100% 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done p { animation: diary-mark 0.7s 0.1s ease-out backwards; }
+  @keyframes diary-mark { from { background-size: 0 100%; } }
+}
+
+/* 更大膽：標題被螢光筆畫過；Day 是一張斜貼的貼紙；膠帶更寬、紙片轉得更明顯 */
+.top h1 { font-size: clamp(38px, 11vw, 52px); display: inline; background: linear-gradient(transparent 62%, color-mix(in srgb, var(--accent) 38%, #fff) 62%); padding: 0 6px; -webkit-box-decoration-break: clone; box-decoration-break: clone; line-height: 1.5; }
+.sec { padding-top: 48px; }
+.sec-title { font-size: 20px; padding: 4px 22px; transform: rotate(-3deg); box-shadow: 1px 2px 6px #0002; }
+.day-n { font-size: 36px; background: color-mix(in srgb, var(--accent) 45%, #fff); padding: 6px 22px; border-radius: 52% 46% 55% 48% / 58% 50% 50% 44%; transform: rotate(-4deg); box-shadow: 1px 2px 6px #0003; }
+.spot:nth-of-type(odd), .rows li:nth-child(odd), .hotel:nth-child(odd), .food:nth-child(odd) { transform: rotate(-1.4deg); }
+.spot:nth-of-type(even), .rows li:nth-child(even), .hotel:nth-child(even), .food:nth-child(even) { transform: rotate(1.4deg); }
+.spot:nth-of-type(odd)::before, .hotel:nth-child(odd)::before { width: 72px; height: 20px; top: -10px; }
+.spot:nth-of-type(even)::before, .food:nth-child(even)::before { content: ''; position: absolute; top: -10px; right: 24px; width: 64px; height: 20px; background: color-mix(in srgb, var(--accent) 40%, transparent); transform: rotate(4deg); }
+.spot h3, .food h3, .hotel h3, .info h3 { font-size: 19px; }

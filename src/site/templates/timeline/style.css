@@ -17,3 +17,22 @@
 .spot { counter-increment: spot; }
 .spot.no-time::before { content: counter(spot); width: 22px; height: 22px; left: -27px; top: 8px; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; }
 .spot .time { color: var(--accent); font-weight: 700; }
+/* 清單全部勾完：文字變成主色小膠囊，跟 Day 標頭同一組圓角語言 */
+.progress.done p { width: fit-content; margin-top: 8px; padding: 0 12px; border-radius: 99px; background: var(--accent); color: #fff; font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done p { animation: tl-pop 0.4s cubic-bezier(0.3, 1.5, 0.5, 1); }
+  @keyframes tl-pop { from { opacity: 0; transform: scale(0.7); transform-origin: left; } }
+}
+
+/* 更大膽：線加粗、圓點加大，Day 標頭捲動時黏在導覽列下面，一路帶著你走到下一天 */
+.day::before { left: 60px; width: 4px; top: 60px; background: color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 2px; }
+.day-head { position: sticky; top: 41px; z-index: 4; padding: 10px 14px; border-radius: 10px; box-shadow: 0 6px 12px -6px #0005; }
+.day-n { font-size: 26px; }
+.spot { margin-left: 80px; padding: 12px 14px; box-shadow: 0 1px 2px #0002; }
+.spot::before { width: 18px; height: 18px; left: -29px; top: 14px; box-shadow: 0 0 0 5px var(--paper); }
+.spot.no-time::before { width: 26px; height: 26px; left: -33px; top: 10px; font-size: 13px; }
+.spot .time { left: -80px; width: 40px; top: 12px; font-size: 16px; }
+.spot h3 { font-size: 18px; }
+.sec { padding-top: 48px; }
+.sec-title { font-size: 18px; border-left-width: 8px; }
+@media print { .day-head { position: static; box-shadow: none; } }

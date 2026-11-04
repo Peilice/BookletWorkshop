@@ -19,3 +19,30 @@
 .food, .info, .check-group { border-bottom: 1px dashed var(--soft); }
 .tk-main small, .tk-stub small { font-size: 13px; }
 @media (min-width: 900px) { .wrap { max-width: 820px; } }
+/* 清單全部勾完：進度旁邊蓋上一個「查驗章」，跟 Day 的圓章同一個世界 */
+.progress { position: relative; }
+.progress.done::before, .progress.done::after { content: ''; position: absolute; right: 4px; top: -22px; width: 48px; height: 48px; transform: rotate(-12deg); }
+.progress.done::before { border: 3px solid var(--accent); border-radius: 50%; }
+.progress.done::after { background: var(--accent); -webkit-mask: var(--tick) center / 24px no-repeat; mask: var(--tick) center / 24px no-repeat; }
+.progress { --tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done::before, .progress.done::after { animation: tk-stamp 0.45s cubic-bezier(0.3, 1.5, 0.5, 1); }
+  @keyframes tk-stamp { from { opacity: 0; transform: rotate(-12deg) scale(1.8); } }
+}
+
+/* 更大膽：Day 標頭是一張兩側缺口的票根，票號放大；區塊標題與航班代碼加粗加大 */
+.sec { padding-top: 48px; }
+.sec-title { font-size: 18px; font-weight: 900; border-bottom-width: 3px; }
+.code { font-size: 28px; letter-spacing: 0.02em; }
+.tk-stub b { font-size: 32px; }
+.rows li, .hotel { border-left-width: 12px; box-shadow: 0 2px 8px #0003; }
+.day-head { background: var(--card); padding: 14px 22px; margin-top: 8px; box-shadow: 0 2px 8px #0003; border-top: 3px solid var(--accent);
+  -webkit-mask: radial-gradient(circle 10px at 0 55%, #0000 97%, #000) left / 51% 100% no-repeat, radial-gradient(circle 10px at 100% 55%, #0000 97%, #000) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle 10px at 0 55%, #0000 97%, #000) left / 51% 100% no-repeat, radial-gradient(circle 10px at 100% 55%, #0000 97%, #000) right / 51% 100% no-repeat; }
+.stamp { width: 72px; height: 72px; border-width: 4px; }
+.stamp b { font-size: 32px; }
+.day-head .date { font-size: 20px; }
+.spot h3 { font-size: 18px; font-weight: 900; }
+/* 查驗章讓出位置，不壓到進度線和區塊標題 */
+.progress.done { min-height: 68px; }
+.progress.done::before, .progress.done::after { top: 14px; }

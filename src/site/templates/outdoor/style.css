@@ -19,3 +19,25 @@
 .progress { font-size: 15px; font-weight: 700; color: var(--accent); }
 .bar { height: 12px; background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .bar span { background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+/* 清單全部勾完：進度條盡頭插上一面旗，登頂 */
+.bar { overflow: visible; position: relative; }
+.bar span { position: relative; border-radius: 6px; }
+.bar span::after { content: ''; position: absolute; right: 0; bottom: 100%; width: 22px; height: 28px; background: var(--accent); clip-path: polygon(100% 0, 0 26%, calc(100% - 2px) 52%, calc(100% - 2px) 100%, 100% 100%); transform: scaleY(0); transform-origin: bottom; }
+.progress.done .bar span::after { transform: scaleY(1); }
+@media (prefers-reduced-motion: no-preference) {
+  .bar span::after { transition: transform 0.45s 0.2s cubic-bezier(0.3, 1.4, 0.5, 1); }
+}
+
+/* 更大膽：山形加高成兩層稜線，標題放大；Day 是大膠囊；景點變成帶陰影的卡片 */
+.top { padding-bottom: 140px; }
+.top::after { height: 124px; }
+.top::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 108px; background: var(--accent2); opacity: 0.4; clip-path: polygon(0 36%, 14% 66%, 34% 14%, 56% 60%, 80% 24%, 100% 58%, 100% 100%, 0 100%); }
+.top h1 { font-size: clamp(38px, 11vw, 52px); line-height: 1.12; }
+.sec { padding-top: 48px; }
+.sec-title { font-size: 18px; font-weight: 900; padding: 8px 14px; }
+.day-n { font-size: 26px; padding: 2px 18px; }
+.spot { border-left: 0; background: var(--card); border-radius: 10px; padding: 10px 14px; box-shadow: 0 2px 6px #2e3a2418; }
+.spot h3 { font-size: 18px; font-weight: 900; color: var(--accent); }
+@media print { .top::before { display: none; } }
+/* 旗子往上長，給它留一點空間 */
+.progress { margin-top: 28px; }

@@ -11,3 +11,24 @@
 .sec-title { border-top: 0; border-bottom: 2px solid var(--accent); padding-bottom: 4px; }
 .day-n { background: var(--accent); color: #fff; padding: 0 10px; border-radius: 6px; font-size: 20px; }
 @media print { .stops li::before, .spot::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+/* 清單進度：進度條前端是一枚圖釘，全部勾完時釘子放大並擴出一圈 */
+.bar { overflow: visible; position: relative; }
+.bar span { position: relative; }
+.bar span::after { content: ''; position: absolute; right: -6px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--paper); transition: transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1); }
+.progress.done .bar span::after { transform: scale(1.5); }
+.progress.done p { color: var(--accent); font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) {
+  .progress.done .bar span::before { content: ''; position: absolute; right: -6px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; border: 2px solid var(--accent); animation: route-ping 0.9s ease-out; }
+  @keyframes route-ping { to { transform: scale(3.2); opacity: 0; } }
+}
+
+/* 更大膽：路線圓點加大成路標，虛線加粗；Day 是一塊醒目的路標牌；區塊標題加粗 */
+.sec { padding-top: 48px; }
+.sec-title { font-size: 18px; font-weight: 900; border-bottom-width: 4px; }
+.day-n { font-size: 28px; padding: 2px 16px; border-radius: 8px; }
+.stops li { font-size: 16px; }
+.stops li::before { width: 30px; height: 30px; font-size: 15px; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--accent); margin-right: 8px; }
+.stops li:not(:last-child)::after { width: 30px; border-top-width: 3px; }
+.spot { border-left-width: 3px; padding-left: 32px; margin-left: 14px; }
+.spot::before { width: 30px; height: 30px; left: -16px; top: 0; font-size: 15px; box-shadow: 0 0 0 4px var(--paper); }
+.spot h3 { font-size: 19px; font-weight: 900; }

@@ -4,3 +4,19 @@
 .top h1 { font-size: 42px; letter-spacing: -0.01em; }
 .day-head { border-bottom: 1px solid var(--ink); padding-bottom: 4px; }
 .day-n { font-size: 34px; }
+/* 清單全部勾完：進度條從強調色換成墨色，什麼都不多加 */
+.bar span { transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s; }
+.progress.done .bar span { background: var(--ink); }
+.progress.done p { color: var(--ink); font-weight: 700; }
+
+/* 更大膽：瑞士海報式的重量對比。標題與 Day 數字放到最大，區塊標題反白成一條墨色橫帶，每個區塊之間有明顯的段落 */
+.top h1 { font-size: clamp(42px, 13vw, 68px); line-height: 1.05; letter-spacing: -0.03em; }
+.dates { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: 0.12em; margin-top: 12px; }
+.sec { padding-top: 48px; }
+.sec-title { background: var(--ink); color: var(--paper); border-top: 0; padding: 6px 12px; font-size: 13px; letter-spacing: 0.3em; }
+.day { padding-top: 28px; }
+.day-head { border-bottom: 4px solid var(--ink); padding-bottom: 8px; align-items: flex-end; }
+.day-n { font-size: clamp(52px, 16vw, 80px); line-height: 0.9; letter-spacing: -0.03em; color: var(--accent); }
+.route-line { font-size: 20px; font-weight: 900; margin-top: 12px; }
+.spot { border-left: 0; padding-left: 0; margin-top: 0; padding-top: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--hair); }
+.spot h3 { font-size: 19px; font-weight: 900; }
