@@ -494,7 +494,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
       <div class="dialog-actions">
-        <button v-if="tripChoice === 'start'" type="button" @click="tripChoice = null">先用出國的預設</button>
+        <button v-if="tripChoice === 'start'" type="button" @click="tripChoice = null">略過</button>
         <button v-else type="button" @click="tripChoice = null">取消</button>
       </div>
     </div>
