@@ -1,5 +1,5 @@
 /* 手帳拼貼 */
-:root { --ink: #4a3b32; --soft: #8a7a6c; --hair: #e3d9bd; --paper: #fffdf5; --card: #fff; --f: 'Iansui', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
+:root { --ink: #4a3b32; --soft: #75675a; --hair: #e3d9bd; --paper: #fffdf5; --card: #fff; --f: 'Iansui', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
 body { background-image: radial-gradient(#d9cfae 1.2px, transparent 1.6px); background-size: 16px 16px; letter-spacing: 0.04em; }
 .top h1 { font-weight: 400; font-size: 38px; }
 .toc { background: color-mix(in srgb, var(--paper) 85%, transparent); border-bottom: 2px dashed var(--soft); backdrop-filter: blur(4px); }

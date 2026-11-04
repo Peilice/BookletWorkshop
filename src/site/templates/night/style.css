@@ -1,5 +1,6 @@
 /* 暗色夜間：accent1 是主要霓虹色，accent2 是次要點色 */
 :root { --ink: #e8ebf5; --soft: #9aa1bd; --hair: #2a2f45; --paper: #12141c; --card: #1d2030; }
+body { line-height: 1.9; letter-spacing: 0.02em; }
 .top h1 { text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent); }
 .dates { color: var(--accent2); }
 .toc { border-bottom-color: var(--hair); }
@@ -7,7 +8,7 @@
 .day { border-bottom: 0; }
 .day-n { text-shadow: 0 0 10px color-mix(in srgb, var(--accent) 70%, transparent); }
 .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.pills li { border: 1px solid var(--accent2); color: var(--accent2); border-radius: 99px; padding: 0 12px; font-size: 13px; font-weight: 700; box-shadow: 0 0 8px color-mix(in srgb, var(--accent2) 35%, transparent); }
+.pills li { border: 1px solid var(--accent2); color: var(--accent2); border-radius: 99px; padding: 0 12px; font-size: 14px; font-weight: 700; box-shadow: 0 0 8px color-mix(in srgb, var(--accent2) 35%, transparent); }
 .spot { background: var(--card); border: 0; border-left: 3px solid var(--accent); border-radius: 8px; padding: 8px 12px; }
 .spot .time { color: var(--accent2); }
 .rows li, .food, .hotel, .info, .check-group { border-bottom-color: var(--hair); }

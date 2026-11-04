@@ -1,5 +1,5 @@
 /* 票券／護照 */
-:root { --ink: #232a3a; --soft: #6d6a5e; --hair: #cfc8b4; --paper: #e9e4d6; --card: #fffdf6; --fa: 'Impact', 'Arial Narrow', sans-serif; }
+:root { --ink: #232a3a; --soft: #5a574c; --hair: #cfc8b4; --paper: #e9e4d6; --card: #fffdf6; --fa: 'Impact', 'Arial Narrow', sans-serif; }
 .sec-title { border-top: 0; letter-spacing: 0.25em; border-bottom: 2px dashed var(--soft); padding-bottom: 6px; }
 .rows li, .hotel { display: grid; grid-template-columns: 1fr auto; gap: 0; padding: 0; margin-bottom: 14px; background: var(--card); border: 0; border-left: 8px solid var(--accent); border-radius: 6px; box-shadow: 0 1px 4px #0002; overflow: hidden; }
 .tk-main { display: grid; gap: 2px; padding: 10px 14px; }
@@ -11,7 +11,7 @@
 .hotel .actions.tk-stub { margin: 0; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
 .day { border-bottom: 2px dashed var(--soft); }
 .stamp { display: inline-grid; place-items: center; width: 62px; height: 62px; border: 3px solid var(--accent); border-radius: 50%; color: var(--accent); transform: rotate(-12deg); line-height: 1; text-align: center; }
-.stamp small { font-size: 10px; font-weight: 900; letter-spacing: 0.15em; }
+.stamp small { font-size: 11px; font-weight: 900; letter-spacing: 0.15em; }
 .stamp b { font-size: 26px; font-family: var(--fa); font-weight: 400; color: inherit; }
 .day-head { align-items: center; }
 .day-head .date { font-weight: 900; font-size: 18px; }

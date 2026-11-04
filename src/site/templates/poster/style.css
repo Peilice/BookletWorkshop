@@ -1,12 +1,12 @@
 /* 海報雜誌 */
 :root { --ink: #1e1d1a; --soft: #6b685f; --hair: #d9d6cd; --paper: #faf9f5; --fa: 'Anton', 'Impact', 'Arial Narrow', sans-serif; }
-.top h1 { font-size: 44px; line-height: 1.1; letter-spacing: 0; }
+.top h1 { font-size: clamp(34px, 10vw, 44px); line-height: 1.1; letter-spacing: 0; }
 .dates { font-family: var(--fa); font-size: 20px; letter-spacing: 0.1em; color: var(--accent); }
 .toc { border-bottom: 3px solid var(--ink); }
 .sec-title { font-size: 22px; letter-spacing: 0.15em; border-top: 6px solid var(--ink); padding-top: 10px; }
 .day { border-bottom: 3px solid var(--ink); padding: 20px 0 26px; }
 .day-head { align-items: flex-end; }
-.bignum { font-family: var(--fa); font-weight: 400; font-size: 120px; line-height: 0.8; color: var(--accent); letter-spacing: -0.02em; }
+.bignum { font-family: var(--fa); font-weight: 400; font-size: clamp(96px, 26vw, 128px); line-height: 0.8; color: var(--accent); letter-spacing: -0.02em; }
 .day-head .date { font-family: var(--fa); font-size: 26px; letter-spacing: 0.04em; }
 .route-line { font-size: 22px; font-weight: 900; line-height: 1.35; margin-top: 12px; }
 .spot { border-left: 0; padding-left: 0; border-top: 1px solid var(--ink); padding-top: 8px; }
@@ -15,5 +15,4 @@
 .rows li { border-bottom: 1px solid var(--ink); }
 .rows .when { font-family: var(--fa); font-size: 18px; font-weight: 400; letter-spacing: 0.04em; }
 .food h3, .hotel h3, .info h3 { font-size: 17px; }
-.spot p { font-size: 16px; }
 @media (min-width: 900px) { .wrap { max-width: 880px; } .spot p { font-size: 17px; } .route-line { font-size: 26px; } }
